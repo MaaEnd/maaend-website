@@ -248,11 +248,11 @@ export default function InteractiveModel() {
   return (
     <div className="group relative h-full w-full cursor-crosshair">
       <Canvas dpr={[1, 2]} camera={{ fov: 50 }}>
-        <PerspectiveCamera makeDefault position={[6, -1.5, 8]} />
+        <PerspectiveCamera makeDefault position={[6, -2.5, 8]} />
         <OrbitControls
           enableZoom={false}
           enablePan={false}
-          minPolarAngle={Math.PI / 2.5}
+          minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 1.6}
           autoRotate
           autoRotateSpeed={1.2}
