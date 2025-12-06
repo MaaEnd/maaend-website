@@ -1,0 +1,91 @@
+{
+  "header": {
+    "github": "Github",
+    "docs": "docs"
+  },
+  "hero": {
+    "systemReady": "SYSTEM.READY",
+    "neuralOnline": "NEURAL_NETWORK_ONLINE",
+    "title": "MaaEnd",
+    "subtitle": "MAA - End",
+    "description": "Endfield Assistant",
+    "tagline": "High-precision automation assistant. Designed for heavy-duty operations and maximum efficiency in Arknights: Endfield.",
+    "status": "[ STATUS: OPTIMIZED FOR PRODUCTION ]",
+    "initCore": "INITIALIZE_CORE",
+    "version": "VER",
+    "build": "BUILD",
+    "selectModule": "SELECT_MODULE",
+    "windowsX64": "Windows x64",
+    "windowsArm": "Windows ARM",
+    "android": "Android",
+    "macos": "macOS"
+  },
+  "features": {
+    "title": "CORE MODULES",
+    "items": {
+      "autoSanity": {
+        "title": "Auto Sanity",
+        "desc": "Auto Sanity & Navigation",
+        "detail": "Automatically recognize stages, optimize efficiency routing, auto-consume recovery items."
+      },
+      "infrastructure": {
+        "title": "Smart Infrastructure",
+        "desc": "Infrastructure Ops",
+        "detail": "Auto mood detection, optimal drone strategy, fully automated shift rotation."
+      },
+      "recruitment": {
+        "title": "Recruitment OCR",
+        "desc": "OCR + Strategy",
+        "detail": "High-precision OCR recognition, auto-calculate optimal tag combinations, never miss a 6-star."
+      },
+      "coreEngine": {
+        "title": "Neural Core",
+        "desc": "Neural Core",
+        "detail": "Deep learning-based image recognition engine, cross-platform support, millisecond response."
+      },
+      "cliApi": {
+        "title": "CLI / API",
+        "desc": "Developer Ready",
+        "detail": "Complete API interface and command-line tools, easily integrate into your workflow."
+      },
+      "crossPlatform": {
+        "title": "Cross Platform",
+        "desc": "Cross Platform",
+        "detail": "Full platform support: Windows, macOS, Linux, Android."
+      }
+    }
+  },
+  "about": {
+    "architectureLabel": "Architecture",
+    "title1": "AI-FIRST",
+    "title2": "AUTOMATION SYSTEM",
+    "paragraph1": "MaaEnd is not just a script—it's an intelligent automation platform built on next-generation image recognition technology. Through deep learning models and real-time decision algorithms, it thinks like a human player but with machine-like precision and stability.",
+    "paragraph2": "Open source, secure, and transparent. MaaEnd is community-driven, providing reliable logistical support for millions of doctors worldwide. Whether on high-performance emulators on Windows or Android native environments, MaaEnd delivers a consistently excellent experience.",
+    "stats": {
+      "githubStars": "GitHub Stars",
+      "dailyUsers": "Daily Users",
+      "modules": "Modules"
+    },
+    "systemLogs": "SYSTEM_LOGS",
+    "log1": "> Initializing Neural Engine...",
+    "log2": "> Loading modules: OCR, Pathfinding, Strategy",
+    "log3": "> Optimizing infrastructure routing...",
+    "log4": "> DETECTED: Sanity Full",
+    "log5": "> Executing: Auto_Clear_Stage_1-7",
+    "log6": "> Efficiency gain: +300%",
+    "log7": "> Status: OPERATIONAL"
+  },
+  "footer": {
+    "marquee": "LET'S AUTOMATE THE FUTURE OF ARKNIGHTS",
+    "description": "An advanced AI automation assistant for Endfield. Open source, secure, and highly efficient.",
+    "resources": "RESOURCES",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "communityGuide": "Community Guide",
+    "project": "PROJECT",
+    "github": "GitHub",
+    "releases": "Releases",
+    "issues": "Issues",
+    "copyright": "MaaEnd TEAM. OPEN SOURCE UNDER AGPL-3.0."
+  }
+}

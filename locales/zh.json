@@ -1,0 +1,91 @@
+{
+  "header": {
+    "github": "Github",
+    "docs": "文档"
+  },
+  "hero": {
+    "systemReady": "系统就绪",
+    "neuralOnline": "神经网络在线",
+    "title": "MaaEnd",
+    "subtitle": "MAA - 终",
+    "description": "终末地小助手",
+    "tagline": "高精度自动化助手。专为明日方舟：终末地重度作战和最大化效率而设计。",
+    "status": "[ 状态：已优化生产环境 ]",
+    "initCore": "下载",
+    "version": "版本",
+    "build": "构建",
+    "selectModule": "选择模块",
+    "windowsX64": "Windows x64",
+    "windowsArm": "Windows ARM",
+    "android": "Android",
+    "macos": "macOS"
+  },
+  "features": {
+    "title": "核心模块",
+    "items": {
+      "autoSanity": {
+        "title": "智能刷理智",
+        "desc": "自动理智与导航",
+        "detail": "全自动识别关卡，效率最大化路径规划，自动吃药回体。"
+      },
+      "infrastructure": {
+        "title": "智能基建",
+        "desc": "基建运营",
+        "detail": "自动心情判定，无人机最优策略，全自动排班轮换。"
+      },
+      "recruitment": {
+        "title": "公招识别",
+        "desc": "OCR + 策略",
+        "detail": "高精度 OCR 识别，自动计算最优标签组合，不错过任何六星。"
+      },
+      "coreEngine": {
+        "title": "核心引擎",
+        "desc": "神经核心",
+        "detail": "基于深度学习的图像识别引擎，跨平台支持，毫秒级响应。"
+      },
+      "cliApi": {
+        "title": "CLI / API",
+        "desc": "开发者就绪",
+        "detail": "提供完整的 API 接口与命令行工具，轻松集成到你的工作流。"
+      },
+      "crossPlatform": {
+        "title": "多端适配",
+        "desc": "跨平台",
+        "detail": "Windows, macOS, Linux, Android 全平台支持。"
+      }
+    }
+  },
+  "about": {
+    "architectureLabel": "架构",
+    "title1": "AI 优先",
+    "title2": "自动化系统",
+    "paragraph1": "MaaEnd 不仅仅是一个脚本，它是基于下一代图像识别技术的智能自动化平台。通过深度学习模型与即时决策算法，它能够像人类玩家一样思考，但拥有机器般的精确与稳定。",
+    "paragraph2": "开源、安全、透明。MaaEnd 由社区驱动，为全球数百万博士提供最可靠的后勤保障。无论是在 Windows 上的高性能模拟器，还是 Android 原生环境，MaaEnd 都能提供一致的极致体验。",
+    "stats": {
+      "githubStars": "GitHub Stars",
+      "dailyUsers": "日活用户",
+      "modules": "模块"
+    },
+    "systemLogs": "SYSTEM_LOGS",
+    "log1": "> Initializing Neural Engine...",
+    "log2": "> Loading modules: OCR, Pathfinding, Strategy",
+    "log3": "> Optimizing infrastructure routing...",
+    "log4": "> DETECTED: Sanity Full",
+    "log5": "> Executing: Auto_Clear_Stage_1-7",
+    "log6": "> Efficiency gain: +300%",
+    "log7": "> Status: OPERATIONAL"
+  },
+  "footer": {
+    "marquee": "LET'S AUTOMATE THE FUTURE OF ARKNIGHTS: ENDFIELD",
+    "description": "An advanced AI automation assistant for Endfield. Open source, secure, and highly efficient.",
+    "resources": "RESOURCES",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "communityGuide": "Community Guide",
+    "project": "PROJECT",
+    "github": "GitHub",
+    "releases": "Releases",
+    "issues": "Issues",
+    "copyright": "MaaEnd TEAM. OPEN SOURCE UNDER AGPL-3.0."
+  }
+}
