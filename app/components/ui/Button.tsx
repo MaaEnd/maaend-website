@@ -11,11 +11,11 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 }
 
 export const Button = ({
-                         children,
-                         variant = "primary",
-                         className,
-                         ...props
-                       }: ButtonProps) => {
+  children,
+  variant = "primary",
+  className,
+  ...props
+}: ButtonProps) => {
   const baseStyles =
     "relative px-8 py-3 font-bold text-sm tracking-wider uppercase transition-all duration-300 group overflow-hidden flex items-center justify-center";
 
