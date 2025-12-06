@@ -38,6 +38,7 @@ jobs:
         with:
           version: 9
           run_install: false
+          version: 10
 
       - name: Setup node.js environment
         uses: actions/setup-node@v5
