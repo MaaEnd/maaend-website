@@ -77,7 +77,7 @@ export default function Hero() {
             className="mb-4 inline-flex w-fit items-center gap-3 border border-[#00F0FF]/30 bg-[#00F0FF]/5 px-3 py-1"
           >
             <TerminalIcon size={12} className="text-[#00F0FF]" />
-            <span className="font-mono text-xs font-bold tracking-widest text-[#00F0FF]">
+            <span className="font-mono text-xs font-bold tracking-widest text-[#00F0FF] select-none">
               {t("hero.neuralOnline")}
             </span>
           </motion.div>
@@ -86,7 +86,7 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-white"
           >
-            <div className="text-[3rem] leading-[0.9] tracking-tighter md:text-[4rem] lg:text-[5rem]">
+            <div className="text-[3rem] leading-[0.9] tracking-tighter md:text-[4rem] lg:text-[5rem] select-none">
               <span className="block bg-gradient-to-r from-[#FFD000] to-white bg-clip-text text-transparent">
                 {t("hero.title")}
               </span>
