@@ -138,7 +138,7 @@ export default function Hero() {
               size={12}
               className="text-[#008fa6] dark:text-[#00F0FF]"
             />
-            <span className="font-mono text-xs font-bold tracking-widest text-[#008fa6] dark:text-[#00F0FF]">
+            <span className="font-mono text-xs font-bold tracking-widest text-[#008fa6] select-none dark:text-[#00F0FF]">
               {t("hero.neuralOnline")}
             </span>
           </motion.div>
@@ -147,7 +147,7 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-black dark:text-white"
           >
-            <div className="text-[3rem] leading-[0.9] tracking-tighter md:text-[4rem] lg:text-[5rem]">
+            <div className="text-[3rem] leading-[0.9] tracking-tighter select-none md:text-[4rem] lg:text-[5rem]">
               <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                 {t("hero.title")}
               </span>

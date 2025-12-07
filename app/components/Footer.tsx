@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-black/5 bg-[#F4F4F4] py-20 dark:border-white/5 dark:bg-[#030305]">
       {/* Marquee */}
-      <div className="group relative mb-16 flex overflow-x-hidden">
+      <div className="group relative mb-16 flex overflow-x-hidden select-none">
         <motion.div
           className="flex gap-12 whitespace-nowrap"
           animate={{ x: [0, -1000] }}
