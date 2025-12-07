@@ -138,7 +138,7 @@ export default function Hero() {
               size={12}
               className="text-[#008fa6] dark:text-[#00F0FF]"
             />
-            <span className="font-mono text-xs font-bold tracking-widest text-[#008fa6] dark:text-[#00F0FF] select-none">
+            <span className="font-mono text-xs font-bold tracking-widest text-[#008fa6] select-none dark:text-[#00F0FF]">
               {t("hero.neuralOnline")}
             </span>
           </motion.div>
