@@ -195,8 +195,8 @@ const ArchitectureModel = ({ isDark }: { isDark: boolean }) => {
       )}
     >
       <pointsMaterial
-        size={0.04}
-        color={isDark ? "#FFD000" : "#111111"} // Yellow in dark, #111 in light
+        size={0.05}
+        color={isDark ? "#FFD000" : "#008fa6"} // Yellow in dark, teal in light
         transparent
         opacity={0.8}
         sizeAttenuation
