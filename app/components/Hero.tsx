@@ -86,7 +86,7 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-white"
           >
-            <div className="text-[3rem] leading-[0.9] tracking-tighter md:text-[4rem] lg:text-[5rem] select-none">
+            <div className="text-[3rem] leading-[0.9] tracking-tighter select-none md:text-[4rem] lg:text-[5rem]">
               <span className="block bg-gradient-to-r from-[#FFD000] to-white bg-clip-text text-transparent">
                 {t("hero.title")}
               </span>
