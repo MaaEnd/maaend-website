@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
 @theme {
   --font-heading: var(--font-space-grotesk), sans-serif;
   --font-syne: var(--font-syne), sans-serif;
@@ -7,16 +9,120 @@
   --font-body: var(--font-dm-sans), sans-serif;
 
   /* Sci-Fi Industrial Palette */
-  --color-deep-void: #050505;
-  --color-industrial-yellow: #ffd000; /* Warmer, heavy-industry yellow */
-  --color-tech-cyan: #00f0ff; /* Cybernetic/Holographic blue */
-  --color-technical-grey: #27272a;
+  --color-deep-void: var(--deep-void);
+  --color-industrial-yellow: var(--industrial-yellow);
+  --color-tech-cyan: var(--tech-cyan);
+  --color-technical-grey: var(--technical-grey);
   --color-warning-red: #ff3333;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Light Mode - Sci-Fi Industrial Light */
+  /* Base Colors */
+  --background: #f9f9f9;
+  --foreground: #111111;
+
+  /* Themed Colors - Darker for better contrast in light mode */
+  --deep-void: #f4f4f4;
+  --industrial-yellow: #d4a017; /* Darker golden yellow for light mode */
+  --tech-cyan: #008fa6; /* Darker cyan for better visibility on light */
+  --technical-grey: #e2e2e2;
+
+  /* Semantic Colors - Light Mode */
+  --primary: #d4a017; /* Darker golden yellow */
+  --primary-foreground: #000000;
+
+  --secondary: #008fa6;
+  --secondary-foreground: #ffffff;
+
+  --accent: #c49102; /* Darker accent for better contrast */
+  --accent-foreground: #000000;
+
+  --muted: #f4f4f4;
+  --muted-foreground: #71717a;
+
+  --border: #e2e2e2;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+
+  --card: rgba(255, 255, 255, 0.8);
+  --card-foreground: #111111;
+
+  --input: #e2e2e2;
+  --input-foreground: #111111;
+
+  /* Text Opacity Levels for consistent usage */
+  --text-primary: rgba(17, 17, 17, 1);
+  --text-secondary: rgba(17, 17, 17, 0.8);
+  --text-tertiary: rgba(17, 17, 17, 0.6);
+  --text-quaternary: rgba(17, 17, 17, 0.4);
+  --text-disabled: rgba(17, 17, 17, 0.3);
+
+  /* Font Variables */
+  --font-heading: var(--font-space-grotesk), sans-serif;
+  --font-syne: var(--font-syne), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-body: var(--font-dm-sans), sans-serif;
+}
+
+.dark {
+  /* Dark Mode Overrides */
+  /* Base Colors */
+  --background: #050505;
+  --foreground: #ffffff;
+
+  /* Themed Colors - Bright for dark mode */
+  --deep-void: #050505;
+  --industrial-yellow: #ffd000; /* Bright yellow for dark mode */
+  --tech-cyan: #00f0ff;
+  --technical-grey: #27272a;
+
+  /* Semantic Colors - Dark Mode */
+  --primary: #ffd000; /* Bright yellow */
+  --primary-foreground: #000000;
+
+  --secondary: #00f0ff;
+  --secondary-foreground: #000000;
+
+  --accent: #ffe600; /* Bright accent */
+  --accent-foreground: #000000;
+
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  --card: rgba(255, 255, 255, 0.02);
+  --card-foreground: #ffffff;
+
+  --input: rgba(255, 255, 255, 0.1);
+  --input-foreground: #ffffff;
+
+  /* Text Opacity Levels for consistent usage */
+  --text-primary: rgba(255, 255, 255, 1);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --text-quaternary: rgba(255, 255, 255, 0.4);
+  --text-disabled: rgba(255, 255, 255, 0.3);
 }
 
 @layer base {
   body {
-    /* Darker, slightly blue-tinted void */
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Apply the radial gradient only in dark mode if desired, or adjust for both */
+  .dark body {
     background: radial-gradient(
       circle at 50% 0%,
       #0a0a0c 0%,
@@ -24,8 +130,6 @@
       #000000 100%
     );
     background-attachment: fixed;
-    color: #ffffff;
-    font-family: var(--font-body);
   }
 
   /* Hide scrollbar for all browsers */
@@ -49,24 +153,34 @@
 }
 
 @layer utilities {
+  /* Glass Panel Effects */
   .glass-panel {
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  :root:not(.dark) .glass-panel {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--technical-grey);
+    box-shadow: none;
+  }
+
+  /* Neon Border Effects */
   .neon-border-yellow {
     box-shadow:
-      0 0 10px var(--color-industrial-yellow),
-      inset 0 0 5px var(--color-industrial-yellow);
+      0 0 10px var(--industrial-yellow),
+      inset 0 0 5px var(--industrial-yellow);
   }
 
   .neon-border-cyan {
     box-shadow:
-      0 0 10px var(--color-tech-cyan),
-      inset 0 0 5px var(--color-tech-cyan);
+      0 0 10px var(--tech-cyan),
+      inset 0 0 5px var(--tech-cyan);
   }
 
+  /* Text Glow Effects */
   .text-glow-yellow {
     text-shadow: 0 0 15px rgba(255, 208, 0, 0.6);
   }
@@ -75,22 +189,43 @@
     text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
   }
 
-  .cyber-gradient-text {
-    /* Yellow to Cyan gradient */
-    background: linear-gradient(to right, #ffd000, #00f0ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* In light mode, reduce glow intensity */
+  :root:not(.dark) .text-glow-yellow {
+    text-shadow: 0 0 8px rgba(255, 208, 0, 0.3);
   }
 
+  :root:not(.dark) .text-glow-cyan {
+    text-shadow: 0 0 8px rgba(0, 143, 166, 0.3);
+  }
+
+  /* Gradient Text */
+  .cyber-gradient-text {
+    background: linear-gradient(
+      to right,
+      var(--industrial-yellow),
+      var(--tech-cyan)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stroke Text */
   .stroke-text {
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
     color: transparent;
   }
 
+  :root:not(.dark) .stroke-text {
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Background Utilities */
   .bg-300\% {
     background-size: 300% 300%;
   }
 
+  /* Clip Path Utilities */
   .clip-path-slant {
     clip-path: polygon(
       10px 0,
@@ -100,5 +235,85 @@
       0 100%,
       0 10px
     );
+  }
+
+  /* Hexagon Shape */
+  .hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  /* Text Color Utilities with Theme Support */
+  .text-adaptive-primary {
+    color: var(--text-primary);
+  }
+
+  .text-adaptive-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-adaptive-tertiary {
+    color: var(--text-tertiary);
+  }
+
+  .text-adaptive-quaternary {
+    color: var(--text-quaternary);
+  }
+
+  .text-adaptive-disabled {
+    color: var(--text-disabled);
+  }
+
+  /* Border Utilities */
+  .border-adaptive {
+    border-color: var(--border);
+  }
+
+  .border-adaptive-subtle {
+    border-color: var(--border-subtle);
+  }
+
+  /* Background Utilities */
+  .bg-card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+  }
+
+  .bg-muted {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+  }
+
+  /* Hover Effects with Theme Support */
+  .hover-primary {
+    transition: color 0.2s ease;
+  }
+
+  .hover-primary:hover {
+    color: var(--primary);
+  }
+
+  .hover-secondary:hover {
+    color: var(--secondary);
+  }
+
+  /* Focus Ring with Theme Support */
+  .focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  .focus-ring:focus-visible {
+    outline-color: var(--primary);
+  }
+
+  /* Selection Color */
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  ::-moz-selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
   }
 }

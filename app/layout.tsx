@@ -4,6 +4,7 @@ import { DM_Sans, JetBrains_Mono, Space_Grotesk, Syne } from "next/font/google";
 import { useEffect } from "react";
 import "./globals.css";
 import "../i18n";
+import { ThemeProvider } from "./providers";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -48,11 +49,18 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body
-        className={`${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${dmSans.variable} overflow-x-hidden bg-[#030305] text-white antialiased`}
+        className={`${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${dmSans.variable} bg-background text-foreground overflow-x-hidden antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange={false}
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

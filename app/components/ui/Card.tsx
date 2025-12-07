@@ -59,7 +59,7 @@ export const Card = ({
       className={clsx("relative w-full", className)}
     >
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-white/0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
-      <div className="glass-panel relative h-full overflow-hidden rounded-xl border border-white/10 p-6 shadow-2xl transition-all duration-300 hover:border-[#FFE600]/50">
+      <div className="glass-panel relative h-full overflow-hidden rounded-xl border border-black/5 p-6 shadow-sm transition-all duration-300 hover:border-[#c49102]/50 dark:border-white/10 dark:shadow-2xl dark:hover:border-[#FFE600]/50">
         {children}
       </div>
     </motion.div>

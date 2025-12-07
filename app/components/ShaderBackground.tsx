@@ -1,9 +1,17 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { AdditiveBlending, Color, Mesh, Points, ShaderMaterial } from "three";
+import {
+  AdditiveBlending,
+  Color,
+  Mesh,
+  NormalBlending,
+  Points,
+  ShaderMaterial,
+} from "three";
 import { PerspectiveCamera } from "@react-three/drei";
+import { useTheme } from "next-themes";
 
 const FragmentShader = `
 uniform float uTime;
@@ -75,6 +83,16 @@ void main() {
 
 const WaveMesh = () => {
   const mesh = useRef<Mesh<never, ShaderMaterial>>(null);
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
+
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -89,6 +107,14 @@ const WaveMesh = () => {
     if (mesh.current && mesh.current.material) {
       const material = mesh.current.material;
       material.uniforms.uTime.value = state.clock.getElapsedTime();
+
+      // Update colors based on theme
+      const targetColor1 = isDark ? new Color("#FFD000") : new Color("#FFD000"); // Keep yellow
+      const targetColor2 = isDark ? new Color("#00F0FF") : new Color("#008fa6"); // Darker cyan for light mode
+
+      material.uniforms.uColor1.value.lerp(targetColor1, 0.05);
+      material.uniforms.uColor2.value.lerp(targetColor2, 0.05);
+
       // Smooth mouse movement
       const targetX = (state.pointer.x + 1) / 2;
       const targetY = (state.pointer.y + 1) / 2;
@@ -99,6 +125,8 @@ const WaveMesh = () => {
         (targetY - material.uniforms.uMouse.value[1]) * 0.1;
     }
   });
+
+  if (!mounted) return null;
 
   return (
     <mesh ref={mesh} scale={[10, 10, 1]}>
@@ -117,6 +145,18 @@ const WaveMesh = () => {
 const Particles = () => {
   const count = 100;
   const mesh = useRef<Points>(null);
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Fix: Use useEffect properly to avoid cascading renders
+  useEffect(() => {
+    // Schedule the state update for the next render cycle
+    const timeoutId = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
 
   const particles = useMemo(() => {
     /* eslint-disable react-hooks/purity */
@@ -170,6 +210,8 @@ const Particles = () => {
     mesh.current.geometry.attributes.position.needsUpdate = true;
   });
 
+  if (!mounted) return null;
+
   return (
     <points ref={mesh}>
       <bufferGeometry>
@@ -177,11 +219,11 @@ const Particles = () => {
       </bufferGeometry>
       <pointsMaterial
         size={0.05}
-        color="#00F0FF"
+        color={isDark ? "#00F0FF" : "#008fa6"}
         transparent
         opacity={0.4}
         sizeAttenuation
-        blending={AdditiveBlending}
+        blending={isDark ? AdditiveBlending : NormalBlending}
       />
     </points>
   );

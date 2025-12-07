@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
+import { useTheme } from "next-themes";
 
-const ArchitectureModel = () => {
+const ArchitectureModel = ({ isDark }: { isDark: boolean }) => {
   const count = 5000;
   const mesh = useRef<THREE.Points>(null);
-
-  // Generate a sci-fi transmission tower / signal tower structure
   // Using useMemo to cache random values - only computed once on mount
   const _particles = useMemo(() => {
     /* eslint-disable react-hooks/purity */
@@ -197,17 +196,17 @@ const ArchitectureModel = () => {
     >
       <pointsMaterial
         size={0.04}
-        color="#FFD000" // Changed to Industrial Yellow
+        color={isDark ? "#FFD000" : "#111111"} // Yellow in dark, #111 in light
         transparent
         opacity={0.8}
         sizeAttenuation
-        blending={THREE.AdditiveBlending}
+        blending={isDark ? THREE.AdditiveBlending : THREE.NormalBlending}
       />
     </points>
   );
 };
 
-const HoloField = () => {
+const HoloField = ({ isDark }: { isDark: boolean }) => {
   const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -222,7 +221,7 @@ const HoloField = () => {
       <mesh position={[0, 0.5, 0]}>
         <cylinderGeometry args={[1.5, 3.5, 10, 6, 1, true]} />
         <meshBasicMaterial
-          color="#00F0FF"
+          color={isDark ? "#00F0FF" : "#008fa6"}
           wireframe
           opacity={0.04}
           transparent
@@ -245,6 +244,23 @@ const HoloField = () => {
 };
 
 export default function InteractiveModel() {
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Fix: Use useEffect properly to avoid cascading renders
+  useEffect(() => {
+    // Schedule the state update for the next render cycle
+    const timeoutId = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // Calculate effective theme
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
+
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) return <div className="h-full w-full" />;
+
   return (
     <div className="group relative h-full w-full cursor-crosshair">
       <Canvas dpr={[1, 2]} camera={{ fov: 50 }}>
@@ -259,13 +275,17 @@ export default function InteractiveModel() {
         />
 
         <Float speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
-          <ArchitectureModel />
-          <HoloField />
+          <ArchitectureModel isDark={isDark} />
+          <HoloField isDark={isDark} />
         </Float>
 
         {/* Dramatic Lighting */}
         <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#00F0FF" />
+        <pointLight
+          position={[10, 10, 10]}
+          intensity={1}
+          color={isDark ? "#00F0FF" : "#00aecb"}
+        />
         <pointLight position={[-10, -10, -10]} intensity={1} color="#FFD000" />
       </Canvas>
 
@@ -278,7 +298,7 @@ export default function InteractiveModel() {
         <div className="absolute right-4 bottom-4 h-8 w-8 border-r border-b border-[#FFD000]/50" />
 
         {/* Center Focus Ring */}
-        <div className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 animate-[spin_60s_linear_infinite] rounded-full border border-[#00F0FF]/10" />
+        <div className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 animate-[spin_60s_linear_infinite] rounded-full border border-[#00aecb]/10 dark:border-[#00F0FF]/10" />
       </div>
     </div>
   );
