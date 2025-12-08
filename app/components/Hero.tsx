@@ -246,7 +246,7 @@ export default function Hero() {
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:border-white/10 dark:hover:bg-[#FFD000]"
+                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
                       >
                         <Monitor
                           size={16}
@@ -256,7 +256,7 @@ export default function Hero() {
                       </Button>
                       <Button
                         variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:border-white/10 dark:hover:bg-[#FFD000]"
+                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
                       >
                         <Apple
                           size={16}
@@ -266,7 +266,7 @@ export default function Hero() {
                       </Button>
                       <Button
                         variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:border-white/10 dark:hover:bg-[#FFD000]"
+                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
                       >
                         <Server
                           size={16}
@@ -276,7 +276,7 @@ export default function Hero() {
                       </Button>
                       <Button
                         variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:border-white/10 dark:hover:bg-[#FFD000]"
+                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
                       >
                         <Smartphone
                           size={16}
