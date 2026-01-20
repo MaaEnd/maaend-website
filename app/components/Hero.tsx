@@ -10,22 +10,176 @@ import { Button } from "./ui/Button";
 import {
   Apple,
   ArrowRight,
+  ChevronDown,
+  Download,
+  Loader2,
   Monitor,
   Server,
   Shield,
-  Smartphone,
   Terminal as TerminalIcon,
   X,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import InteractiveModel from "./InteractiveModel";
+
+// 定义平台和架构类型
+type Platform = "win" | "macos" | "linux" | "unknown";
+type Arch = "x86_64" | "aarch64" | "unknown";
+
+interface ReleaseAsset {
+  name: string;
+  browser_download_url: string;
+  size: number;
+}
+
+interface ReleaseInfo {
+  tag_name: string;
+  assets: ReleaseAsset[];
+  html_url: string;
+}
+
+interface DownloadOption {
+  platform: Platform;
+  arch: Arch;
+  url: string;
+  filename: string;
+  size: number;
+}
+
+// 检测当前系统平台
+function detectPlatform(): Platform {
+  if (typeof window === "undefined") return "unknown";
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes("win")) return "win";
+  if (ua.includes("mac")) return "macos";
+  if (ua.includes("linux")) return "linux";
+  return "unknown";
+}
+
+// 检测当前系统架构
+function detectArch(): Arch {
+  if (typeof window === "undefined") return "unknown";
+  const ua = navigator.userAgent.toLowerCase();
+  // Apple Silicon Mac 检测
+  if (ua.includes("mac") && (navigator as unknown as { userAgentData?: { platform?: string } })?.userAgentData?.platform === "macOS") {
+    // 使用 userAgentData 检测（现代浏览器）
+    return "aarch64";
+  }
+  // 简单的架构检测逻辑
+  if (ua.includes("arm64") || ua.includes("aarch64")) return "aarch64";
+  // 默认假设为 x86_64
+  return "x86_64";
+}
+
+// 获取平台显示名称
+function getPlatformDisplayName(platform: Platform): string {
+  switch (platform) {
+    case "win": return "Windows";
+    case "macos": return "macOS";
+    case "linux": return "Linux";
+    default: return "Unknown";
+  }
+}
+
+// 获取架构显示名称
+function getArchDisplayName(arch: Arch): string {
+  switch (arch) {
+    case "x86_64": return "x64";
+    case "aarch64": return "ARM64";
+    default: return "Unknown";
+  }
+}
+
+// 格式化文件大小
+function formatSize(bytes: number): string {
+  const mb = bytes / (1024 * 1024);
+  return `${mb.toFixed(1)} MB`;
+}
+
+// 获取平台图标
+function PlatformIcon({ platform, className }: { platform: Platform; className?: string }) {
+  switch (platform) {
+    case "win": return <Monitor className={className} />;
+    case "macos": return <Apple className={className} />;
+    case "linux": return <Server className={className} />;
+    default: return <Download className={className} />;
+  }
+}
 
 export default function Hero() {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+  const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo | null>(null);
+  const [downloadOptions, setDownloadOptions] = useState<DownloadOption[]>([]);
+  const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
+  const [currentArch, setCurrentArch] = useState<Arch>("unknown");
+  const [loading, setLoading] = useState(true);
+
+  // 获取最新 release 信息
+  const fetchReleaseInfo = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "https://api.github.com/repos/MaaEnd/MaaEnd/releases/latest"
+      );
+      if (!response.ok) throw new Error("Failed to fetch release info");
+      const data: ReleaseInfo = await response.json();
+      setReleaseInfo(data);
+
+      // 解析 assets 为下载选项
+      const options: DownloadOption[] = data.assets
+        .filter((asset) => asset.name.endsWith(".zip"))
+        .map((asset) => {
+          // 解析文件名: MaaEnd-{os}-{arch}-{version}.zip
+          const match = asset.name.match(/MaaEnd-(\w+)-(\w+)-v[\d.]+\.zip/);
+          if (!match) return null;
+          return {
+            platform: match[1] as Platform,
+            arch: match[2] as Arch,
+            url: asset.browser_download_url,
+            filename: asset.name,
+            size: asset.size,
+          };
+        })
+        .filter((opt): opt is DownloadOption => opt !== null);
+      
+      // 排序：Windows > macOS > Linux，每个平台内 x64 在左 ARM64 在右
+      const platformOrder: Platform[] = ["win", "macos", "linux"];
+      const archOrder: Arch[] = ["x86_64", "aarch64"];
+      options.sort((a, b) => {
+        const platformDiff = platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
+        if (platformDiff !== 0) return platformDiff;
+        return archOrder.indexOf(a.arch) - archOrder.indexOf(b.arch);
+      });
+      
+      setDownloadOptions(options);
+    } catch (error) {
+      console.error("Failed to fetch release info:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    setCurrentPlatform(detectPlatform());
+    setCurrentArch(detectArch());
+    fetchReleaseInfo();
+  }, [fetchReleaseInfo]);
+
+  // 获取当前系统对应的下载链接
+  const currentDownload = downloadOptions.find(
+    (opt) => opt.platform === currentPlatform && opt.arch === currentArch
+  ) || downloadOptions.find(
+    // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
+    (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
+  ) || downloadOptions[0];
+
+  // 其他下载选项（不包括当前系统）
+  const otherDownloads = downloadOptions.filter(
+    (opt) => opt !== currentDownload
+  );
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -195,9 +349,9 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex items-center gap-6"
+                  className="flex items-center gap-3"
                 >
-                  {/* Industrial Button */}
+                  {/* 主下载按钮 - 自动检测系统 */}
                   <Button
                     variant="primary"
                     className="group relative h-16 overflow-hidden border-none bg-[#fef901] pr-10 pl-8 text-xl font-bold tracking-wide text-black hover:bg-[#fef901] dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
@@ -205,19 +359,55 @@ export default function Hero() {
                       clipPath:
                         "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
                     }}
-                    onClick={() => setShowDownloadOptions(true)}
+                    onClick={() => {
+                      if (currentDownload) {
+                        window.open(currentDownload.url, "_blank");
+                      }
+                    }}
+                    disabled={loading || !currentDownload}
                   >
                     <span className="relative z-10 flex items-center gap-3">
-                      {t("hero.initCore")}{" "}
-                      <ArrowRight size={20} strokeWidth={3} />
+                      {loading ? (
+                        <>
+                          <Loader2 size={20} className="animate-spin" />
+                          {t("hero.loading")}
+                        </>
+                      ) : currentDownload ? (
+                        <>
+                          <PlatformIcon platform={currentDownload.platform} className="h-5 w-5" />
+                          {t("hero.downloadFor")} {getPlatformDisplayName(currentDownload.platform)} {getArchDisplayName(currentDownload.arch)}
+                          <ArrowRight size={20} strokeWidth={3} />
+                        </>
+                      ) : (
+                        <>
+                          {t("hero.initCore")}
+                          <ArrowRight size={20} strokeWidth={3} />
+                        </>
+                      )}
                     </span>
                     {/* Warning Stripes on Hover */}
                     <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#00000010_10px,#00000010_20px)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   </Button>
 
+                  {/* 更多下载选项按钮 */}
+                  <Button
+                    variant="outline"
+                    className="group relative h-16 w-16 overflow-hidden border-2 border-[#d4a017] bg-transparent p-0 hover:bg-[#d4a017]/10 dark:border-[#FFD000] dark:hover:bg-[#FFD000]/10"
+                    style={{
+                      clipPath:
+                        "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                    }}
+                    onClick={() => setShowDownloadOptions(true)}
+                    disabled={loading}
+                  >
+                    <ChevronDown size={24} className="text-[#d4a017] dark:text-[#FFD000]" />
+                  </Button>
+
                   <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">
-                    <span>{t("hero.version")}: 5.0.0</span>
-                    <span>{t("hero.build")}: 114514</span>
+                    <span>{t("hero.version")}: {releaseInfo?.tag_name || "..."}</span>
+                    {currentDownload && (
+                      <span>{t("hero.size")}: {formatSize(currentDownload.size)}</span>
+                    )}
                   </div>
                 </motion.div>
               ) : (
@@ -233,7 +423,7 @@ export default function Hero() {
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-2 bg-[#d4a017] dark:bg-[#FFD000]" />
                         <span className="font-mono text-xs text-[#d4a017] dark:text-[#FFD000]">
-                          {t("hero.selectModule")}
+                          {t("hero.selectPlatform")} - {releaseInfo?.tag_name}
                         </span>
                       </div>
                       <button
@@ -243,47 +433,47 @@ export default function Hero() {
                         <X size={16} />
                       </button>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {downloadOptions.map((opt) => (
+                        <Button
+                          key={`${opt.platform}-${opt.arch}`}
+                          variant="outline"
+                          className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
+                            opt === currentDownload
+                              ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
+                              : ""
+                          }`}
+                          onClick={() => window.open(opt.url, "_blank")}
+                        >
+                          <span className="flex items-center gap-2">
+                            <PlatformIcon
+                              platform={opt.platform}
+                              className="h-4 w-4 group-hover:stroke-2"
+                            />
+                            <span className="font-medium">
+                              {getPlatformDisplayName(opt.platform)}
+                            </span>
+                            <span className="text-xs opacity-60">
+                              {getArchDisplayName(opt.arch)}
+                            </span>
+                          </span>
+                          <span className="text-xs opacity-60 group-hover:opacity-80">
+                            {formatSize(opt.size)}
+                          </span>
+                        </Button>
+                      ))}
+                    </div>
+                    {/* 查看所有 releases 链接 */}
+                    <div className="mt-3 border-t border-black/10 pt-3 dark:border-white/10">
+                      <a
+                        href="https://github.com/MaaEnd/MaaEnd/releases"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 text-xs text-black/50 transition-colors hover:text-[#d4a017] dark:text-white/50 dark:hover:text-[#FFD000]"
                       >
-                        <Monitor
-                          size={16}
-                          className="mr-2 group-hover:stroke-2"
-                        />{" "}
-                        {t("hero.windows")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
-                      >
-                        <Apple
-                          size={16}
-                          className="mr-2 group-hover:stroke-2"
-                        />{" "}
-                        {t("hero.macos")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
-                      >
-                        <Server
-                          size={16}
-                          className="mr-2 group-hover:stroke-2"
-                        />{" "}
-                        {t("hero.linux")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="group h-12 justify-start border-black/10 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black"
-                      >
-                        <Smartphone
-                          size={16}
-                          className="mr-2 group-hover:stroke-2"
-                        />{" "}
-                        {t("hero.android")}
-                      </Button>
+                        {t("hero.viewAllReleases")}
+                        <ArrowRight size={12} />
+                      </a>
                     </div>
                   </div>
                 </motion.div>
