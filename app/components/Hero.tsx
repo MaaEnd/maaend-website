@@ -63,7 +63,11 @@ function detectArch(): Arch {
   if (typeof window === "undefined") return "unknown";
   const ua = navigator.userAgent.toLowerCase();
   // Apple Silicon Mac 检测
-  if (ua.includes("mac") && (navigator as unknown as { userAgentData?: { platform?: string } })?.userAgentData?.platform === "macOS") {
+  if (
+    ua.includes("mac") &&
+    (navigator as unknown as { userAgentData?: { platform?: string } })
+      ?.userAgentData?.platform === "macOS"
+  ) {
     // 使用 userAgentData 检测（现代浏览器）
     return "aarch64";
   }
@@ -76,19 +80,26 @@ function detectArch(): Arch {
 // 获取平台显示名称
 function getPlatformDisplayName(platform: Platform): string {
   switch (platform) {
-    case "win": return "Windows";
-    case "macos": return "macOS";
-    case "linux": return "Linux";
-    default: return "Unknown";
+    case "win":
+      return "Windows";
+    case "macos":
+      return "macOS";
+    case "linux":
+      return "Linux";
+    default:
+      return "Unknown";
   }
 }
 
 // 获取架构显示名称
 function getArchDisplayName(arch: Arch): string {
   switch (arch) {
-    case "x86_64": return "x64";
-    case "aarch64": return "ARM64";
-    default: return "Unknown";
+    case "x86_64":
+      return "x64";
+    case "aarch64":
+      return "ARM64";
+    default:
+      return "Unknown";
   }
 }
 
@@ -99,12 +110,22 @@ function formatSize(bytes: number): string {
 }
 
 // 获取平台图标
-function PlatformIcon({ platform, className }: { platform: Platform; className?: string }) {
+function PlatformIcon({
+  platform,
+  className,
+}: {
+  platform: Platform;
+  className?: string;
+}) {
   switch (platform) {
-    case "win": return <Monitor className={className} />;
-    case "macos": return <Apple className={className} />;
-    case "linux": return <Server className={className} />;
-    default: return <Download className={className} />;
+    case "win":
+      return <Monitor className={className} />;
+    case "macos":
+      return <Apple className={className} />;
+    case "linux":
+      return <Server className={className} />;
+    default:
+      return <Download className={className} />;
   }
 }
 
@@ -144,16 +165,17 @@ export default function Hero() {
           };
         })
         .filter((opt): opt is DownloadOption => opt !== null);
-      
+
       // 排序：Windows > macOS > Linux，每个平台内 x64 在左 ARM64 在右
       const platformOrder: Platform[] = ["win", "macos", "linux"];
       const archOrder: Arch[] = ["x86_64", "aarch64"];
       options.sort((a, b) => {
-        const platformDiff = platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
+        const platformDiff =
+          platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
         if (platformDiff !== 0) return platformDiff;
         return archOrder.indexOf(a.arch) - archOrder.indexOf(b.arch);
       });
-      
+
       setDownloadOptions(options);
     } catch (error) {
       console.error("Failed to fetch release info:", error);
@@ -169,12 +191,15 @@ export default function Hero() {
   }, [fetchReleaseInfo]);
 
   // 获取当前系统对应的下载链接
-  const currentDownload = downloadOptions.find(
-    (opt) => opt.platform === currentPlatform && opt.arch === currentArch
-  ) || downloadOptions.find(
-    // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
-    (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
-  ) || downloadOptions[0];
+  const currentDownload =
+    downloadOptions.find(
+      (opt) => opt.platform === currentPlatform && opt.arch === currentArch
+    ) ||
+    downloadOptions.find(
+      // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
+      (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
+    ) ||
+    downloadOptions[0];
 
   // 其他下载选项（不包括当前系统）
   const otherDownloads = downloadOptions.filter(
@@ -374,8 +399,13 @@ export default function Hero() {
                         </>
                       ) : currentDownload ? (
                         <>
-                          <PlatformIcon platform={currentDownload.platform} className="h-5 w-5" />
-                          {t("hero.downloadFor")} {getPlatformDisplayName(currentDownload.platform)} {getArchDisplayName(currentDownload.arch)}
+                          <PlatformIcon
+                            platform={currentDownload.platform}
+                            className="h-5 w-5"
+                          />
+                          {t("hero.downloadFor")}{" "}
+                          {getPlatformDisplayName(currentDownload.platform)}{" "}
+                          {getArchDisplayName(currentDownload.arch)}
                           <ArrowRight size={20} strokeWidth={3} />
                         </>
                       ) : (
@@ -400,13 +430,20 @@ export default function Hero() {
                     onClick={() => setShowDownloadOptions(true)}
                     disabled={loading}
                   >
-                    <ChevronDown size={24} className="text-[#d4a017] dark:text-[#FFD000]" />
+                    <ChevronDown
+                      size={24}
+                      className="text-[#d4a017] dark:text-[#FFD000]"
+                    />
                   </Button>
 
                   <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">
-                    <span>{t("hero.version")}: {releaseInfo?.tag_name || "..."}</span>
+                    <span>
+                      {t("hero.version")}: {releaseInfo?.tag_name || "..."}
+                    </span>
                     {currentDownload && (
-                      <span>{t("hero.size")}: {formatSize(currentDownload.size)}</span>
+                      <span>
+                        {t("hero.size")}: {formatSize(currentDownload.size)}
+                      </span>
                     )}
                   </div>
                 </motion.div>
