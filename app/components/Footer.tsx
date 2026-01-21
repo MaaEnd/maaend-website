@@ -78,7 +78,9 @@ export default function Footer() {
       </div>
 
       <div className="mt-20 text-center font-mono text-xs text-black/30 dark:text-white/20">
-        <div>© {new Date().getFullYear()} {t("footer.copyright")}</div>
+        <div>
+          © {new Date().getFullYear()} {t("footer.copyright")}
+        </div>
         <div className="mt-2 text-[10px] text-black/40 dark:text-white/30">
           {t("footer.designGoalNote")}
         </div>
