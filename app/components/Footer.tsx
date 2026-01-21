@@ -37,33 +37,11 @@ export default function Footer() {
         </div>
         <div>
           <h4 className="mb-4 font-mono text-[#c49102] dark:text-[#FFE600]">
-            {t("footer.resources")}
+            {t("footer.contact")}
           </h4>
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
-            <li>
-              <a
-                href="#"
-                className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
-              >
-                {t("footer.documentation")}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
-              >
-                {t("footer.apiReference")}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
-              >
-                {t("footer.communityGuide")}
-              </a>
-            </li>
+            <li>{t("footer.userGroup")}</li>
+            <li>{t("footer.devGroup")}</li>
           </ul>
         </div>
         <div>
@@ -73,7 +51,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href="#"
+                href="https://github.com/MaaEnd/MaaEnd"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.github")}
@@ -81,7 +59,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#"
+                href="https://github.com/MaaEnd/MaaEnd/releases"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.releases")}
@@ -89,7 +67,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#"
+                href="https://github.com/MaaEnd/MaaEnd/issues"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.issues")}
@@ -100,7 +78,10 @@ export default function Footer() {
       </div>
 
       <div className="mt-20 text-center font-mono text-xs text-black/30 dark:text-white/20">
-        © {new Date().getFullYear()} {t("footer.copyright")}
+        <div>© {new Date().getFullYear()} {t("footer.copyright")}</div>
+        <div className="mt-2 text-[10px] text-black/40 dark:text-white/30">
+          {t("footer.designGoalNote")}
+        </div>
       </div>
     </footer>
   );

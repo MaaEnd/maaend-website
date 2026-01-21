@@ -81,14 +81,14 @@
   "footer": {
     "marquee": "LET'S AUTOMATE THE FUTURE OF ARKNIGHTS: ENDFIELD",
     "description": "An advanced AI automation assistant for Endfield. Open source, secure, and highly efficient.",
-    "resources": "RESOURCES",
-    "documentation": "Documentation",
-    "apiReference": "API Reference",
-    "communityGuide": "Community Guide",
+    "contact": "联系方式",
+    "userGroup": "用户 QQ 群: 1078075580",
+    "devGroup": "开发 QQ 群: 1072587329",
     "project": "PROJECT",
     "github": "GitHub",
     "releases": "Releases",
     "issues": "Issues",
-    "copyright": "MaaEnd TEAM. OPEN SOURCE UNDER AGPL-3.0."
+    "copyright": "MaaEnd TEAM. OPEN SOURCE UNDER AGPL-3.0.",
+    "designGoalNote": "以上内容是设计目标"
   }
 }
