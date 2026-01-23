@@ -267,26 +267,12 @@ export default function Hero() {
             <div className="h-12 w-12 border-r-2 border-b-2 border-[#008fa6]/25" />
           </div>
 
-          {/* Data Flow Lines */}
-          <div className="absolute top-[30%] left-[15%] h-[1px] w-[20%] bg-gradient-to-r from-transparent via-[#d4a017]/30 to-transparent">
-            <div className="absolute top-1/2 right-0 h-2 w-2 -translate-y-1/2 animate-pulse rounded-full bg-[#d4a017]" />
-          </div>
-          <div className="absolute top-[60%] right-[15%] h-[1px] w-[25%] bg-gradient-to-l from-transparent via-[#008fa6]/25 to-transparent">
-            <div className="absolute top-1/2 left-0 h-2 w-2 -translate-y-1/2 animate-pulse rounded-full bg-[#008fa6]" />
-          </div>
 
           {/* Technical Pattern - Center Background */}
           <div className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 opacity-10">
             <div className="absolute inset-0 bg-[radial-gradient(circle,#d4a017_1px,transparent_1px)] bg-[size:2rem_2rem]" />
           </div>
 
-          {/* Floating Hexagons */}
-          <div className="absolute top-[25%] left-[20%] h-12 w-12 rotate-12 opacity-30">
-            <div className="hexagon border-2 border-[#d4a017]" />
-          </div>
-          <div className="absolute top-[70%] right-[25%] h-16 w-16 -rotate-12 opacity-25">
-            <div className="hexagon border-2 border-[#008fa6]" />
-          </div>
         </div>
 
         {/* HUD Elements */}
