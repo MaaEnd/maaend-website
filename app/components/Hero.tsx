@@ -130,7 +130,9 @@ function PlatformIcon({
 }
 
 export default function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const mirrorLocale = i18n.language?.startsWith("zh") ? "zh" : "en";
+  const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo | null>(null);
@@ -563,7 +565,7 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex items-center gap-3"
+                  className="flex flex-wrap items-center gap-3"
                 >
                   {/* 主下载按钮 - 自动检测系统 */}
                   <Button
@@ -623,6 +625,24 @@ export default function Hero() {
                       size={24}
                       className="text-[#d4a017] dark:text-[#FFD000]"
                     />
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="group relative h-16 max-w-[320px] overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                    style={{
+                      clipPath:
+                        "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                    }}
+                    onClick={() => window.open(mirrorDownloadUrl, "_blank")}
+                  >
+                    <span className="flex w-full flex-col items-start gap-1">
+                      <span>{t("hero.mirrorDownloadLine1")}</span>
+                      <span className="flex items-center gap-2">
+                        {t("hero.mirrorDownloadLine2")}
+                        <ArrowRight size={16} strokeWidth={2.5} />
+                      </span>
+                    </span>
                   </Button>
 
                   <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">

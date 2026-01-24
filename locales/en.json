@@ -18,6 +18,8 @@
     "size": "SIZE",
     "selectPlatform": "SELECT_PLATFORM",
     "viewAllReleases": "View all releases",
+    "mirrorDownloadLine1": "Have a MirrorChyan CDK?",
+    "mirrorDownloadLine2": "Fast download on MirrorChyan",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",

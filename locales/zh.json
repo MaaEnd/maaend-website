@@ -18,6 +18,8 @@
     "size": "大小",
     "selectPlatform": "选择平台",
     "viewAllReleases": "查看所有版本",
+    "mirrorDownloadLine1": "已有 Mirror酱 CDK？",
+    "mirrorDownloadLine2": "前往 Mirror酱 高速下载",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
