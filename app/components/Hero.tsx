@@ -19,10 +19,11 @@ import {
   Terminal as TerminalIcon,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import InteractiveModel from "./InteractiveModel";
+import InteractiveModelOptimized from "./hero/InteractiveModelOptimized";
+import BackgroundLayer from "./hero/BackgroundLayer";
 
 // 定义平台和架构类型
 type Platform = "win" | "macos" | "linux" | "unknown";
@@ -138,10 +139,35 @@ export default function Hero() {
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   const [loading, setLoading] = useState(true);
-  
-  // 鼠标视差效果 (仅桌面端)
+
+  // 鼠标视差效果 (仅桌面端) - 优化版本
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isDesktop, setIsDesktop] = useState(false);
+
+  // 防抖函数
+  const debounce = useCallback((func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }, []);
+
+  // 节流函数
+  const throttle = useCallback((func: Function, limit: number) => {
+    let inThrottle: boolean;
+    return function executedFunction(...args: any[]) {
+      if (!inThrottle) {
+        func.apply(null, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }, []);
 
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
@@ -194,43 +220,55 @@ export default function Hero() {
     fetchReleaseInfo();
   }, [fetchReleaseInfo]);
 
-  // 鼠标移动监听 - 仅桌面端
+  // 优化的桌面检测和鼠标移动监听
   useEffect(() => {
-    // 检测是否为桌面端
-    const checkIsDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    
-    checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
+    // 防抖的桌面检测函数
+    const debouncedCheckIsDesktop = debounce(() => {
+      const newIsDesktop = window.innerWidth >= 1024;
+      setIsDesktop(newIsDesktop);
+    }, 100);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth < 1024) return; // 仅桌面端启用
-      
+    // 初始检测
+    debouncedCheckIsDesktop();
+    window.addEventListener('resize', debouncedCheckIsDesktop);
+
+    return () => {
+      window.removeEventListener('resize', debouncedCheckIsDesktop);
+    };
+  }, [debounce]);
+
+  // 仅在桌面端挂载鼠标监听器
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    // 节流的鼠标移动处理函数
+    const throttledHandleMouseMove = throttle((e: MouseEvent) => {
       // 将鼠标位置转换为 -1 到 1 的范围
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = (e.clientY / window.innerHeight) * 2 - 1;
+
+      // 直接更新状态
       setMousePosition({ x, y });
-    };
+    }, 16); // 约 60fps
 
-    window.addEventListener('mousemove', handleMouseMove);
-    
+    window.addEventListener('mousemove', throttledHandleMouseMove);
+
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', checkIsDesktop);
+      window.removeEventListener('mousemove', throttledHandleMouseMove);
     };
-  }, []);
+  }, [isDesktop, throttle]);
 
-  // 获取当前系统对应的下载链接
-  const currentDownload =
-    downloadOptions.find(
+  // 使用 useMemo 优化 currentDownload 计算
+  const currentDownload = useMemo(() => {
+    return downloadOptions.find(
       (opt) => opt.platform === currentPlatform && opt.arch === currentArch
     ) ||
-    downloadOptions.find(
-      // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
-      (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
-    ) ||
-    downloadOptions[0];
+      downloadOptions.find(
+        // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
+        (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
+      ) ||
+      downloadOptions[0];
+  }, [downloadOptions, currentPlatform, currentArch]);
 
   // 其他下载选项(不包括当前系统) - 暂未使用
   // const otherDownloads = downloadOptions.filter(
@@ -249,171 +287,8 @@ export default function Hero() {
       ref={containerRef}
       className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 transition-colors duration-300 md:px-10"
     >
-      {/* Industrial Background Layer */}
-      <div className="pointer-events-none absolute inset-0 select-none">
-        {/* Hazard Stripes Top/Bottom - 轻微移动 */}
-        <motion.div 
-          className="absolute top-0 right-0 left-0 h-2 bg-[repeating-linear-gradient(45deg,#d4a017,#d4a017_10px,#E2E2E2_10px,#E2E2E2_20px)] opacity-20 dark:bg-[repeating-linear-gradient(45deg,#FFD000,#FFD000_10px,#000_10px,#000_20px)]"
-          animate={isDesktop ? { x: mousePosition.x * 5, y: mousePosition.y * 2 } : {}}
-          transition={{ type: "spring", stiffness: 150, damping: 15 }}
-        />
-        <motion.div 
-          className="absolute right-0 bottom-0 left-0 h-2 bg-[repeating-linear-gradient(45deg,#d4a017,#d4a017_10px,#E2E2E2_10px,#E2E2E2_20px)] opacity-20 dark:bg-[repeating-linear-gradient(45deg,#FFD000,#FFD000_10px,#000_10px,#000_20px)]"
-          animate={isDesktop ? { x: mousePosition.x * -5, y: mousePosition.y * -2 } : {}}
-          transition={{ type: "spring", stiffness: 150, damping: 15 }}
-        />
-
-        {/* Vertical Guide Lines - 中等移动 */}
-        <motion.div 
-          className="absolute top-0 bottom-0 left-[10%] w-[1px] bg-[#E2E2E2] dark:bg-[#00F0FF]/10"
-          animate={isDesktop ? { x: mousePosition.x * 10, y: mousePosition.y * 5 } : {}}
-          transition={{ type: "spring", stiffness: 120, damping: 15 }}
-        />
-        <motion.div 
-          className="absolute top-0 right-[10%] bottom-0 w-[1px] bg-[#E2E2E2] dark:bg-[#00F0FF]/10"
-          animate={isDesktop ? { x: mousePosition.x * -10, y: mousePosition.y * 5 } : {}}
-          transition={{ type: "spring", stiffness: 120, damping: 15 }}
-        />
-
-        {/* Technical Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:6rem_6rem] dark:bg-[linear-gradient(to_right,#00F0FF05_1px,transparent_1px),linear-gradient(to_bottom,#00F0FF05_1px,transparent_1px)]" />
-
-        {/* Light Mode: Additional Background Elements */}
-        <div className="absolute inset-0 opacity-100 dark:opacity-0">
-          {/* Geometric Shapes - Top Left - 较大移动 */}
-          <motion.div 
-            className="absolute top-32 left-[5%] h-32 w-32 rotate-45 border-2 border-[#d4a017]/20"
-            animate={isDesktop ? { x: mousePosition.x * 20, y: mousePosition.y * 20 } : {}}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-40 left-[6%] h-24 w-24 rotate-45 border-2 border-[#008fa6]/15"
-            animate={isDesktop ? { x: mousePosition.x * 25, y: mousePosition.y * 25 } : {}}
-            transition={{ type: "spring", stiffness: 90, damping: 15 }}
-          />
-
-          {/* Geometric Shapes - Top Right - 较大移动 */}
-          <motion.div 
-            className="absolute top-40 right-[8%] h-40 w-40 rounded-full border-2 border-[#d4a017]/15"
-            animate={isDesktop ? { x: mousePosition.x * -20, y: mousePosition.y * 20 } : {}}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-48 right-[10%] h-28 w-28 rounded-full border-2 border-[#008fa6]/20"
-            animate={isDesktop ? { x: mousePosition.x * -25, y: mousePosition.y * 25 } : {}}
-            transition={{ type: "spring", stiffness: 90, damping: 15 }}
-          />
-
-          {/* Diagonal Lines - Left Side - 中等移动 */}
-          <motion.div 
-            className="absolute top-[20%] left-0 h-[1px] w-[30%] rotate-45 bg-gradient-to-r from-[#d4a017]/20 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * 15, y: mousePosition.y * 10 } : {}}
-            transition={{ type: "spring", stiffness: 110, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-[35%] left-0 h-[1px] w-[25%] rotate-45 bg-gradient-to-r from-[#008fa6]/15 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * 18, y: mousePosition.y * 12 } : {}}
-            transition={{ type: "spring", stiffness: 105, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-[50%] left-0 h-[1px] w-[28%] rotate-45 bg-gradient-to-r from-[#d4a017]/15 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * 16, y: mousePosition.y * 11 } : {}}
-            transition={{ type: "spring", stiffness: 108, damping: 15 }}
-          />
-
-          {/* Diagonal Lines - Right Side - 中等移动 */}
-          <motion.div 
-            className="absolute top-[25%] right-0 h-[1px] w-[35%] -rotate-45 bg-gradient-to-l from-[#d4a017]/20 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * -15, y: mousePosition.y * 10 } : {}}
-            transition={{ type: "spring", stiffness: 110, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-[45%] right-0 h-[1px] w-[30%] -rotate-45 bg-gradient-to-l from-[#008fa6]/15 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * -18, y: mousePosition.y * 12 } : {}}
-            transition={{ type: "spring", stiffness: 105, damping: 15 }}
-          />
-          <motion.div 
-            className="absolute top-[65%] right-0 h-[1px] w-[32%] -rotate-45 bg-gradient-to-l from-[#d4a017]/15 to-transparent"
-            animate={isDesktop ? { x: mousePosition.x * -16, y: mousePosition.y * 11 } : {}}
-            transition={{ type: "spring", stiffness: 108, damping: 15 }}
-          />
-
-          {/* Corner Brackets - Bottom Left - 较大移动 */}
-          <motion.div 
-            className="absolute bottom-32 left-8"
-            animate={isDesktop ? { x: mousePosition.x * 22, y: mousePosition.y * -15 } : {}}
-            transition={{ type: "spring", stiffness: 95, damping: 15 }}
-          >
-            <div className="h-16 w-16 border-b-2 border-l-2 border-[#d4a017]/30" />
-          </motion.div>
-          <motion.div 
-            className="absolute bottom-40 left-16"
-            animate={isDesktop ? { x: mousePosition.x * 28, y: mousePosition.y * -18 } : {}}
-            transition={{ type: "spring", stiffness: 85, damping: 15 }}
-          >
-            <div className="h-12 w-12 border-b-2 border-l-2 border-[#008fa6]/25" />
-          </motion.div>
-
-          {/* Corner Brackets - Bottom Right - 较大移动 */}
-          <motion.div 
-            className="absolute right-8 bottom-32"
-            animate={isDesktop ? { x: mousePosition.x * -22, y: mousePosition.y * -15 } : {}}
-            transition={{ type: "spring", stiffness: 95, damping: 15 }}
-          >
-            <div className="h-16 w-16 border-r-2 border-b-2 border-[#d4a017]/30" />
-          </motion.div>
-          <motion.div 
-            className="absolute right-16 bottom-40"
-            animate={isDesktop ? { x: mousePosition.x * -28, y: mousePosition.y * -18 } : {}}
-            transition={{ type: "spring", stiffness: 85, damping: 15 }}
-          >
-            <div className="h-12 w-12 border-r-2 border-b-2 border-[#008fa6]/25" />
-          </motion.div>
-
-
-          {/* Technical Pattern - Center Background - 轻微移动 */}
-          <motion.div 
-            className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 opacity-10"
-            animate={isDesktop ? { 
-              x: `calc(-50% + ${mousePosition.x * 8}px)`, 
-              y: `calc(-50% + ${mousePosition.y * 8}px)` 
-            } : {}}
-            transition={{ type: "spring", stiffness: 130, damping: 15 }}
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle,#d4a017_1px,transparent_1px)] bg-[size:2rem_2rem]" />
-          </motion.div>
-
-        </div>
-
-        {/* HUD Elements - 轻微移动 */}
-        <motion.div 
-          className="absolute top-24 left-8 flex items-center gap-2 font-mono text-[10px] text-[#008fa6]/80 dark:text-[#00F0FF]/60"
-          animate={isDesktop ? { x: mousePosition.x * 5, y: mousePosition.y * 5 } : {}}
-          transition={{ type: "spring", stiffness: 140, damping: 15 }}
-        >
-          <div className="h-2 w-2 animate-pulse bg-[#008fa6] dark:bg-[#00F0FF]" />
-          <span>{t("hero.systemReady")}</span>
-        </motion.div>
-        <motion.div 
-          className="absolute top-24 right-8 font-mono text-[10px] text-black/40 dark:text-white/30"
-          animate={isDesktop ? { x: mousePosition.x * -5, y: mousePosition.y * 5 } : {}}
-          transition={{ type: "spring", stiffness: 140, damping: 15 }}
-        >
-          ID: MaaEnd-V5-RELEASE
-        </motion.div>
-
-        {/* Large Watermark - 非常轻微的移动 */}
-        <motion.div 
-          className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[10vw] font-black whitespace-nowrap text-black/[0.02] dark:text-white/[0.02]"
-          animate={isDesktop ? { 
-            x: `calc(-50% + ${mousePosition.x * 3}px)`, 
-            y: `calc(-50% + ${mousePosition.y * 3}px)` 
-          } : {}}
-          transition={{ type: "spring", stiffness: 150, damping: 20 }}
-        >
-          MaaEnd
-        </motion.div>
-      </div>
+      {/* Industrial Background Layer - 合并所有背景元素 */}
+      <BackgroundLayer isDesktop={isDesktop} mousePosition={mousePosition} />
 
       <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left: Industrial Typography */}
@@ -586,11 +461,10 @@ export default function Hero() {
                         <Button
                           key={`${opt.platform}-${opt.arch}`}
                           variant="outline"
-                          className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
-                            opt === currentDownload
-                              ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
-                              : ""
-                          }`}
+                          className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${opt === currentDownload
+                            ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
+                            : ""
+                            }`}
                           onClick={() => window.open(opt.url, "_blank")}
                         >
                           <span className="flex items-center gap-2">
@@ -632,7 +506,7 @@ export default function Hero() {
 
         {/* Right: Interactive Particle Model */}
         <div className="pointer-events-auto relative col-span-1 hidden h-[500px] lg:col-span-5 lg:block lg:h-[700px]">
-          <InteractiveModel />
+          <InteractiveModelOptimized />
         </div>
       </div>
     </section>
