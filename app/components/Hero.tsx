@@ -629,7 +629,7 @@ export default function Hero() {
 
                   <Button
                     variant="outline"
-                    className="group relative h-16 max-w-[320px] overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm font-semibold leading-tight tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                    className="group relative h-16 max-w-[320px] overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
                     style={{
                       clipPath:
                         "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
@@ -644,7 +644,6 @@ export default function Hero() {
                       </span>
                     </span>
                   </Button>
-
 
                   <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">
                     <span>
