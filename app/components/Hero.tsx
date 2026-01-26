@@ -517,14 +517,14 @@ export default function Hero() {
 
               <div className="text-center text-[2rem] leading-[0.9] tracking-tighter select-none sm:text-[2.5rem] md:text-left md:text-[3rem] lg:text-[5rem]">
                 <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
-                {t("hero.title")}
-              </span>
-              <span className="block text-black dark:text-white">
-                {t("hero.subtitle")}
-              </span>
-              <span className="mt-2 block font-mono text-[1.8rem] tracking-normal text-[#008fa6] sm:text-[2.2rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
-                {t("hero.description")}
-              </span>
+                  {t("hero.title")}
+                </span>
+                <span className="block text-black dark:text-white">
+                  {t("hero.subtitle")}
+                </span>
+                <span className="mt-2 block font-mono text-[1.8rem] tracking-normal text-[#008fa6] sm:text-[2.2rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
+                  {t("hero.description")}
+                </span>
               </div>
             </div>
 
@@ -538,7 +538,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-12 flex max-w-xl items-start gap-4 justify-center md:justify-start"
+            className="mb-12 flex max-w-xl items-start justify-center gap-4 md:justify-start"
           >
             <div className="mt-1.5 text-[#d4a017] dark:text-[#FFD000]">
               <Shield size={20} />
@@ -643,7 +643,6 @@ export default function Hero() {
                       </span>
                     </span>
                   </Button>
-
                 </motion.div>
               ) : (
                 <motion.div
