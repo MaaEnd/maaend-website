@@ -8,19 +8,18 @@ import {
 } from "framer-motion";
 import { Button } from "./ui/Button";
 import {
-  Apple,
   ArrowRight,
   ChevronDown,
   Download,
   Loader2,
   Monitor,
-  Server,
   Shield,
   Terminal as TerminalIcon,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 import InteractiveModelOptimized from "./hero/InteractiveModelOptimized";
 import BackgroundLayer from "./hero/BackgroundLayer";
@@ -118,20 +117,40 @@ function PlatformIcon({
   platform: Platform;
   className?: string;
 }) {
+  const size = className?.includes("w-5") ? 20 : 16;
+
   switch (platform) {
     case "win":
       return <Monitor className={className} />;
     case "macos":
-      return <Apple className={className} />;
+      return (
+        <Image
+          src="/apple.svg"
+          alt="macOS"
+          width={size}
+          height={size}
+          className={`dark:invert ${className}`}
+        />
+      );
     case "linux":
-      return <Server className={className} />;
+      return (
+        <Image
+          src="/linux.svg"
+          alt="Linux"
+          width={size}
+          height={size}
+          className={`dark:invert ${className}`}
+        />
+      );
     default:
       return <Download className={className} />;
   }
 }
 
 export default function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const mirrorLocale = i18n.language?.startsWith("zh") ? "zh" : "en";
+  const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo | null>(null);
@@ -168,7 +187,6 @@ export default function Hero() {
       }
     };
   }, []);
-
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
     try {
@@ -285,14 +303,14 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 transition-colors duration-300 md:px-10"
+      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-24 transition-colors duration-300 md:px-16 md:pt-20"
     >
       {/* Industrial Background Layer - 合并所有背景元素 */}
       <BackgroundLayer isDesktop={isDesktop} mousePosition={mousePosition} />
 
       <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left: Industrial Typography */}
-        <div className="col-span-1 flex flex-col justify-center pl-0 text-left lg:col-span-7 lg:pl-12">
+        <div className="col-span-1 flex flex-col pl-0 text-left md:items-start lg:col-span-7 lg:pl-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -312,16 +330,35 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-black dark:text-white"
           >
-            <div className="text-[3rem] leading-[0.9] tracking-tighter select-none md:text-[4rem] lg:text-[5rem]">
-              <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
-                {t("hero.title")}
-              </span>
-              <span className="block text-black dark:text-white">
-                {t("hero.subtitle")}
-              </span>
-              <span className="mt-2 block font-mono text-[2.5rem] tracking-normal text-[#008fa6] md:text-[3.5rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
-                {t("hero.description")}
-              </span>
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-8 lg:gap-10">
+              {/* Logo Icon */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="shrink-0"
+              >
+                <Image
+                  src="/MaaEnd-Tiny-512.png"
+                  alt="MaaEnd Logo"
+                  width={512}
+                  height={512}
+                  className="h-28 w-28 object-contain sm:h-36 sm:w-36 md:h-44 md:w-44 lg:h-56 lg:w-56"
+                  priority
+                />
+              </motion.div>
+
+              <div className="text-center text-[2rem] leading-[0.9] tracking-tighter select-none sm:text-[2.5rem] md:text-left md:text-[3rem] lg:text-[5rem]">
+                <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
+                  {t("hero.title")}
+                </span>
+                <span className="block text-black dark:text-white">
+                  {t("hero.subtitle")}
+                </span>
+                <span className="mt-2 block font-mono text-[1.8rem] tracking-normal text-[#008fa6] sm:text-[2.2rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
+                  {t("hero.description")}
+                </span>
+              </div>
             </div>
 
             {/* Decorative lines attached to text */}
@@ -334,7 +371,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-12 flex max-w-xl items-start gap-4"
+            className="mb-12 flex max-w-xl items-start justify-center gap-4 md:justify-start"
           >
             <div className="mt-1.5 text-[#d4a017] dark:text-[#FFD000]">
               <Shield size={20} />
@@ -360,7 +397,7 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex items-center gap-3"
+                  className="flex flex-wrap items-center justify-center gap-3 md:justify-start"
                 >
                   {/* 主下载按钮 - 自动检测系统 */}
                   <Button
@@ -422,16 +459,23 @@ export default function Hero() {
                     />
                   </Button>
 
-                  <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">
-                    <span>
-                      {t("hero.version")}: {releaseInfo?.tag_name || "..."}
-                    </span>
-                    {currentDownload && (
-                      <span>
-                        {t("hero.size")}: {formatSize(currentDownload.size)}
+                  <Button
+                    variant="outline"
+                    className="group relative h-16 max-w-[320px] overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                    style={{
+                      clipPath:
+                        "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                    }}
+                    onClick={() => window.open(mirrorDownloadUrl, "_blank")}
+                  >
+                    <span className="flex w-full flex-col items-start gap-1">
+                      <span>{t("hero.mirrorDownloadLine1")}</span>
+                      <span className="flex items-center gap-2">
+                        {t("hero.mirrorDownloadLine2")}
+                        <ArrowRight size={16} strokeWidth={2.5} />
                       </span>
-                    )}
-                  </div>
+                    </span>
+                  </Button>
                 </motion.div>
               ) : (
                 <motion.div
@@ -509,6 +553,6 @@ export default function Hero() {
           <InteractiveModelOptimized />
         </div>
       </div>
-    </section>
+    </section >
   );
 }

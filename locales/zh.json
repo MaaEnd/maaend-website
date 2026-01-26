@@ -4,7 +4,6 @@
     "docs": "文档"
   },
   "hero": {
-    "systemReady": "系统就绪",
     "neuralOnline": "神经网络在线",
     "title": "MaaEnd",
     "subtitle": "MAA - 终",
@@ -18,6 +17,8 @@
     "size": "大小",
     "selectPlatform": "选择平台",
     "viewAllReleases": "查看所有版本",
+    "mirrorDownloadLine1": "已有 Mirror酱 CDK？",
+    "mirrorDownloadLine2": "前往 Mirror酱 高速下载",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
@@ -82,7 +83,7 @@
     "marquee": "LET'S AUTOMATE THE FUTURE OF ARKNIGHTS: ENDFIELD",
     "description": "An advanced AI automation assistant for Endfield. Open source, secure, and highly efficient.",
     "contact": "联系方式",
-    "userGroup": "用户 QQ 群: 1078075580",
+    "userGroup": "用户 QQ 群: 1062010346",
     "devGroup": "开发 QQ 群: 1072587329",
     "project": "PROJECT",
     "github": "GitHub",

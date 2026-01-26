@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Book, Github, Languages } from "lucide-react";
+import Image from "next/image";
+import { Book, Languages } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
@@ -28,21 +29,32 @@ export default function Header() {
         </span>
       </div>
 
-      <nav className="hidden items-center gap-6 md:flex">
-        <Link
-          href="https://github.com/MaaEnd/MaaEnd"
-          className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
-        >
-          <Github size={16} /> {t("header.github")}
-        </Link>
-        <Link
-          href="#"
-          className="mr-4 flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
-        >
-          <Book size={16} /> {t("header.docs")}
-        </Link>
+      <div className="flex items-center gap-4 md:gap-6">
+        <nav className="hidden items-center gap-6 md:flex">
+          <Link
+            href="https://github.com/MaaEnd/MaaEnd"
+            className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
+          >
+            <Image
+              src="/github.svg"
+              alt="GitHub"
+              width={16}
+              height={16}
+              className="dark:invert"
+            />
+            {t("header.github")}
+          </Link>
+          <Link
+            href="#"
+            className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
+          >
+            <Book size={16} /> {t("header.docs")}
+          </Link>
+        </nav>
 
-        <div className="flex items-center gap-2 border-l border-[#E2E2E2] pl-6 dark:border-white/10">
+        <div className="hidden h-6 w-[1px] bg-[#E2E2E2] md:block dark:bg-white/10" />
+
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             className="h-9 w-9 rounded-full border-[#E2E2E2] p-0 hover:border-[#c49102] hover:text-[#c49102] dark:border-white/10 dark:hover:border-[#ffd000] dark:hover:text-[#ffd000]"
@@ -53,7 +65,7 @@ export default function Header() {
           </Button>
           <ThemeToggle />
         </div>
-      </nav>
+      </div>
     </motion.header>
   );
 }

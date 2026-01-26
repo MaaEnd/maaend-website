@@ -4,7 +4,6 @@
     "docs": "docs"
   },
   "hero": {
-    "systemReady": "SYSTEM.READY",
     "neuralOnline": "NEURAL_NETWORK_ONLINE",
     "title": "MaaEnd",
     "subtitle": "MAA - End",
@@ -18,6 +17,8 @@
     "size": "SIZE",
     "selectPlatform": "SELECT_PLATFORM",
     "viewAllReleases": "View all releases",
+    "mirrorDownloadLine1": "Have a MirrorChyan CDK?",
+    "mirrorDownloadLine2": "Fast download on MirrorChyan",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
@@ -82,7 +83,7 @@
     "marquee": "LET'S AUTOMATE THE FUTURE OF ARKNIGHTS",
     "description": "An advanced AI automation assistant for Endfield. Open source, secure, and highly efficient.",
     "contact": "CONTACT",
-    "userGroup": "User QQ Group: 1078075580",
+    "userGroup": "User QQ Group: 1062010346",
     "devGroup": "Dev QQ Group: 1072587329",
     "project": "PROJECT",
     "github": "GitHub",
