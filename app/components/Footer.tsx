@@ -40,8 +40,26 @@ export default function Footer() {
             {t("footer.contact")}
           </h4>
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
-            <li>{t("footer.userGroup")}</li>
-            <li>{t("footer.devGroup")}</li>
+            <li>
+              <a
+                href="https://qm.qq.com/q/MN6XLvtZia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
+              >
+                {t("footer.userGroup")}
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://qm.qq.com/q/EyirQpBiW4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
+              >
+                {t("footer.devGroup")}
+              </a>
+            </li>
           </ul>
         </div>
         <div>
