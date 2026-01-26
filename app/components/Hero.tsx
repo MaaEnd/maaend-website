@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 import InteractiveModel from "./InteractiveModel";
 
@@ -508,8 +509,26 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-black dark:text-white"
           >
-            <div className="text-[3rem] leading-[0.9] tracking-tighter select-none md:text-[4rem] lg:text-[5rem]">
-              <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
+            <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:gap-8 lg:gap-10">
+              {/* Logo Icon */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="shrink-0"
+              >
+                <Image
+                  src="/MaaEnd-Tiny-512.png"
+                  alt="MaaEnd Logo"
+                  width={512}
+                  height={512}
+                  className="h-40 w-40 object-contain md:h-48 md:w-48 lg:h-56 lg:w-56"
+                  priority
+                />
+              </motion.div>
+
+              <div className="text-center text-[2.5rem] leading-[0.9] tracking-tighter select-none md:text-left md:text-[3.5rem] lg:text-[5rem]">
+                <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                 {t("hero.title")}
               </span>
               <span className="block text-black dark:text-white">
@@ -518,6 +537,7 @@ export default function Hero() {
               <span className="mt-2 block font-mono text-[2.5rem] tracking-normal text-[#008fa6] md:text-[3.5rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
                 {t("hero.description")}
               </span>
+              </div>
             </div>
 
             {/* Decorative lines attached to text */}
