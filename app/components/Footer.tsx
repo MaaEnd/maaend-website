@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 
@@ -47,7 +47,7 @@ export default function Footer() {
           transition={{
             repeat: Infinity,
             duration: dynamicDuration,
-            ease: "linear"
+            ease: "linear",
           }}
         >
           {[...Array(8)].map((_, i) => (

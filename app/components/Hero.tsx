@@ -164,29 +164,35 @@ export default function Hero() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   // 防抖函数
-  const debounce = useCallback((func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return function executedFunction(...args: any[]) {
-      const later = () => {
+  const debounce = useCallback(
+    (func: (...args: any[]) => void, wait: number) => {
+      let timeout: NodeJS.Timeout;
+      return function executedFunction(...args: any[]) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
         clearTimeout(timeout);
-        func(...args);
+        timeout = setTimeout(later, wait);
       };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }, []);
+    },
+    []
+  );
 
   // 节流函数
-  const throttle = useCallback((func: Function, limit: number) => {
-    let inThrottle: boolean;
-    return function executedFunction(...args: any[]) {
-      if (!inThrottle) {
-        func.apply(null, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
-    };
-  }, []);
+  const throttle = useCallback(
+    (func: (...args: any[]) => void, limit: number) => {
+      let inThrottle: boolean;
+      return function executedFunction(...args: any[]) {
+        if (!inThrottle) {
+          func(...args);
+          inThrottle = true;
+          setTimeout(() => (inThrottle = false), limit);
+        }
+      };
+    },
+    []
+  );
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
     try {
@@ -248,10 +254,10 @@ export default function Hero() {
 
     // 初始检测
     debouncedCheckIsDesktop();
-    window.addEventListener('resize', debouncedCheckIsDesktop);
+    window.addEventListener("resize", debouncedCheckIsDesktop);
 
     return () => {
-      window.removeEventListener('resize', debouncedCheckIsDesktop);
+      window.removeEventListener("resize", debouncedCheckIsDesktop);
     };
   }, [debounce]);
 
@@ -269,23 +275,25 @@ export default function Hero() {
       setMousePosition({ x, y });
     }, 16); // 约 60fps
 
-    window.addEventListener('mousemove', throttledHandleMouseMove);
+    window.addEventListener("mousemove", throttledHandleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', throttledHandleMouseMove);
+      window.removeEventListener("mousemove", throttledHandleMouseMove);
     };
   }, [isDesktop, throttle]);
 
   // 使用 useMemo 优化 currentDownload 计算
   const currentDownload = useMemo(() => {
-    return downloadOptions.find(
-      (opt) => opt.platform === currentPlatform && opt.arch === currentArch
-    ) ||
+    return (
+      downloadOptions.find(
+        (opt) => opt.platform === currentPlatform && opt.arch === currentArch
+      ) ||
       downloadOptions.find(
         // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
         (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
       ) ||
-      downloadOptions[0];
+      downloadOptions[0]
+    );
   }, [downloadOptions, currentPlatform, currentArch]);
 
   // 其他下载选项(不包括当前系统) - 暂未使用
@@ -505,10 +513,11 @@ export default function Hero() {
                         <Button
                           key={`${opt.platform}-${opt.arch}`}
                           variant="outline"
-                          className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${opt === currentDownload
-                            ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
-                            : ""
-                            }`}
+                          className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
+                            opt === currentDownload
+                              ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
+                              : ""
+                          }`}
                           onClick={() => window.open(opt.url, "_blank")}
                         >
                           <span className="flex items-center gap-2">
@@ -553,6 +562,6 @@ export default function Hero() {
           <InteractiveModelOptimized />
         </div>
       </div>
-    </section >
+    </section>
   );
 }
