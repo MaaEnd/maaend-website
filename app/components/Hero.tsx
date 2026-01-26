@@ -9,10 +9,13 @@ import {
 import { Button } from "./ui/Button";
 import {
   ArrowRight,
+  Check,
   ChevronDown,
+  Copy,
   Download,
   Loader2,
   Monitor,
+  RefreshCw,
   Shield,
   Terminal as TerminalIcon,
   X,
@@ -31,6 +34,7 @@ interface ReleaseAsset {
   name: string;
   browser_download_url: string;
   size: number;
+  digest?: string; // 格式: "sha256:hash"
 }
 
 interface ReleaseInfo {
@@ -45,6 +49,7 @@ interface DownloadOption {
   url: string;
   filename: string;
   size: number;
+  digest?: string; // SHA256 hash
 }
 
 // 检测当前系统平台
@@ -152,6 +157,13 @@ export default function Hero() {
   const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [activeDownload, setActiveDownload] = useState<DownloadOption | null>(
+    null
+  );
+  const [checksum, setChecksum] = useState<string | null>(null);
+  const [checksumLoading, setChecksumLoading] = useState(false);
+  const [checksumCopied, setChecksumCopied] = useState(false);
   const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo | null>(null);
   const [downloadOptions, setDownloadOptions] = useState<DownloadOption[]>([]);
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
@@ -175,16 +187,21 @@ export default function Hero() {
       // 解析 assets 为下载选项
       const options: DownloadOption[] = data.assets
         .filter((asset) => asset.name.endsWith(".zip"))
-        .map((asset) => {
+        .map((asset): DownloadOption | null => {
           // 解析文件名: MaaEnd-{os}-{arch}-{version}.zip
           const match = asset.name.match(/MaaEnd-(\w+)-(\w+)-v[\d.]+\.zip/);
           if (!match) return null;
+          // 从 digest 字段提取 SHA256，格式为 "sha256:hash"
+          const sha256 = asset.digest?.startsWith("sha256:")
+            ? asset.digest.slice(7)
+            : undefined;
           return {
             platform: match[1] as Platform,
             arch: match[2] as Arch,
             url: asset.browser_download_url,
             filename: asset.name,
             size: asset.size,
+            digest: sha256,
           };
         })
         .filter((opt): opt is DownloadOption => opt !== null);
@@ -255,6 +272,29 @@ export default function Hero() {
   // const otherDownloads = downloadOptions.filter(
   //   (opt) => opt !== currentDownload
   // );
+
+  // 处理下载并显示模态框
+  const handleDownload = useCallback((download: DownloadOption) => {
+    setActiveDownload(download);
+    setShowDownloadModal(true);
+    setShowDownloadOptions(false);
+    setChecksumCopied(false);
+    // 直接使用 asset 中的 digest
+    setChecksum(download.digest || null);
+    setChecksumLoading(false);
+
+    // 触发下载
+    window.open(download.url, "_blank");
+  }, []);
+
+  // 复制 checksum
+  const copyChecksum = useCallback(() => {
+    if (checksum) {
+      navigator.clipboard.writeText(checksum);
+      setChecksumCopied(true);
+      setTimeout(() => setChecksumCopied(false), 2000);
+    }
+  }, [checksum]);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -592,7 +632,7 @@ export default function Hero() {
                     }}
                     onClick={() => {
                       if (currentDownload) {
-                        window.open(currentDownload.url, "_blank");
+                        handleDownload(currentDownload);
                       }
                     }}
                     disabled={loading || !currentDownload}
@@ -693,7 +733,7 @@ export default function Hero() {
                               ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
                               : ""
                           }`}
-                          onClick={() => window.open(opt.url, "_blank")}
+                          onClick={() => handleDownload(opt)}
                         >
                           <span className="flex items-center gap-2">
                             <PlatformIcon
@@ -737,6 +777,130 @@ export default function Hero() {
           <InteractiveModel />
         </div>
       </div>
+
+      {/* Download Started Modal */}
+      <AnimatePresence>
+        {showDownloadModal && activeDownload && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            onClick={() => setShowDownloadModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="w-full max-w-lg border-2 border-[#d4a017] bg-[#F4F4F4] p-1 dark:border-[#FFD000] dark:bg-[#09090B]"
+              style={{
+                clipPath:
+                  "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="border border-black/5 bg-white p-6 dark:border-white/5 dark:bg-black/50">
+                {/* Header */}
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center bg-[#d4a017] dark:bg-[#FFD000]">
+                      <Download size={20} className="text-black" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-black dark:text-white">
+                        {t("hero.downloadStarted")}
+                      </h3>
+                      <p className="font-mono text-xs text-[#008fa6] dark:text-[#00F0FF]">
+                        {activeDownload.filename}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowDownloadModal(false)}
+                    className="text-black/50 transition-colors hover:text-black dark:text-white/50 dark:hover:text-white"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Description */}
+                <p className="mb-6 text-sm leading-relaxed text-black/70 dark:text-white/70">
+                  {t("hero.downloadStartedDesc")}
+                </p>
+
+                {/* Checksum Section */}
+                <div className="mb-6 border border-black/10 bg-black/5 p-4 dark:border-white/10 dark:bg-white/5">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Shield
+                      size={14}
+                      className="text-[#008fa6] dark:text-[#00F0FF]"
+                    />
+                    <span className="font-mono text-xs font-bold text-[#008fa6] dark:text-[#00F0FF]">
+                      {t("hero.verifyChecksum")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 overflow-hidden rounded border border-black/10 bg-black/5 px-3 py-2 font-mono text-xs dark:border-white/10 dark:bg-white/5">
+                      {checksumLoading ? (
+                        <span className="flex items-center gap-2 text-black/50 dark:text-white/50">
+                          <Loader2 size={12} className="animate-spin" />
+                          {t("hero.checksumLoading")}
+                        </span>
+                      ) : checksum ? (
+                        <span className="block truncate text-black/80 dark:text-white/80">
+                          {checksum}
+                        </span>
+                      ) : (
+                        <span className="text-black/40 dark:text-white/40">
+                          {t("hero.checksumUnavailable")}
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="h-9 w-9 shrink-0 border-black/10 p-0 hover:border-[#008fa6] hover:text-[#008fa6] dark:border-white/10 dark:hover:border-[#00F0FF] dark:hover:text-[#00F0FF]"
+                      onClick={copyChecksum}
+                      disabled={!checksum}
+                    >
+                      {checksumCopied ? (
+                        <Check size={14} className="text-green-500" />
+                      ) : (
+                        <Copy size={14} />
+                      )}
+                    </Button>
+                  </div>
+                  {checksumCopied && (
+                    <p className="mt-2 text-xs text-green-600 dark:text-green-400">
+                      {t("hero.checksumCopied")}
+                    </p>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    variant="primary"
+                    className="flex-1 gap-2 border-none bg-[#d4a017] text-black hover:bg-[#c49102] dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
+                    onClick={() => window.open(activeDownload.url, "_blank")}
+                  >
+                    <RefreshCw size={16} />
+                    {t("hero.retryDownload")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-2 border-[#008fa6]/60 text-[#008fa6] hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                    onClick={() => setShowDownloadModal(false)}
+                  >
+                    <X size={16} />
+                    {t("hero.close")}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
