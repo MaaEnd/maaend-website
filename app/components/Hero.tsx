@@ -8,13 +8,11 @@ import {
 } from "framer-motion";
 import { Button } from "./ui/Button";
 import {
-  Apple,
   ArrowRight,
   ChevronDown,
   Download,
   Loader2,
   Monitor,
-  Server,
   Shield,
   Terminal as TerminalIcon,
   X,
@@ -118,13 +116,31 @@ function PlatformIcon({
   platform: Platform;
   className?: string;
 }) {
+  const size = className?.includes("w-5") ? 20 : 16;
+
   switch (platform) {
     case "win":
       return <Monitor className={className} />;
     case "macos":
-      return <Apple className={className} />;
+      return (
+        <Image
+          src="/apple.svg"
+          alt="macOS"
+          width={size}
+          height={size}
+          className={`dark:invert ${className}`}
+        />
+      );
     case "linux":
-      return <Server className={className} />;
+      return (
+        <Image
+          src="/linux.svg"
+          alt="Linux"
+          width={size}
+          height={size}
+          className={`dark:invert ${className}`}
+        />
+      );
     default:
       return <Download className={className} />;
   }

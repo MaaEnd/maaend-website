@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Book, Github, Languages } from "lucide-react";
+import Image from "next/image";
+import { Book, Languages } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
@@ -34,7 +35,14 @@ export default function Header() {
             href="https://github.com/MaaEnd/MaaEnd"
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
           >
-            <Github size={16} /> {t("header.github")}
+            <Image
+              src="/github.svg"
+              alt="GitHub"
+              width={16}
+              height={16}
+              className="dark:invert"
+            />
+            {t("header.github")}
           </Link>
           <Link
             href="#"
