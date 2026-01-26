@@ -550,7 +550,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-12 flex max-w-xl items-start gap-4"
+            className="mb-12 flex max-w-xl items-start gap-4 justify-center md:justify-start"
           >
             <div className="mt-1.5 text-[#d4a017] dark:text-[#FFD000]">
               <Shield size={20} />
@@ -576,7 +576,7 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex flex-wrap items-center gap-3"
+                  className="flex flex-wrap items-center justify-center gap-3 md:justify-start"
                 >
                   {/* 主下载按钮 - 自动检测系统 */}
                   <Button
