@@ -636,16 +636,6 @@ export default function Hero() {
                     </span>
                   </Button>
 
-                  <div className="hidden flex-col gap-1 font-mono text-[10px] text-black/50 md:flex dark:text-white/30">
-                    <span>
-                      {t("hero.version")}: {releaseInfo?.tag_name || "..."}
-                    </span>
-                    {currentDownload && (
-                      <span>
-                        {t("hero.size")}: {formatSize(currentDownload.size)}
-                      </span>
-                    )}
-                  </div>
                 </motion.div>
               ) : (
                 <motion.div
