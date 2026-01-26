@@ -266,7 +266,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-12 transition-colors duration-300 md:px-16 md:pt-10"
+      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-24 transition-colors duration-300 md:px-16 md:pt-20"
     >
       {/* Industrial Background Layer */}
       <div className="pointer-events-none absolute inset-0 select-none">
