@@ -468,15 +468,6 @@ export default function Hero() {
           <div className="h-2 w-2 animate-pulse bg-[#008fa6] dark:bg-[#00F0FF]" />
           <span>{t("hero.systemReady")}</span>
         </motion.div>
-        <motion.div
-          className="absolute top-24 right-8 font-mono text-[10px] text-black/40 dark:text-white/30"
-          animate={
-            isDesktop ? { x: mousePosition.x * -5, y: mousePosition.y * 5 } : {}
-          }
-          transition={{ type: "spring", stiffness: 140, damping: 15 }}
-        >
-          ID: MaaEnd-V5-RELEASE
-        </motion.div>
 
         {/* Large Watermark - 非常轻微的移动 */}
         <motion.div
