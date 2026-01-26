@@ -4,7 +4,6 @@
     "docs": "docs"
   },
   "hero": {
-    "systemReady": "SYSTEM.READY",
     "neuralOnline": "NEURAL_NETWORK_ONLINE",
     "title": "MaaEnd",
     "subtitle": "MAA - End",

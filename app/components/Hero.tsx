@@ -250,7 +250,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-20 transition-colors duration-300 md:px-10"
+      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-12 transition-colors duration-300 md:px-16 md:pt-10"
     >
       {/* Industrial Background Layer */}
       <div className="pointer-events-none absolute inset-0 select-none">
@@ -458,18 +458,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* HUD Elements - 轻微移动 */}
-        <motion.div
-          className="absolute top-24 left-8 flex items-center gap-2 font-mono text-[10px] text-[#008fa6]/80 dark:text-[#00F0FF]/60"
-          animate={
-            isDesktop ? { x: mousePosition.x * 5, y: mousePosition.y * 5 } : {}
-          }
-          transition={{ type: "spring", stiffness: 140, damping: 15 }}
-        >
-          <div className="h-2 w-2 animate-pulse bg-[#008fa6] dark:bg-[#00F0FF]" />
-          <span>{t("hero.systemReady")}</span>
-        </motion.div>
-
         {/* Large Watermark - 非常轻微的移动 */}
         <motion.div
           className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[10vw] font-black whitespace-nowrap text-black/[0.02] dark:text-white/[0.02]"
@@ -489,7 +477,7 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left: Industrial Typography */}
-        <div className="col-span-1 flex flex-col justify-center pl-0 text-left lg:col-span-7 lg:pl-12">
+        <div className="col-span-1 flex flex-col pl-0 text-left md:items-start lg:col-span-7 lg:pl-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -509,7 +497,7 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-black dark:text-white"
           >
-            <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:gap-8 lg:gap-10">
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-8 lg:gap-10">
               {/* Logo Icon */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -522,19 +510,19 @@ export default function Hero() {
                   alt="MaaEnd Logo"
                   width={512}
                   height={512}
-                  className="h-40 w-40 object-contain md:h-48 md:w-48 lg:h-56 lg:w-56"
+                  className="h-28 w-28 object-contain sm:h-36 sm:w-36 md:h-44 md:w-44 lg:h-56 lg:w-56"
                   priority
                 />
               </motion.div>
 
-              <div className="text-center text-[2.5rem] leading-[0.9] tracking-tighter select-none md:text-left md:text-[3.5rem] lg:text-[5rem]">
+              <div className="text-center text-[2rem] leading-[0.9] tracking-tighter select-none sm:text-[2.5rem] md:text-left md:text-[3rem] lg:text-[5rem]">
                 <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                 {t("hero.title")}
               </span>
               <span className="block text-black dark:text-white">
                 {t("hero.subtitle")}
               </span>
-              <span className="mt-2 block font-mono text-[2.5rem] tracking-normal text-[#008fa6] md:text-[3.5rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
+              <span className="mt-2 block font-mono text-[1.8rem] tracking-normal text-[#008fa6] sm:text-[2.2rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
                 {t("hero.description")}
               </span>
               </div>
