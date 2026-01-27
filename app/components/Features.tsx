@@ -2,7 +2,7 @@
 
 import { Card } from "./ui/Card";
 import { motion } from "framer-motion";
-import { Cpu, Globe, Layout, Scan, Terminal, Zap } from "lucide-react";
+import { Cpu, Globe, Layout, Scan, Terminal, Zap, Crosshair, Puzzle, ShoppingCart, FileJson, Calendar, MonitorSmartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Features() {
@@ -13,28 +13,28 @@ export default function Features() {
       title: t("features.items.realTimeTask.title"),
       desc: t("features.items.realTimeTask.desc"),
       detail: t("features.items.realTimeTask.detail"),
-      icon: <Zap className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
+      icon: <Crosshair className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-2",
     },
     {
       title: t("features.items.puzzleSolver.title"),
       desc: t("features.items.puzzleSolver.desc"),
       detail: t("features.items.puzzleSolver.detail"),
-      icon: <Layout className="text-black dark:text-white" size={32} />,
+      icon: <Puzzle className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-1",
     },
     {
       title: t("features.items.autoResell.title"),
       desc: t("features.items.autoResell.desc"),
       detail: t("features.items.autoResell.detail"),
-      icon: <Scan className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
+      icon: <ShoppingCart className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-1",
     },
     {
       title: t("features.items.blueprints.title"),
       desc: t("features.items.blueprints.desc"),
       detail: t("features.items.blueprints.detail"),
-      icon: <Cpu className="text-black dark:text-white" size={32} />,
+      icon: <FileJson className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-2",
     },
     {
@@ -42,7 +42,7 @@ export default function Features() {
       desc: t("features.items.dailyRewards.desc"),
       detail: t("features.items.dailyRewards.detail"),
       icon: (
-        <Terminal className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+        <Calendar className="text-[#c49102] dark:text-[#FFE600]" size={32} />
       ),
       col: "md:col-span-1",
     },
@@ -50,7 +50,7 @@ export default function Features() {
       title: t("features.items.crossPlatform.title"),
       desc: t("features.items.crossPlatform.desc"),
       detail: t("features.items.crossPlatform.detail"),
-      icon: <Globe className="text-black dark:text-white" size={32} />,
+      icon: <MonitorSmartphone className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-2",
     },
   ];
