@@ -27,35 +27,35 @@
   "features": {
     "title": "核心模块",
     "items": {
-      "autoSanity": {
-        "title": "智能刷理智",
-        "desc": "自动理智与导航",
-        "detail": "全自动识别关卡，效率最大化路径规划，自动吃药回体。"
+      "realTimeTask": {
+        "title": "实时作战辅助",
+        "desc": "Real-time Task",
+        "detail": "自动战斗、自动拾取、自动滑索、快速传送。全自动处理交互、指引与说明书。"
       },
-      "infrastructure": {
-        "title": "智能基建",
-        "desc": "基建运营",
-        "detail": "自动心情判定，无人机最优策略，全自动排班轮换。"
+      "puzzleSolver": {
+        "title": "自动解谜",
+        "desc": "Puzzle Solver",
+        "detail": "高精度识别并自动完成各类场景谜题，支持单次执行、循环执行与模拟运行。"
       },
-      "recruitment": {
-        "title": "公招识别",
-        "desc": "OCR + 策略",
-        "detail": "高精度 OCR 识别，自动计算最优标签组合，不错过任何六星。"
+      "autoResell": {
+        "title": "自动贸易",
+        "desc": "Auto Resell",
+        "detail": "智能识别商品利润，自动执行低买高卖策略，最大化贸易收益。"
       },
-      "coreEngine": {
-        "title": "核心引擎",
-        "desc": "神经核心",
-        "detail": "基于深度学习的图像识别引擎，跨平台支持，毫秒级响应。"
+      "blueprints": {
+        "title": "蓝图导入",
+        "desc": "Blueprints",
+        "detail": "支持一键导入建筑蓝图，快速构建复杂的工业流水线。"
       },
-      "cliApi": {
-        "title": "CLI / API",
-        "desc": "开发者就绪",
-        "detail": "提供完整的 API 接口与命令行工具，轻松集成到你的工作流。"
+      "dailyRewards": {
+        "title": "日常自动化",
+        "desc": "Daily Automation",
+        "detail": "自动领取每日奖励、阅读百科、完成 Baker 入口任务，告别繁琐重复操作。"
       },
       "crossPlatform": {
         "title": "多端适配",
-        "desc": "跨平台",
-        "detail": "Windows, macOS, Linux, Android 全平台支持。"
+        "desc": "Cross Platform",
+        "detail": "完美支持 Windows (Win32 API) 与 Android (ADB)，适配各类模拟器与原生环境。"
       }
     }
   },
@@ -64,7 +64,7 @@
     "title1": "AI 优先",
     "title2": "自动化系统",
     "paragraph1": "MaaEnd 不仅仅是一个脚本，它是基于下一代图像识别技术的智能自动化平台。通过深度学习模型与即时决策算法，它能够像人类玩家一样思考，但拥有机器般的精确与稳定。",
-    "paragraph2": "开源、安全、透明。MaaEnd 由社区驱动，为全球数百万管理员提供最可靠的后勤保障。无论是在 Windows 上的高性能模拟器，还是 Android 原生环境，MaaEnd 都能提供一致的极致体验。",
+    "paragraph2": "开源、安全、透明。MaaEnd 由社区驱动，为全球管理员提供最可靠的后勤保障。无论是基于 Win32 API 的高性能原生环境，还是 ADB 驱动的移动端，MaaEnd 都能提供一致的极致体验。",
     "stats": {
       "githubStars": "GitHub Stars",
       "dailyUsers": "日活用户",
@@ -73,9 +73,9 @@
     "systemLogs": "SYSTEM_LOGS",
     "log1": "> Initializing Neural Engine...",
     "log2": "> Loading modules: OCR, Pathfinding, Strategy",
-    "log3": "> Optimizing infrastructure routing...",
-    "log4": "> DETECTED: Sanity Full",
-    "log5": "> Executing: Auto_Clear_Stage_1-7",
+    "log3": "> Optimizing industrial routing...",
+    "log4": "> DETECTED: Puzzle unsolved",
+    "log5": "> Executing: Auto_Puzzle_Solver",
     "log6": "> Efficiency gain: +300%",
     "log7": "> Status: OPERATIONAL"
   },

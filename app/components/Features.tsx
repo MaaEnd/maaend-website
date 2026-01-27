@@ -10,37 +10,37 @@ export default function Features() {
 
   const features = [
     {
-      title: t("features.items.autoSanity.title"),
-      desc: t("features.items.autoSanity.desc"),
-      detail: t("features.items.autoSanity.detail"),
+      title: t("features.items.realTimeTask.title"),
+      desc: t("features.items.realTimeTask.desc"),
+      detail: t("features.items.realTimeTask.detail"),
       icon: <Zap className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-2",
     },
     {
-      title: t("features.items.infrastructure.title"),
-      desc: t("features.items.infrastructure.desc"),
-      detail: t("features.items.infrastructure.detail"),
+      title: t("features.items.puzzleSolver.title"),
+      desc: t("features.items.puzzleSolver.desc"),
+      detail: t("features.items.puzzleSolver.detail"),
       icon: <Layout className="text-black dark:text-white" size={32} />,
       col: "md:col-span-1",
     },
     {
-      title: t("features.items.recruitment.title"),
-      desc: t("features.items.recruitment.desc"),
-      detail: t("features.items.recruitment.detail"),
+      title: t("features.items.autoResell.title"),
+      desc: t("features.items.autoResell.desc"),
+      detail: t("features.items.autoResell.detail"),
       icon: <Scan className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-1",
     },
     {
-      title: t("features.items.coreEngine.title"),
-      desc: t("features.items.coreEngine.desc"),
-      detail: t("features.items.coreEngine.detail"),
+      title: t("features.items.blueprints.title"),
+      desc: t("features.items.blueprints.desc"),
+      detail: t("features.items.blueprints.detail"),
       icon: <Cpu className="text-black dark:text-white" size={32} />,
       col: "md:col-span-2",
     },
     {
-      title: t("features.items.cliApi.title"),
-      desc: t("features.items.cliApi.desc"),
-      detail: t("features.items.cliApi.detail"),
+      title: t("features.items.dailyRewards.title"),
+      desc: t("features.items.dailyRewards.desc"),
+      detail: t("features.items.dailyRewards.detail"),
       icon: (
         <Terminal className="text-[#c49102] dark:text-[#FFE600]" size={32} />
       ),
