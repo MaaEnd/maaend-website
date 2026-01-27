@@ -45,14 +45,14 @@ export default function Header() {
             {t("header.github")}
           </Link>
           <Link
-            href="#"
+            href="https://github.com/MaaEnd/MaaEnd/blob/main/docs/developers/development.md"
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
           >
             <Book size={16} /> {t("header.docs")}
           </Link>
         </nav>
 
-        <div className="hidden h-6 w-[1px] bg-[#E2E2E2] md:block dark:bg-white/10" />
+        <div className="hidden h-6 w-px bg-[#E2E2E2] md:block dark:bg-white/10" />
 
         <div className="flex items-center gap-2">
           <Button
