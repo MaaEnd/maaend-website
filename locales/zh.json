@@ -30,7 +30,7 @@
       "realTimeTask": {
         "title": "实时作战辅助",
         "desc": "Real-time Task",
-        "detail": "自动战斗、自动拾取、自动滑索、快速传送。全自动处理交互、指引与说明书。"
+        "detail": "自动战斗、自动拾取、自动滑索、快速传送。全自动处理剧情跳过、交互指引、说明书及档案关闭。"
       },
       "puzzleSolver": {
         "title": "自动解谜",
@@ -50,7 +50,7 @@
       "dailyRewards": {
         "title": "日常自动化",
         "desc": "Daily Automation",
-        "detail": "自动领取每日奖励、阅读百科、完成 Baker 入口任务，告别繁琐重复操作。"
+        "detail": "自动领取每日奖励、阅读百科、领取生产手册、完成 Baker 入口任务，告别繁琐重复操作。"
       },
       "crossPlatform": {
         "title": "多端适配",

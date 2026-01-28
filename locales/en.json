@@ -30,7 +30,7 @@
       "realTimeTask": {
         "title": "Real-time Combat",
         "desc": "Real-time Task",
-        "detail": "Auto-fight, auto-pick, auto-zipline, and quick teleport. Handles interactions, guides, and tutorials automatically."
+        "detail": "Auto-fight, auto-pick, auto-zipline, and quick teleport. Handles story skipping, interaction guides, tutorials, and info panels automatically."
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
@@ -50,7 +50,7 @@
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Daily Automation",
-        "detail": "Auto-claim daily rewards, read Wiki, and complete Baker Entry tasks. Say goodbye to repetitive chores."
+        "detail": "Auto-claim daily rewards, read Wiki, receive production manual rewards, and complete Baker Entry tasks."
       },
       "crossPlatform": {
         "title": "Cross Platform",
