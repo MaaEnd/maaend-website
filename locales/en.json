@@ -1,6 +1,10 @@
 {
+  "metadata": {
+    "title": "MaaEnd - Endfield Assistant",
+    "description": "Advanced AI automation assistant for \"Arknights: Endfield\". Intelligent, Efficient, Cross-platform."
+  },
   "header": {
-    "github": "Github",
+    "github": "GitHub",
     "docs": "docs"
   },
   "hero": {
@@ -10,6 +14,7 @@
     "description": "Endfield Assistant",
     "tagline": "High-precision automation assistant. Designed for heavy-duty operations and maximum efficiency in Arknights: Endfield.",
     "status": "[ STATUS: OPTIMIZED FOR PRODUCTION ]",
+    "systemReady": "SYSTEM_READY",
     "initCore": "DOWNLOAD",
     "downloadFor": "Download for",
     "loading": "Loading...",

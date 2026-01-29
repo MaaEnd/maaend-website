@@ -17,7 +17,7 @@ import {
   Terminal as TerminalIcon,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
@@ -159,40 +159,6 @@ export default function Hero() {
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   const [loading, setLoading] = useState(true);
 
-  // 鼠标视差效果 (仅桌面端) - 优化版本
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  // 防抖函数
-  const debounce = useCallback(
-    (func: (...args: any[]) => void, wait: number) => {
-      let timeout: NodeJS.Timeout;
-      return function executedFunction(...args: any[]) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    },
-    []
-  );
-
-  // 节流函数
-  const throttle = useCallback(
-    (func: (...args: any[]) => void, limit: number) => {
-      let inThrottle: boolean;
-      return function executedFunction(...args: any[]) {
-        if (!inThrottle) {
-          func(...args);
-          inThrottle = true;
-          setTimeout(() => (inThrottle = false), limit);
-        }
-      };
-    },
-    []
-  );
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
     try {
@@ -244,44 +210,6 @@ export default function Hero() {
     fetchReleaseInfo();
   }, [fetchReleaseInfo]);
 
-  // 优化的桌面检测和鼠标移动监听
-  useEffect(() => {
-    // 防抖的桌面检测函数
-    const debouncedCheckIsDesktop = debounce(() => {
-      const newIsDesktop = window.innerWidth >= 1024;
-      setIsDesktop(newIsDesktop);
-    }, 100);
-
-    // 初始检测
-    debouncedCheckIsDesktop();
-    window.addEventListener("resize", debouncedCheckIsDesktop);
-
-    return () => {
-      window.removeEventListener("resize", debouncedCheckIsDesktop);
-    };
-  }, [debounce]);
-
-  // 仅在桌面端挂载鼠标监听器
-  useEffect(() => {
-    if (!isDesktop) return;
-
-    // 节流的鼠标移动处理函数
-    const throttledHandleMouseMove = throttle((e: MouseEvent) => {
-      // 将鼠标位置转换为 -1 到 1 的范围
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-
-      // 直接更新状态
-      setMousePosition({ x, y });
-    }, 16); // 约 60fps
-
-    window.addEventListener("mousemove", throttledHandleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", throttledHandleMouseMove);
-    };
-  }, [isDesktop, throttle]);
-
   // 使用 useMemo 优化 currentDownload 计算
   const currentDownload = useMemo(() => {
     return (
@@ -313,8 +241,8 @@ export default function Hero() {
       ref={containerRef}
       className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-24 transition-colors duration-300 md:px-16 md:pt-20"
     >
-      {/* Industrial Background Layer - 合并所有背景元素 */}
-      <BackgroundLayer isDesktop={isDesktop} mousePosition={mousePosition} />
+      {/* Industrial Background Layer */}
+      <BackgroundLayer />
 
       <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left: Industrial Typography */}

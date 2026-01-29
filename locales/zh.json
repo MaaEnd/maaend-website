@@ -1,6 +1,10 @@
 {
+  "metadata": {
+    "title": "MaaEnd - 终末地小助手",
+    "description": "「明日方舟：终末地」高级 AI 自动化助手。智能、高效、跨平台。"
+  },
   "header": {
-    "github": "Github",
+    "github": "GitHub",
     "docs": "文档"
   },
   "hero": {
@@ -10,6 +14,7 @@
     "description": "终末地小助手",
     "tagline": "高精度自动化助手。专为「明日方舟：终末地」重度作战和最大化效率而设计。",
     "status": "[ 状态：已优化生产环境 ]",
+    "systemReady": "系统就绪",
     "initCore": "下载",
     "downloadFor": "下载",
     "loading": "加载中...",
