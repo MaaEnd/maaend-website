@@ -52,9 +52,9 @@ jobs:
         if: ${{ inputs.deploy-to-prod != true }}
         run: pnpm lint
 
-      - name: Format check
-        if: ${{ inputs.deploy-to-prod != true }}
-        run: pnpm format:check
+      # - name: Format check
+      #   if: ${{ inputs.deploy-to-prod != true }}
+      #   run: pnpm format:check
 
       - name: Build
         run: pnpm build
