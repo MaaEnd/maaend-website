@@ -7,7 +7,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   // 性能优化：使用固定速度，移除滚动速度检测
-  const marqueeDuration = 40;
+  const marqueeDuration = 200;
 
   return (
     <footer className="relative overflow-hidden border-t border-black/5 bg-[#F4F4F4] py-20 dark:border-white/5 dark:bg-[#030305]">
@@ -25,7 +25,7 @@ export default function Footer() {
           {[...Array(8)].map((_, i) => (
             <span
               key={i}
-              className="font-syne stroke-text cyber-gradient-text text-[8vw] font-bold text-transparent opacity-30 transition-opacity duration-300 hover:opacity-100"
+              className="font-syne stroke-text cyber-gradient-text text-[8vw] font-bold text-transparent opacity-30"
             >
               {t("footer.marquee")}
             </span>

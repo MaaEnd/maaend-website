@@ -72,7 +72,7 @@ export default function About() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative hidden lg:block"
           >
             <div className="absolute inset-0 aspect-square animate-pulse rounded-full bg-gradient-to-tr from-[#c49102]/10 to-white/5 blur-3xl dark:from-[#FFE600]/10" />
             <div className="glass-panel relative z-10 rounded-2xl border border-black/10 p-8 dark:border-white/10">
