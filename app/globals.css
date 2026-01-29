@@ -119,16 +119,45 @@
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
+    /* 浅色模式：淡淡的黄/青渐变背景，模拟原有的科技感 */
+    background-image:
+      radial-gradient(
+        ellipse at 20% 20%,
+        rgba(255, 208, 0, 0.06) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at 80% 30%,
+        rgba(0, 143, 166, 0.05) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        ellipse at 50% 80%,
+        rgba(255, 208, 0, 0.04) 0%,
+        transparent 50%
+      );
+    background-attachment: fixed;
   }
 
-  /* Apply the radial gradient only in dark mode if desired, or adjust for both */
+  /* 暗色模式渐变背景 */
   .dark body {
-    background: radial-gradient(
-      circle at 50% 0%,
-      #0a0a0c 0%,
-      #050505 60%,
-      #000000 100%
-    );
+    background:
+      radial-gradient(
+        ellipse at 20% 20%,
+        rgba(255, 208, 0, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at 80% 30%,
+        rgba(0, 240, 255, 0.06) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        ellipse at 50% 80%,
+        rgba(255, 208, 0, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(circle at 50% 0%, #0a0a0c 0%, #050505 60%, #000000 100%);
     background-attachment: fixed;
   }
 

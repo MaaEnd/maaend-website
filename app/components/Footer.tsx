@@ -1,41 +1,13 @@
 "use client";
 
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
 
 export default function Footer() {
   const { t } = useTranslation();
-  const [scrollSpeed, setScrollSpeed] = useState(0);
-  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    let lastScrollY = 0;
-    let lastTime = Date.now();
-
-    const updateScrollSpeed = () => {
-      const currentTime = Date.now();
-      const currentScrollY = scrollY.get();
-      const deltaY = Math.abs(currentScrollY - lastScrollY);
-      const deltaTime = currentTime - lastTime;
-
-      if (deltaTime > 0) {
-        const speed = deltaY / deltaTime;
-        setScrollSpeed(speed);
-      }
-
-      lastScrollY = currentScrollY;
-      lastTime = currentTime;
-    };
-
-    const unsubscribe = scrollY.on("change", updateScrollSpeed);
-    return () => unsubscribe();
-  }, [scrollY]);
-
-  // 基础速度更慢，根据滚动速度调整
-  const baseDuration = 40; // 基础持续时间更长（更慢）
-  const speedMultiplier = Math.max(0.5, Math.min(2, 1 + scrollSpeed * 10));
-  const dynamicDuration = baseDuration / speedMultiplier;
+  // 性能优化：使用固定速度，移除滚动速度检测
+  const marqueDuration = 40;
 
   return (
     <footer className="relative overflow-hidden border-t border-black/5 bg-[#F4F4F4] py-20 dark:border-white/5 dark:bg-[#030305]">
@@ -46,7 +18,7 @@ export default function Footer() {
           animate={{ x: "-50%" }}
           transition={{
             repeat: Infinity,
-            duration: dynamicDuration,
+            duration: marqueDuration,
             ease: "linear",
           }}
         >
