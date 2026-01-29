@@ -202,6 +202,24 @@
     box-shadow: none;
   }
 
+  /* Interactive Card Effects - 可复用的卡片交互样式 */
+  .card-interactive {
+    @apply rounded-xl border border-black/5 p-6 shadow-sm transition-all duration-300;
+    @apply hover:border-[#c49102]/50 hover:shadow-lg;
+    @apply dark:border-white/10 dark:shadow-2xl;
+    @apply dark:hover:border-[#FFE600]/50;
+  }
+
+  .card-interactive:hover {
+    box-shadow: 0 4px 20px rgba(255, 230, 0, 0.15);
+  }
+
+  :root:not(.dark) .card-interactive:hover {
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
   /* Neon Border Effects */
   .neon-border-yellow {
     box-shadow:

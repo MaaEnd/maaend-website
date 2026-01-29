@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
 import { clsx } from "clsx";
 
-// 性能优化版本：移除 3D 鼠标跟踪效果，使用简单的 CSS hover 效果
+// 简化的 Card 组件，使用全局 card-interactive 样式类
 export const Card = ({
   children,
   className,
@@ -13,7 +11,7 @@ export const Card = ({
 }) => {
   return (
     <div className={clsx("relative w-full", className)}>
-      <div className="glass-panel relative h-full overflow-hidden rounded-xl border border-black/5 p-6 shadow-sm transition-all duration-300 hover:border-[#c49102]/50 hover:shadow-lg dark:border-white/10 dark:shadow-2xl dark:hover:border-[#FFE600]/50 dark:hover:shadow-[0_4px_20px_rgba(255,230,0,0.15)]">
+      <div className="glass-panel card-interactive relative h-full overflow-hidden">
         {children}
       </div>
     </div>
