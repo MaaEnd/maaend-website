@@ -67,7 +67,7 @@ export default function BackgroundLayer() {
         <span>{t("hero.systemReady")}</span>
       </div>
       <div className="absolute top-24 right-8 font-mono text-[10px] text-black/40 dark:text-white/30">
-        ID: MaaEnd-V5-RELEASE
+        ID: MaaEnd-V1-RELEASE
       </div>
 
       {/* Large Watermark - 静态版本 */}
