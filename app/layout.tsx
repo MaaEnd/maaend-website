@@ -2,6 +2,7 @@
 
 import { DM_Sans, JetBrains_Mono, Space_Grotesk, Syne } from "next/font/google";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import "./globals.css";
 import "../i18n";
 import { ThemeProvider } from "./providers";
@@ -31,22 +32,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { t } = useTranslation();
+
   useEffect(() => {
-    document.title = "MaaEnd - Intelligent Automation";
+    document.title = t("metadata.title");
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute(
-        "content",
-        "Advanced AI automation assistant for Arknights: Endfield. Intelligent, Efficient, Cross-platform."
-      );
+      metaDescription.setAttribute("content", t("metadata.description"));
     } else {
       const meta = document.createElement("meta");
       meta.name = "description";
-      meta.content =
-        "Advanced AI automation assistant for Arknights: Endfield. Intelligent, Efficient, Cross-platform.";
+      meta.content = t("metadata.description");
       document.head.appendChild(meta);
     }
-  }, []);
+  }, [t]);
 
   return (
     <html lang="zh-CN" suppressHydrationWarning>
