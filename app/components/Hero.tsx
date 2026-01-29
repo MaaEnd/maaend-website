@@ -246,12 +246,12 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left: Industrial Typography */}
-        <div className="col-span-1 flex flex-col pl-0 text-left md:items-start lg:col-span-7 lg:pl-12">
+        <div className="col-span-1 flex flex-col items-center pl-0 text-left md:items-start lg:col-span-7 lg:pl-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-4 inline-flex w-fit items-center gap-3 border border-[#008fa6]/30 bg-[#008fa6]/5 px-3 py-1 dark:border-[#00F0FF]/30 dark:bg-[#00F0FF]/5"
+            className="mb-4 inline-flex w-fit items-center gap-3 self-start border border-[#008fa6]/30 bg-[#008fa6]/5 px-3 py-1 dark:border-[#00F0FF]/30 dark:bg-[#00F0FF]/5"
           >
             <TerminalIcon
               size={12}
@@ -266,7 +266,7 @@ export default function Hero() {
             style={{ y: textY }}
             className="font-syne relative mb-6 font-bold text-black dark:text-white"
           >
-            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-8 lg:gap-10">
+            <div className="flex flex-row items-center gap-3 sm:gap-4 md:gap-8 lg:gap-10">
               {/* Logo Icon */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -284,14 +284,14 @@ export default function Hero() {
                 />
               </motion.div>
 
-              <div className="text-center text-[2rem] leading-[0.9] tracking-tighter select-none sm:text-[2.5rem] md:text-left md:text-[3rem] lg:text-[5rem]">
+              <div className="text-left text-[2.5rem] leading-[0.9] tracking-tighter select-none sm:text-[3rem] md:text-[3rem] lg:text-[5rem]">
                 <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                   {t("hero.title")}
                 </span>
-                <span className="block text-black dark:text-white">
+                <span className="hidden text-black md:block dark:text-white">
                   {t("hero.subtitle")}
                 </span>
-                <span className="mt-2 block font-mono text-[1.8rem] tracking-normal text-[#008fa6] sm:text-[2.2rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
+                <span className="mt-2 block font-mono text-[2.2rem] tracking-normal text-[#008fa6] sm:text-[2.6rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
                   {t("hero.description")}
                 </span>
               </div>
