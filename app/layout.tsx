@@ -32,23 +32,30 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
+  // 依赖 i18n.language 确保语言切换时更新标题和描述
   useEffect(() => {
     document.title = t("metadata.title");
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute("content", t("metadata.description"));
-    } else {
-      const meta = document.createElement("meta");
-      meta.name = "description";
-      meta.content = t("metadata.description");
-      document.head.appendChild(meta);
     }
-  }, [t]);
+  }, [i18n.language, t]);
 
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html
+      lang={i18n.language === "zh" ? "zh-CN" : "en"}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* 静态默认 metadata，避免 SSR 时标题/描述为空 */}
+        <title>MaaEnd - Intelligent Automation</title>
+        <meta
+          name="description"
+          content="Advanced AI automation assistant for Arknights: Endfield. Intelligent, Efficient, Cross-platform."
+        />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${dmSans.variable} bg-background text-foreground overflow-x-hidden antialiased`}
       >
