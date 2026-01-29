@@ -7,7 +7,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   // 性能优化：使用固定速度，移除滚动速度检测
-  const marqueDuration = 40;
+  const marqueeDuration = 40;
 
   return (
     <footer className="relative overflow-hidden border-t border-black/5 bg-[#F4F4F4] py-20 dark:border-white/5 dark:bg-[#030305]">
@@ -18,7 +18,7 @@ export default function Footer() {
           animate={{ x: "-50%" }}
           transition={{
             repeat: Infinity,
-            duration: marqueDuration,
+            duration: marqueeDuration,
             ease: "linear",
           }}
         >

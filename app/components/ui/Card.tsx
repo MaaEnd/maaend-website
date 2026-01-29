@@ -13,7 +13,7 @@ export const Card = ({
 }) => {
   return (
     <div className={clsx("relative w-full", className)}>
-      <div className="glass-panel relative h-full overflow-hidden rounded-xl border border-black/5 p-6 shadow-sm transition-all duration-300 hover:border-[#c49102]/50 hover:shadow-lg dark:border-white/10 dark:shadow-2xl dark:hover:border-[#FFE600]/50 dark:hover:shadow-[#FFE600]/5">
+      <div className="glass-panel relative h-full overflow-hidden rounded-xl border border-black/5 p-6 shadow-sm transition-all duration-300 hover:border-[#c49102]/50 hover:shadow-lg dark:border-white/10 dark:shadow-2xl dark:hover:border-[#FFE600]/50 dark:hover:shadow-[0_4px_20px_rgba(255,230,0,0.15)]">
         {children}
       </div>
     </div>

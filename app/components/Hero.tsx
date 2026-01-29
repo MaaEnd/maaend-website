@@ -159,8 +159,8 @@ export default function Hero() {
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   const [loading, setLoading] = useState(true);
 
-  // 性能优化：移除鼠标视差效果相关逻辑，保持API兼容
-  const mousePosition = { x: 0, y: 0 };
+  // 性能优化：移除鼠标视差效果相关逻辑，使用稳定引用避免 memo 失效
+  const mousePosition = useMemo(() => ({ x: 0, y: 0 }), []);
   const isDesktop = false;
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
