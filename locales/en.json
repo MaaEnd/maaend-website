@@ -24,6 +24,8 @@
     "viewAllReleases": "View all releases",
     "mirrorDownloadLine1": "Have a MirrorChyan CDK?",
     "mirrorDownloadLine2": "Fast download on MirrorChyan",
+    "desktopOnlyLine1": "Desktop Only",
+    "desktopOnlyLine2": "Use PC to Download",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",

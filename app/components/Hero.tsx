@@ -25,7 +25,7 @@ import InteractiveModelOptimized from "./hero/InteractiveModelOptimized";
 import BackgroundLayer from "./hero/BackgroundLayer";
 
 // 定义平台和架构类型
-type Platform = "win" | "macos" | "linux" | "unknown";
+type Platform = "win" | "macos" | "linux" | "mobile" | "unknown";
 type Arch = "x86_64" | "aarch64" | "unknown";
 
 interface ReleaseAsset {
@@ -52,6 +52,15 @@ interface DownloadOption {
 function detectPlatform(): Platform {
   if (typeof window === "undefined") return "unknown";
   const ua = navigator.userAgent.toLowerCase();
+  // 先检测移动设备，避免被桌面检测误判
+  if (
+    ua.includes("android") ||
+    ua.includes("iphone") ||
+    ua.includes("ipad") ||
+    ua.includes("ipod")
+  ) {
+    return "mobile";
+  }
   if (ua.includes("win")) return "win";
   if (ua.includes("mac")) return "macos";
   if (ua.includes("linux")) return "linux";
@@ -212,6 +221,10 @@ export default function Hero() {
 
   // 使用 useMemo 优化 currentDownload 计算
   const currentDownload = useMemo(() => {
+    // 移动设备不提供匹配的下载选项
+    if (currentPlatform === "mobile") {
+      return null;
+    }
     return (
       downloadOptions.find(
         (opt) => opt.platform === currentPlatform && opt.arch === currentArch
@@ -344,6 +357,8 @@ export default function Hero() {
                         "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
                     }}
                     onClick={() => {
+                      // 移动设备不支持下载，点击无效
+                      if (currentPlatform === "mobile") return;
                       if (currentDownload) {
                         window.open(currentDownload.url, "_blank");
                       }
@@ -355,6 +370,14 @@ export default function Hero() {
                         <>
                           <Loader2 size={20} className="animate-spin" />
                           {t("hero.loading")}
+                        </>
+                      ) : currentPlatform === "mobile" ? (
+                        <>
+                          <Monitor size={20} className="shrink-0" />
+                          <span className="flex flex-col items-start gap-0.5 text-left text-base leading-tight">
+                            <span>{t("hero.desktopOnlyLine1")}</span>
+                            <span>{t("hero.desktopOnlyLine2")}</span>
+                          </span>
                         </>
                       ) : currentDownload ? (
                         <>

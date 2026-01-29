@@ -24,6 +24,8 @@
     "viewAllReleases": "查看所有版本",
     "mirrorDownloadLine1": "已有 Mirror酱 CDK？",
     "mirrorDownloadLine2": "前往 Mirror酱 高速下载",
+    "desktopOnlyLine1": "仅支持桌面端",
+    "desktopOnlyLine2": "请使用电脑下载",
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
