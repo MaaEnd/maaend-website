@@ -25,7 +25,7 @@ export default function Footer() {
           {[...Array(8)].map((_, i) => (
             <span
               key={i}
-              className="font-syne stroke-text cyber-gradient-text text-[8vw] font-bold text-transparent opacity-30"
+              className="font-syne stroke-text cyber-gradient-text text-[4rem] font-bold text-transparent opacity-30 md:text-[9rem]"
             >
               {t("footer.marquee")}
             </span>
