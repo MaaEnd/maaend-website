@@ -174,7 +174,10 @@ export default function Hero() {
       const response = await fetch(
         "https://api.github.com/repos/MaaEnd/MaaEnd/releases/latest"
       );
-      if (!response.ok) throw new Error("Failed to fetch release info");
+      if (!response.ok) {
+        console.error("Failed to fetch release info");
+        return;
+      }
       const data: ReleaseInfo = await response.json();
       setReleaseInfo(data);
 
@@ -252,7 +255,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-24 transition-colors duration-300 md:px-16 md:pt-20"
+      className="bg-background relative flex min-h-screen flex-col justify-start overflow-hidden px-4 pt-32 transition-colors duration-300 md:px-16 md:pt-28"
     >
       {/* Industrial Background Layer */}
       <BackgroundLayer />
@@ -298,7 +301,7 @@ export default function Hero() {
               </motion.div>
 
               <div className="text-left text-[2.5rem] leading-[0.9] tracking-tighter select-none sm:text-[3rem] md:text-[3rem] lg:text-[5rem]">
-                <span className="block bg-gradient-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
+                <span className="block bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                   {t("hero.title")}
                 </span>
                 <span className="hidden text-black md:block dark:text-white">
@@ -346,81 +349,85 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex flex-wrap items-center justify-center gap-3 md:justify-start"
+                  className="flex flex-col gap-3 md:flex-row md:items-center"
                 >
-                  {/* 主下载按钮 - 自动检测系统 */}
-                  <Button
-                    variant="primary"
-                    className="group relative h-16 overflow-hidden border-none bg-[#fef901] pr-10 pl-8 text-xl font-bold tracking-wide text-black hover:bg-[#fef901] dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
-                    style={{
-                      clipPath:
-                        "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
-                    }}
-                    onClick={() => {
-                      // 移动设备不支持下载，点击无效
-                      if (currentPlatform === "mobile") return;
-                      if (currentDownload) {
-                        window.open(currentDownload.url, "_blank");
-                      }
-                    }}
-                    disabled={loading || !currentDownload}
-                  >
-                    <span className="relative z-10 flex items-center gap-3">
-                      {loading ? (
-                        <>
-                          <Loader2 size={20} className="animate-spin" />
-                          {t("hero.loading")}
-                        </>
-                      ) : currentPlatform === "mobile" ? (
-                        <>
-                          <Monitor size={20} className="shrink-0" />
-                          <span className="flex flex-col items-start gap-0.5 text-left text-base leading-tight">
-                            <span>{t("hero.desktopOnlyLine1")}</span>
-                            <span>{t("hero.desktopOnlyLine2")}</span>
-                          </span>
-                        </>
-                      ) : currentDownload ? (
-                        <>
-                          <PlatformIcon
-                            platform={currentDownload.platform}
-                            className="h-5 w-5"
-                          />
-                          {t("hero.downloadFor")}{" "}
-                          {getPlatformDisplayName(currentDownload.platform)}{" "}
-                          {getArchDisplayName(currentDownload.arch)}
-                          <ArrowRight size={20} strokeWidth={3} />
-                        </>
-                      ) : (
-                        <>
-                          {t("hero.initCore")}
-                          <ArrowRight size={20} strokeWidth={3} />
-                        </>
-                      )}
-                    </span>
-                    {/* Warning Stripes on Hover */}
-                    <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#00000010_10px,#00000010_20px)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  </Button>
+                  {/* 第一行：主下载 + 展示全部 */}
+                  <div className="flex items-center gap-3">
+                    {/* 主下载按钮 - 自动检测系统 */}
+                    <Button
+                      variant="primary"
+                      className="group relative h-16 flex-1 overflow-hidden border-none bg-[#fef901] pr-10 pl-8 text-xl font-bold tracking-wide text-black hover:bg-[#fef901] md:flex-none dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
+                      style={{
+                        clipPath:
+                          "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
+                      }}
+                      onClick={() => {
+                        // 移动设备不支持下载，点击无效
+                        if (currentPlatform === "mobile") return;
+                        if (currentDownload) {
+                          window.open(currentDownload.url, "_blank");
+                        }
+                      }}
+                      disabled={loading || !currentDownload}
+                    >
+                      <span className="relative z-10 flex items-center gap-3">
+                        {loading ? (
+                          <>
+                            <Loader2 size={20} className="animate-spin" />
+                            {t("hero.loading")}
+                          </>
+                        ) : currentPlatform === "mobile" ? (
+                          <>
+                            <Monitor size={20} className="shrink-0" />
+                            <span className="flex flex-col items-start gap-0.5 text-left text-base leading-tight">
+                              <span>{t("hero.desktopOnlyLine1")}</span>
+                              <span>{t("hero.desktopOnlyLine2")}</span>
+                            </span>
+                          </>
+                        ) : currentDownload ? (
+                          <>
+                            <PlatformIcon
+                              platform={currentDownload.platform}
+                              className="h-5 w-5"
+                            />
+                            {t("hero.downloadFor")}{" "}
+                            {getPlatformDisplayName(currentDownload.platform)}{" "}
+                            {getArchDisplayName(currentDownload.arch)}
+                            <ArrowRight size={20} strokeWidth={3} />
+                          </>
+                        ) : (
+                          <>
+                            {t("hero.initCore")}
+                            <ArrowRight size={20} strokeWidth={3} />
+                          </>
+                        )}
+                      </span>
+                      {/* Warning Stripes on Hover */}
+                      <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#00000010_10px,#00000010_20px)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    </Button>
 
-                  {/* 更多下载选项按钮 */}
+                    {/* 更多下载选项按钮 */}
+                    <Button
+                      variant="outline"
+                      className="group relative h-16 w-16 overflow-hidden border-2 border-[#d4a017] bg-transparent p-0 hover:bg-[#d4a017]/10 dark:border-[#FFD000] dark:hover:bg-[#FFD000]/10"
+                      style={{
+                        clipPath:
+                          "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                      }}
+                      onClick={() => setShowDownloadOptions(true)}
+                      disabled={loading}
+                    >
+                      <ChevronDown
+                        size={24}
+                        className="text-[#d4a017] dark:text-[#FFD000]"
+                      />
+                    </Button>
+                  </div>
+
+                  {/* 第二行：Mirror酱 */}
                   <Button
                     variant="outline"
-                    className="group relative h-16 w-16 overflow-hidden border-2 border-[#d4a017] bg-transparent p-0 hover:bg-[#d4a017]/10 dark:border-[#FFD000] dark:hover:bg-[#FFD000]/10"
-                    style={{
-                      clipPath:
-                        "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-                    }}
-                    onClick={() => setShowDownloadOptions(true)}
-                    disabled={loading}
-                  >
-                    <ChevronDown
-                      size={24}
-                      className="text-[#d4a017] dark:text-[#FFD000]"
-                    />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    className="group relative h-16 max-w-[320px] overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                    className="group relative h-16 w-full overflow-hidden border-2 border-[#008fa6]/60 bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:border-[#008fa6] hover:bg-[#008fa6]/10 md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/60 dark:text-[#00F0FF] dark:hover:border-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
                     style={{
                       clipPath:
                         "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
