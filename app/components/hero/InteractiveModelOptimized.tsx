@@ -1,227 +1,91 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  Environment,
+  Float,
+  OrbitControls,
+  PerspectiveCamera,
+  useGLTF,
+} from "@react-three/drei";
+import {
+  Bloom,
+  ChromaticAberration,
+  EffectComposer,
+  Noise,
+  Vignette,
+} from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useTheme } from "next-themes";
 
-// 性能优化的粒子系统
-const OptimizedArchitectureModel = ({ isDark }: { isDark: boolean }) => {
-  const count = 5000; // 保持原始粒子数量以维持视觉效果
-  const mesh = useRef<THREE.Points>(null);
+// MaaEnd 主题色常量
+const THEME_COLORS = {
+  cyan: "#00F0FF",
+  cyanDark: "#0891b2",
+  yellow: "#FFD000",
+  orangeDark: "#ea580c",
+} as const;
 
-  // 使用 useMemo 缓存完整的几何体结构
-  const geometry = useMemo(() => {
-    /* eslint-disable react-hooks/purity */
-    // Math.random() is safe here as it's memoized and only runs once on mount
-    const temp = [];
+function RelayModel(): React.JSX.Element {
+  const { scene } = useGLTF("/model/Relay.glb", true);
+  const modelRef = useRef<THREE.Group>(null);
 
-    // 塔的总高度
-    const towerHeight = 8;
-    const baseY = -4; // 底部位置（往下移动让顶部完整显示）
+  const clonedScene = useMemo(() => {
+    const cloned = scene.clone();
+    cloned.traverse((child) => {
+      if (!(child instanceof THREE.Mesh) || !child.material) return;
 
-    // 1. 主塔身 - 底部宽大向上逐渐收窄的锥形结构 (四面体框架)
-    for (let i = 0; i < count * 0.25; i++) {
-      const t = Math.random(); // 0 = 底部, 1 = 顶部
-      const y = baseY + t * towerHeight * 0.7;
+      child.material = child.material.clone();
+      const material = child.material as THREE.MeshStandardMaterial;
 
-      // 半径随高度减小 (底部2.0, 顶部0.3)
-      const radius = 2.0 - t * 1.7;
-
-      // 四边形框架的边缘
-      const edge = Math.floor(Math.random() * 4);
-      const baseAngle = (edge / 4) * Math.PI * 2 + Math.PI / 4;
-      const nextAngle = ((edge + 1) / 4) * Math.PI * 2 + Math.PI / 4;
-      const lerp = Math.random();
-
-      const angle = baseAngle + lerp * (nextAngle - baseAngle);
-      const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.05;
-      const z = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.05;
-
-      temp.push(x, y, z);
-    }
-
-    // 2. 垂直支撑柱 (四根主柱从底部延伸到顶部)
-    for (let pillar = 0; pillar < 4; pillar++) {
-      const angle = (pillar / 4) * Math.PI * 2 + Math.PI / 4;
-      for (let i = 0; i < count * 0.04; i++) {
-        const t = Math.random();
-        const y = baseY + t * towerHeight * 0.7;
-        const radius = 2.0 - t * 1.7;
-
-        const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.08;
-        const z = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.08;
-
-        temp.push(x, y, z);
+      if (material.transparent) {
+        material.depthWrite = true;
+        material.alphaTest = 0.1;
       }
-    }
 
-    // 3. 水平横梁结构 (多层平台)
-    const platforms = [0.0, 0.25, 0.5, 0.7];
-    for (const pLevel of platforms) {
-      const y = baseY + pLevel * towerHeight * 0.7;
-      const radius = 2.0 - pLevel * 1.7;
+      material.side = THREE.DoubleSide;
 
-      for (let i = 0; i < count * 0.03; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const r = radius * (0.3 + Math.random() * 0.7);
+      const hasEmissive =
+        material.emissive &&
+        (material.emissive.r > 0 ||
+          material.emissive.g > 0 ||
+          material.emissive.b > 0);
 
-        const x = Math.cos(angle) * r + (Math.random() - 0.5) * 0.05;
-        const z = Math.sin(angle) * r + (Math.random() - 0.5) * 0.05;
-
-        temp.push(x, y + (Math.random() - 0.5) * 0.1, z);
+      if (hasEmissive) {
+        material.emissive = new THREE.Color(THEME_COLORS.yellow);
+        material.emissiveIntensity = 3;
       }
-    }
-
-    // 4. 能量环 (围绕塔身的悬浮光环)
-    const energyRings = [
-      { y: baseY + towerHeight * 0.3, radius: 2.8, particles: 0.06 },
-      { y: baseY + towerHeight * 0.55, radius: 2.0, particles: 0.05 },
-      { y: baseY + towerHeight * 0.75, radius: 1.2, particles: 0.04 },
-    ];
-
-    for (const ring of energyRings) {
-      for (let i = 0; i < count * ring.particles; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const r = ring.radius + (Math.random() - 0.5) * 0.15;
-        const x = Math.cos(angle) * r;
-        const z = Math.sin(angle) * r;
-        const y = ring.y + (Math.random() - 0.5) * 0.08;
-
-        temp.push(x, y, z);
-      }
-    }
-
-    // 5. 顶部天线结构 (细长的能量发射器)
-    const antennaBase = baseY + towerHeight * 0.7;
-    const antennaHeight = towerHeight * 0.35;
-
-    // 主天线柱
-    for (let i = 0; i < count * 0.08; i++) {
-      const t = Math.random();
-      const y = antennaBase + t * antennaHeight;
-
-      // 天线越往上越细
-      const radius = 0.15 - t * 0.12;
-      const angle = Math.random() * Math.PI * 2;
-
-      const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.03;
-      const z = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.03;
-
-      temp.push(x, y, z);
-    }
-
-    // 6. 天线顶部能量球
-    const topY = antennaBase + antennaHeight;
-    for (let i = 0; i < count * 0.04; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.random() * Math.PI;
-      const r = 0.25 + Math.random() * 0.1;
-
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = topY + r * Math.cos(phi);
-      const z = r * Math.sin(phi) * Math.sin(theta);
-
-      temp.push(x, y, z);
-    }
-
-    // 7. 斜向支撑结构 (X形交叉支撑)
-    for (let level = 0; level < 3; level++) {
-      const t1 = level * 0.25;
-      const t2 = (level + 1) * 0.25;
-
-      for (let cross = 0; cross < 4; cross++) {
-        const angle1 = (cross / 4) * Math.PI * 2 + Math.PI / 4;
-        const angle2 = ((cross + 1) / 4) * Math.PI * 2 + Math.PI / 4;
-
-        for (let i = 0; i < count * 0.01; i++) {
-          const lerp = Math.random();
-          const t = t1 + lerp * (t2 - t1);
-          const y = baseY + t * towerHeight * 0.7;
-
-          const radius = 2.0 - t * 1.7;
-          const angle = angle1 + lerp * (angle2 - angle1);
-
-          const x = Math.cos(angle) * radius * 0.95;
-          const z = Math.sin(angle) * radius * 0.95;
-
-          temp.push(x, y, z);
-        }
-      }
-    }
-
-    // 8. 悬浮能量粒子 (围绕塔身的浮动粒子)
-    for (let i = 0; i < count * 0.1; i++) {
-      const y = baseY + Math.random() * towerHeight;
-      const distance = 2.5 + Math.random() * 1.5;
-      const angle = Math.random() * Math.PI * 2;
-
-      const x = Math.cos(angle) * distance;
-      const z = Math.sin(angle) * distance;
-
-      temp.push(x, y, z);
-    }
-
-    // 9. 底座结构 (宽大的六边形底座)
-    for (let i = 0; i < count * 0.06; i++) {
-      const angle = (Math.floor(Math.random() * 6) / 6) * Math.PI * 2;
-      const nextAngle = ((Math.floor(Math.random() * 6) + 1) / 6) * Math.PI * 2;
-      const lerp = Math.random();
-      const finalAngle = angle + lerp * (nextAngle - angle);
-
-      const radius = 2.2 + Math.random() * 0.3;
-      const x = Math.cos(finalAngle) * radius;
-      const z = Math.sin(finalAngle) * radius;
-      const y = baseY + (Math.random() - 0.5) * 0.2;
-
-      temp.push(x, y, z);
-    }
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(temp), 3)
-    );
-    return geometry;
-    /* eslint-enable react-hooks/purity */
-  }, [count]);
-
-  // 优化材质，减少重新创建
-  const material = useMemo(() => {
-    return new THREE.PointsMaterial({
-      size: 0.05,
-      color: isDark ? "#FFD000" : "#00BFFF",
-      transparent: true,
-      opacity: 0.8,
-      sizeAttenuation: true,
-      blending: isDark ? THREE.AdditiveBlending : THREE.NormalBlending,
     });
-  }, [isDark]);
+    return cloned;
+  }, [scene]);
 
-  // 优化动画循环 - 保持原始旋转速度
   useFrame(() => {
-    if (!mesh.current) return;
-    // Technical rotation - 保持原始速度
-    mesh.current.rotation.y -= 0.002;
+    if (modelRef.current) {
+      modelRef.current.rotation.y -= 0.002;
+    }
   });
 
-  // 清理几何体和材质
-  useEffect(() => {
-    return () => {
-      geometry.dispose();
-      material.dispose();
-    };
-  }, [geometry, material]);
+  return (
+    <primitive
+      ref={modelRef}
+      object={clonedScene}
+      scale={0.33}
+      position={[0, -4, 0]}
+    />
+  );
+}
 
-  return <points ref={mesh} geometry={geometry} material={material} />;
-};
+useGLTF.preload("/model/Relay.glb", true);
 
-// 简化的全息场组件
-const OptimizedHoloField = ({ isDark }: { isDark: boolean }) => {
+function OptimizedHoloField({
+  isDark,
+}: {
+  isDark: boolean;
+}): React.JSX.Element {
   const ref = useRef<THREE.Group>(null);
 
-  // 缓存几何体
+  // 几何体只需创建一次
   const geometries = useMemo(
     () => ({
       outer: new THREE.CylinderGeometry(1.5, 3.5, 10, 6, 1, true),
@@ -230,20 +94,20 @@ const OptimizedHoloField = ({ isDark }: { isDark: boolean }) => {
     []
   );
 
-  // 缓存材质
+  // 材质随主题变化
   const materials = useMemo(
     () => ({
       outer: new THREE.MeshBasicMaterial({
-        color: isDark ? "#00F0FF" : "#008fa6",
+        color: isDark ? THEME_COLORS.cyan : THEME_COLORS.cyanDark,
         wireframe: true,
-        opacity: 0.04,
+        opacity: isDark ? 0.04 : 0.15,
         transparent: true,
         side: THREE.DoubleSide,
       }),
       inner: new THREE.MeshBasicMaterial({
-        color: "#FFD000",
+        color: isDark ? THEME_COLORS.yellow : THEME_COLORS.orangeDark,
         wireframe: true,
-        opacity: 0.03,
+        opacity: isDark ? 0.03 : 0.12,
         transparent: true,
         side: THREE.DoubleSide,
       }),
@@ -251,19 +115,27 @@ const OptimizedHoloField = ({ isDark }: { isDark: boolean }) => {
     [isDark]
   );
 
-  useFrame((state, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * 0.5;
-    }
-  });
-
-  // 清理资源
+  // 材质清理
   useEffect(() => {
     return () => {
-      Object.values(geometries).forEach((geo) => geo.dispose());
-      Object.values(materials).forEach((mat) => mat.dispose());
+      materials.outer.dispose();
+      materials.inner.dispose();
     };
-  }, [geometries, materials]);
+  }, [materials]);
+
+  useFrame((state, delta) => {
+    if (!ref.current) return;
+    ref.current.rotation.y += delta * 0.5;
+    ref.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+  });
+
+  // 组件卸载时清理几何体
+  useEffect(() => {
+    return () => {
+      geometries.outer.dispose();
+      geometries.inner.dispose();
+    };
+  }, [geometries]);
 
   return (
     <group ref={ref}>
@@ -279,47 +151,96 @@ const OptimizedHoloField = ({ isDark }: { isDark: boolean }) => {
       />
     </group>
   );
-};
+}
 
-// 主组件
-export default function InteractiveModelOptimized() {
+function SceneLighting({ isDark }: { isDark: boolean }): React.JSX.Element {
+  const { gl } = useThree();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    gl.toneMappingExposure = isDark ? 1.5 : 1.0;
+  }, [isDark, gl]);
+
+  return (
+    <>
+      <Environment preset="city" />
+      <ambientLight
+        intensity={isDark ? 0.8 : 1.2}
+        color={isDark ? "#ccfbfd" : "#ffffff"}
+      />
+
+      {isDark ? (
+        <>
+          <spotLight
+            position={[-5, 5, -5]}
+            angle={0.5}
+            penumbra={1}
+            intensity={20}
+            color={THEME_COLORS.cyan}
+            distance={20}
+          />
+          <pointLight
+            position={[5, 0, 2]}
+            intensity={5}
+            color={THEME_COLORS.yellow}
+            distance={10}
+            decay={2}
+          />
+          <directionalLight
+            position={[0, 10, 0]}
+            intensity={1}
+            color="#ffffff"
+          />
+        </>
+      ) : (
+        <>
+          <directionalLight
+            position={[5, 10, 7]}
+            intensity={2}
+            color="#fff"
+            castShadow
+          />
+          <directionalLight
+            position={[-5, 5, -5]}
+            intensity={1}
+            color="#dbeafe"
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+export default function InteractiveModelOptimized(): React.JSX.Element | null {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 延迟挂载以避免水合不匹配
   useEffect(() => {
     const timeoutId = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // 使用 Intersection Observer 优化性能
   useEffect(() => {
     if (!mounted || !containerRef.current) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
+      ([entry]) => setIsVisible(entry.isIntersecting),
       { threshold: 0.1 }
     );
 
     observer.observe(containerRef.current);
-
     return () => observer.disconnect();
   }, [mounted]);
 
-  // 计算有效主题
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
 
-  // 防止水合不匹配
   if (!mounted) {
     return <div ref={containerRef} className="h-full w-full" />;
   }
 
-  // 只有在可见时才渲染 Canvas
   if (!isVisible) {
     return (
       <div
@@ -331,25 +252,26 @@ export default function InteractiveModelOptimized() {
     );
   }
 
+  const chromaticOffset = isDark ? 0.002 : 0.0005;
+
   return (
     <div
       ref={containerRef}
       className="group relative h-full w-full cursor-crosshair"
     >
       <Canvas
-        dpr={[1, 2]} // 限制设备像素比以提升性能
+        dpr={[1, 2]}
         camera={{ fov: 50 }}
         gl={{
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-          stencil: false,
           depth: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1,
+          toneMappingExposure: 1.0,
         }}
-        frameloop="demand" // 按需渲染
-        performance={{ min: 0.5 }} // 性能阈值
+        frameloop="demand"
+        performance={{ min: 0.5 }}
       >
         <PerspectiveCamera makeDefault position={[6, -2.5, 8]} />
         <OrbitControls
@@ -358,48 +280,52 @@ export default function InteractiveModelOptimized() {
           minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 1.6}
           autoRotate
-          autoRotateSpeed={1.2}
+          autoRotateSpeed={0.5}
           enableDamping
           dampingFactor={0.05}
+          rotateSpeed={0.5}
         />
 
         <Float speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
-          <OptimizedArchitectureModel isDark={isDark} />
+          <RelayModel />
           <OptimizedHoloField isDark={isDark} />
         </Float>
 
-        {/* 优化的光照 */}
-        <ambientLight intensity={0.2} />
-        <pointLight
-          position={[10, 10, 10]}
-          intensity={1}
-          color={isDark ? "#00F0FF" : "#00aecb"}
-          decay={2}
-          distance={50}
-        />
-        <pointLight
-          position={[-10, -10, -10]}
-          intensity={1}
-          color="#FFD000"
-          decay={2}
-          distance={50}
-        />
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={1.2}
+            mipmapBlur
+            intensity={1.2}
+            radius={0.7}
+          />
+          <Noise opacity={isDark ? 0.05 : 0.02} premultiply />
+          <ChromaticAberration
+            offset={[chromaticOffset, chromaticOffset]}
+            radialModulation={false}
+            modulationOffset={0}
+          />
+          <Vignette eskil={false} offset={0.1} darkness={1.0} />
+        </EffectComposer>
+
+        <SceneLighting isDark={isDark} />
       </Canvas>
 
-      {/* 简化的 HUD 覆盖层 */}
-      <div className="pointer-events-none absolute inset-0">
-        {/* 角落括号 */}
-        <div className="absolute top-4 left-4 h-8 w-8 border-t border-l border-[#FFD000]/50" />
-        <div className="absolute top-4 right-4 h-8 w-8 border-t border-r border-[#FFD000]/50" />
-        <div className="absolute bottom-4 left-4 h-8 w-8 border-b border-l border-[#FFD000]/50" />
-        <div className="absolute right-4 bottom-4 h-8 w-8 border-r border-b border-[#FFD000]/50" />
+      <HudOverlay />
+    </div>
+  );
+}
 
-        {/* 中心聚焦环 - 使用 CSS 动画而不是 Framer Motion */}
-        <div
-          className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 animate-spin rounded-full border border-[#00aecb]/10 dark:border-[#00F0FF]/10"
-          style={{ animationDuration: "60s" }}
-        />
-      </div>
+function HudOverlay(): React.JSX.Element {
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute top-4 left-4 h-8 w-8 border-t border-l border-[#FFD000]/50" />
+      <div className="absolute top-4 right-4 h-8 w-8 border-t border-r border-[#FFD000]/50" />
+      <div className="absolute bottom-4 left-4 h-8 w-8 border-b border-l border-[#FFD000]/50" />
+      <div className="absolute right-4 bottom-4 h-8 w-8 border-r border-b border-[#FFD000]/50" />
+      <div
+        className="absolute top-1/2 left-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 animate-spin rounded-full border border-[#00aecb]/10 dark:border-[#00F0FF]/10"
+        style={{ animationDuration: "60s" }}
+      />
     </div>
   );
 }
