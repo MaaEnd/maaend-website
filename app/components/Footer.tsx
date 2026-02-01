@@ -3,6 +3,12 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
+// QQ 群号和链接常量
+const USER_QQ_GROUP = "1082597011";
+const DEV_QQ_GROUP = "1072587329";
+const USER_QQ_GROUP_LINK = "https://qm.qq.com/q/9IMcuQ55ny";
+const DEV_QQ_GROUP_LINK = "https://qm.qq.com/q/EyirQpBiW4";
+
 export default function Footer() {
   const { t } = useTranslation();
 
@@ -49,22 +55,22 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href="https://qm.qq.com/q/9IMcuQ55ny"
+                href={USER_QQ_GROUP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.userGroup")}
+                {t("footer.userGroup")}: {USER_QQ_GROUP}
               </a>
             </li>
             <li>
               <a
-                href="https://qm.qq.com/q/EyirQpBiW4"
+                href={DEV_QQ_GROUP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.devGroup")}
+                {t("footer.devGroup")}: {DEV_QQ_GROUP}
               </a>
             </li>
           </ul>
