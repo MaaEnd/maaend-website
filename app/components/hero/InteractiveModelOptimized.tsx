@@ -273,7 +273,7 @@ export default function InteractiveModelOptimized(): React.JSX.Element | null {
         frameloop="demand"
         performance={{ min: 0.5 }}
       >
-        <PerspectiveCamera makeDefault position={[6, -2.5, 8]} />
+        <PerspectiveCamera makeDefault position={[6, 0, 8]} />
         <OrbitControls
           enableZoom={false}
           enablePan={false}
