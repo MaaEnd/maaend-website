@@ -49,7 +49,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href="https://qm.qq.com/q/MN6XLvtZia"
+                href="https://qm.qq.com/q/9IMcuQ55ny"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
