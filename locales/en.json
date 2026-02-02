@@ -35,34 +35,34 @@
     "title": "CORE MODULES",
     "items": {
       "realTimeTask": {
-        "title": "Real-time Combat",
-        "desc": "Real-time Task",
-        "detail": "Auto-fight, auto-pick, auto-zipline, and quick teleport. Handles story skipping, interaction guides, tutorials, and info panels automatically."
+        "title": "Real-time Assist",
+        "desc": "Ultimate AFK Tool!",
+        "detail": "Auto story, combat assist, auto pickup, quick teleport, auto zipline — just turn it on and go do something else~ 🎮"
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
-        "desc": "Puzzle Solver",
-        "detail": "High-precision recognition and automated solving for various puzzles. Supports single, loop, and dry-run modes."
+        "desc": "Brain? Not needed!",
+        "detail": "AI solves puzzles instantly — no more scratching your head! Supports single/loop/demo modes 😎"
       },
       "autoResell": {
         "title": "Auto Resell",
-        "desc": "Auto Resell",
-        "detail": "Smart profit recognition and automated trading strategies to maximize your commercial gains."
+        "desc": "Path to Riches!",
+        "detail": "Smart profit detection, buy low sell high — financial freedom awaits~ 💸"
       },
       "blueprints": {
-        "title": "Blueprint Import",
-        "desc": "Blueprints",
-        "detail": "One-click import for building blueprints, quickly constructing complex industrial production lines."
+        "title": "Blueprint Importer",
+        "desc": "Builder's Dream!",
+        "detail": "Batch import blueprints with smart parsing — build your industrial empire with max efficiency! 📐"
       },
       "dailyRewards": {
         "title": "Daily Automation",
-        "desc": "Daily Automation",
-        "detail": "Auto-claim daily rewards, read Wiki, receive production manual rewards, and complete Baker Entry tasks."
+        "desc": "Never forget to claim!",
+        "detail": "Base harvesting, daily rewards, wiki red dots, manual rewards, Baker chats — all done in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",
-        "desc": "Cross Platform",
-        "detail": "Full support for Windows (Win32 API) and Android (ADB), compatible with various emulators and native environments."
+        "desc": "Chill with us~",
+        "detail": "PC + Android fully supported — enjoy the game on any platform! 🐟"
       }
     }
   },
