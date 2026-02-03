@@ -183,10 +183,10 @@ export default function Hero() {
 
       // 解析 assets 为下载选项
       const options: DownloadOption[] = data.assets
-        .filter((asset) => asset.name.endsWith(".zip"))
         .map((asset) => {
-          // 解析文件名: MaaEnd-{os}-{arch}-{version}.zip
-          const match = asset.name.match(/MaaEnd-(\w+)-(\w+)-v[\d.]+\.zip/);
+          // 解析文件名: MaaEnd-{os}-{arch}-{version}.{ext}
+          // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz）
+          const match = asset.name.match(/MaaEnd-(\w+)-(\w+)-v[\d.]+/);
           if (!match) return null;
           return {
             platform: match[1] as Platform,
