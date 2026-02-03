@@ -522,7 +522,7 @@ export default function Hero() {
         </div>
 
         {/* Right: Interactive Particle Model */}
-        <div className="pointer-events-auto relative col-span-1 hidden h-[550px] lg:col-span-5 lg:block lg:h-[750px]">
+        <div className="pointer-events-auto relative col-span-1 hidden h-[500px] lg:col-span-5 lg:block lg:h-[700px]">
           <InteractiveModelOptimized />
         </div>
       </div>
