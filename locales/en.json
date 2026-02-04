@@ -37,8 +37,8 @@
     "items": {
       "realTimeTask": {
         "title": "Real-time Assist",
-        "desc": "Ultimate AFK Tool!",
-        "detail": "Auto story, combat assist, auto pickup, quick teleport, auto zipline — just turn it on and go do something else~ 🎮"
+        "desc": "Helper while you play!",
+        "detail": "Auto story, interaction handling, combat assist, auto pickup, teleport confirmations, auto zipline — recognizes the screen in real time and assists with key actions while you play~ 🎮"
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
@@ -48,7 +48,7 @@
       "autoResell": {
         "title": "Auto Resell",
         "desc": "Path to Riches!",
-        "detail": "Smart profit detection, buy low sell high — financial freedom awaits~ 💸"
+        "detail": "Detects the best-profit items and buys them, can auto-enter the target friend's ship; region switching and selling still require manual steps for now~ 💸"
       },
       "blueprints": {
         "title": "Blueprint Importer",
@@ -58,7 +58,7 @@
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Never forget to claim!",
-        "detail": "Base harvesting, daily rewards, wiki red dots, manual rewards, Baker chats — all done in one click! ✅"
+        "detail": "Daily rewards, wiki red dots, production manual rewards, Baker chats — all done in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",
