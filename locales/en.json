@@ -38,7 +38,7 @@
       "realTimeTask": {
         "title": "Real-time Assist",
         "desc": "Helper while you play!",
-        "detail": "Auto story, interaction handling, combat assist, auto pickup, teleport confirmations, auto zipline — recognizes the screen in real time and assists with key actions while you play~ 🎮"
+        "detail": "Auto story, interaction handling, combat assist, auto pickup, teleport confirmations, auto zipline — plus quick puzzle solving and pat support, powered by real-time screen recognition~ 🎮"
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
@@ -48,17 +48,17 @@
       "autoResell": {
         "title": "Auto Resell",
         "desc": "Path to Riches!",
-        "detail": "Detects the best-profit items and buys them, can auto-enter the target friend's ship; region switching and selling still require manual steps for now~ 💸"
+        "detail": "Detects the best-profit items and buys them, can auto-enter the target friend's ship; optional auto region switching, but selling still requires manual steps for now~ 💸"
       },
       "blueprints": {
         "title": "Blueprint Importer",
         "desc": "Builder's Dream!",
-        "detail": "Batch import blueprints with smart parsing — build your industrial empire with max efficiency! 📐"
+        "detail": "Batch import blueprints with smart parsing (share codes or messy text) — build your industrial empire with max efficiency! 📐"
       },
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Never forget to claim!",
-        "detail": "Daily rewards, wiki red dots, production manual rewards, Baker chats — all done in one click! ✅"
+        "detail": "Base collection/restock/clues, daily rewards (missions/pass/mail), simulation rewards, delivery jobs/commission grabbing, friend visits, wiki/manual cleanup, Baker chats — plus product exchanges, item transfers, batch crafting... all done in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",
