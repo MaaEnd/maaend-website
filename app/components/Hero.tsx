@@ -365,11 +365,22 @@ export default function Hero() {
                         onClick={() => {
                           // 移动设备不支持下载，点击无效
                           if (currentPlatform === "mobile") return;
+                          // API 错误或无结果时，跳转 GitHub releases
+                          if (downloadOptions.length === 0) {
+                            window.open(
+                              "https://github.com/MaaEnd/MaaEnd/releases",
+                              "_blank"
+                            );
+                            return;
+                          }
                           if (currentDownload) {
                             window.open(currentDownload.url, "_blank");
                           }
                         }}
-                        disabled={loading || !currentDownload}
+                        disabled={
+                          loading ||
+                          (downloadOptions.length > 0 && !currentDownload)
+                        }
                       >
                         <span className="relative z-10 flex items-center gap-3">
                           {loading ? (
@@ -384,6 +395,12 @@ export default function Hero() {
                                 <span>{t("hero.desktopOnlyLine1")}</span>
                                 <span>{t("hero.desktopOnlyLine2")}</span>
                               </span>
+                            </>
+                          ) : downloadOptions.length === 0 ? (
+                            <>
+                              <Download size={20} />
+                              {t("hero.goToGitHub")}
+                              <ArrowRight size={20} strokeWidth={3} />
                             </>
                           ) : currentDownload ? (
                             <>
@@ -408,24 +425,26 @@ export default function Hero() {
                       </Button>
                     </div>
 
-                    {/* 更多下载选项按钮 */}
-                    <div className="relative shrink-0 border-2 border-dashed border-[#d4a017]/50 p-[2px] dark:border-[#FFD000]/50">
-                      <Button
-                        variant="outline"
-                        className="group relative h-16 w-16 overflow-hidden border-none bg-transparent p-0 hover:bg-[#d4a017]/10 dark:hover:bg-[#FFD000]/10"
-                        style={{
-                          clipPath:
-                            "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-                        }}
-                        onClick={() => setShowDownloadOptions(true)}
-                        disabled={loading}
-                      >
-                        <ChevronDown
-                          size={24}
-                          className="text-[#d4a017] dark:text-[#FFD000]"
-                        />
-                      </Button>
-                    </div>
+                    {/* 更多下载选项按钮 - 仅当有下载选项时显示 */}
+                    {downloadOptions.length > 0 && (
+                      <div className="relative shrink-0 border-2 border-dashed border-[#d4a017]/50 p-[2px] dark:border-[#FFD000]/50">
+                        <Button
+                          variant="outline"
+                          className="group relative h-16 w-16 overflow-hidden border-none bg-transparent p-0 hover:bg-[#d4a017]/10 dark:hover:bg-[#FFD000]/10"
+                          style={{
+                            clipPath:
+                              "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                          }}
+                          onClick={() => setShowDownloadOptions(true)}
+                          disabled={loading}
+                        >
+                          <ChevronDown
+                            size={24}
+                            className="text-[#d4a017] dark:text-[#FFD000]"
+                          />
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
                   {/* 第二行：Mirror酱 */}

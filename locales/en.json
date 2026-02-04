@@ -22,6 +22,7 @@
     "size": "SIZE",
     "selectPlatform": "SELECT_PLATFORM",
     "viewAllReleases": "View all releases",
+    "goToGitHub": "Go to GitHub",
     "mirrorDownloadLine1": "Have a MirrorChyan CDK?",
     "mirrorDownloadLine2": "Fast download on MirrorChyan",
     "desktopOnlyLine1": "Desktop Only",
