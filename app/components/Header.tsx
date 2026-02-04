@@ -7,6 +7,7 @@ import { Book, Languages } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
+import { GITHUB_URLS } from "../constants";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -32,7 +33,7 @@ export default function Header() {
       <div className="flex items-center gap-4 md:gap-6">
         <nav className="hidden items-center gap-6 md:flex">
           <Link
-            href="https://github.com/MaaEnd/MaaEnd"
+            href={GITHUB_URLS.REPO}
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
           >
             <Image
@@ -45,7 +46,7 @@ export default function Header() {
             {t("header.github")}
           </Link>
           <Link
-            href="https://github.com/MaaEnd/MaaEnd/blob/main/docs/developers/development.md"
+            href={GITHUB_URLS.DOCS}
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
           >
             <Book size={16} /> {t("header.docs")}

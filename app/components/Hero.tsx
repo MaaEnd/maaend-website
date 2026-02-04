@@ -23,6 +23,7 @@ import Image from "next/image";
 
 import InteractiveModelOptimized from "./hero/InteractiveModelOptimized";
 import BackgroundLayer from "./hero/BackgroundLayer";
+import { GITHUB_URLS } from "../constants";
 
 // 定义平台和架构类型
 type Platform = "win" | "macos" | "linux" | "mobile" | "unknown";
@@ -171,9 +172,7 @@ export default function Hero() {
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
     try {
-      const response = await fetch(
-        "https://api.github.com/repos/MaaEnd/MaaEnd/releases/latest"
-      );
+      const response = await fetch(GITHUB_URLS.API_LATEST_RELEASE);
       if (!response.ok) {
         console.error("Failed to fetch release info");
         return;
@@ -367,10 +366,7 @@ export default function Hero() {
                           if (currentPlatform === "mobile") return;
                           // API 错误或无结果时，跳转 GitHub releases
                           if (downloadOptions.length === 0) {
-                            window.open(
-                              "https://github.com/MaaEnd/MaaEnd/releases",
-                              "_blank"
-                            );
+                            window.open(GITHUB_URLS.RELEASES, "_blank");
                             return;
                           }
                           if (currentDownload) {
@@ -524,7 +520,7 @@ export default function Hero() {
                     {/* 查看所有 releases 链接 */}
                     <div className="mt-3 border-t border-black/10 pt-3 dark:border-white/10">
                       <a
-                        href="https://github.com/MaaEnd/MaaEnd/releases"
+                        href={GITHUB_URLS.RELEASES}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2 text-xs text-black/50 transition-colors hover:text-[#d4a017] dark:text-white/50 dark:hover:text-[#FFD000]"

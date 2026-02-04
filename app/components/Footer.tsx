@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { GITHUB_URLS } from "../constants";
 
 // QQ 群号和链接常量
 const USER_QQ_GROUP = "1082597011";
@@ -82,7 +83,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href="https://github.com/MaaEnd/MaaEnd"
+                href={GITHUB_URLS.REPO}
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.github")}
@@ -90,7 +91,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://github.com/MaaEnd/MaaEnd/releases"
+                href={GITHUB_URLS.RELEASES}
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.releases")}
@@ -98,7 +99,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://github.com/MaaEnd/MaaEnd/issues"
+                href={GITHUB_URLS.ISSUES}
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
                 {t("footer.issues")}

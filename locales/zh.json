@@ -94,9 +94,9 @@
     "userGroup": "用户 QQ 群",
     "devGroup": "开发 QQ 群",
     "project": "PROJECT",
-    "github": "GitHub",
-    "releases": "Releases",
-    "issues": "Issues",
+    "github": "源码",
+    "releases": "发行版",
+    "issues": "问题反馈",
     "copyright": "MaaEnd TEAM. OPEN SOURCE UNDER AGPL-3.0.",
     "designGoalNote": "网页内容是产品设计目标，AI 优先指模块项目名称"
   }
