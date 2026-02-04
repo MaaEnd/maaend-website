@@ -2,7 +2,20 @@
 
 import { Card } from "./ui/Card";
 import { motion } from "framer-motion";
-import { Cpu, Globe, Layout, Scan, Terminal, Zap, Crosshair, Puzzle, ShoppingCart, FileJson, Calendar, MonitorSmartphone } from "lucide-react";
+import {
+  Cpu,
+  Globe,
+  Layout,
+  Scan,
+  Terminal,
+  Zap,
+  Crosshair,
+  Puzzle,
+  ShoppingCart,
+  FileJson,
+  Calendar,
+  MonitorSmartphone,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Features() {
@@ -13,8 +26,19 @@ export default function Features() {
       title: t("features.items.realTimeTask.title"),
       desc: t("features.items.realTimeTask.desc"),
       detail: t("features.items.realTimeTask.detail"),
-      icon: <Crosshair className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
+      icon: (
+        <Crosshair className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+      ),
       col: "md:col-span-2",
+    },
+    {
+      title: t("features.items.blueprints.title"),
+      desc: t("features.items.blueprints.desc"),
+      detail: t("features.items.blueprints.detail"),
+      icon: (
+        <FileJson className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+      ),
+      col: "md:col-span-1",
     },
     {
       title: t("features.items.puzzleSolver.title"),
@@ -27,15 +51,25 @@ export default function Features() {
       title: t("features.items.autoResell.title"),
       desc: t("features.items.autoResell.desc"),
       detail: t("features.items.autoResell.detail"),
-      icon: <ShoppingCart className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
-      col: "md:col-span-1",
+      icon: (
+        <ShoppingCart
+          className="text-[#c49102] dark:text-[#FFE600]"
+          size={32}
+        />
+      ),
+      col: "md:col-span-2",
     },
     {
-      title: t("features.items.blueprints.title"),
-      desc: t("features.items.blueprints.desc"),
-      detail: t("features.items.blueprints.detail"),
-      icon: <FileJson className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
-      col: "md:col-span-2",
+      title: t("features.items.crossPlatform.title"),
+      desc: t("features.items.crossPlatform.desc"),
+      detail: t("features.items.crossPlatform.detail"),
+      icon: (
+        <MonitorSmartphone
+          className="text-[#c49102] dark:text-[#FFE600]"
+          size={32}
+        />
+      ),
+      col: "md:col-span-1",
     },
     {
       title: t("features.items.dailyRewards.title"),
@@ -44,13 +78,6 @@ export default function Features() {
       icon: (
         <Calendar className="text-[#c49102] dark:text-[#FFE600]" size={32} />
       ),
-      col: "md:col-span-1",
-    },
-    {
-      title: t("features.items.crossPlatform.title"),
-      desc: t("features.items.crossPlatform.desc"),
-      detail: t("features.items.crossPlatform.detail"),
-      icon: <MonitorSmartphone className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
       col: "md:col-span-2",
     },
   ];
