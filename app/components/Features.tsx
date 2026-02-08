@@ -15,6 +15,7 @@ import {
   FileJson,
   Calendar,
   MonitorSmartphone,
+  Sparkles,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -48,14 +49,11 @@ export default function Features() {
       col: "md:col-span-1",
     },
     {
-      title: t("features.items.autoResell.title"),
-      desc: t("features.items.autoResell.desc"),
-      detail: t("features.items.autoResell.detail"),
+      title: t("features.items.essenceFilter.title"),
+      desc: t("features.items.essenceFilter.desc"),
+      detail: t("features.items.essenceFilter.detail"),
       icon: (
-        <ShoppingCart
-          className="text-[#c49102] dark:text-[#FFE600]"
-          size={32}
-        />
+        <Sparkles className="text-[#c49102] dark:text-[#FFE600]" size={32} />
       ),
       col: "md:col-span-2",
     },

@@ -45,10 +45,10 @@
         "desc": "Brain? Not needed!",
         "detail": "AI solves puzzles instantly — no more scratching your head! Supports single/loop/demo modes 😎"
       },
-      "autoResell": {
-        "title": "Auto Resell",
-        "desc": "Path to Riches!",
-        "detail": "Detects the best-profit items and buys them, can auto-enter the target friend's ship; optional auto region switching, but selling still requires manual steps for now~ 💸"
+      "essenceFilter": {
+        "title": "Essence Filter",
+        "desc": "AI Appraiser!",
+        "detail": "Intelligently recognizes essence attributes, auto-filters and keeps the best stats — trash cleared in one click, no more manual checking! 💎"
       },
       "blueprints": {
         "title": "Blueprint Importer",
@@ -58,7 +58,7 @@
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Never forget to claim!",
-        "detail": "Base collection/restock/clues, daily rewards (missions/pass/mail), simulation rewards, delivery jobs/commission grabbing, friend visits, wiki/manual cleanup, Baker chats — plus product exchanges, item transfers, batch crafting... all done in one click! ✅"
+        "detail": "Base collection/restock/clues, daily rewards (missions/pass/mail), simulation rewards, delivery jobs/commission grabbing, friend visits, wiki/manual cleanup, Baker chats — plus product exchanges, credit shopping, item transfers, batch crafting... all done in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",
