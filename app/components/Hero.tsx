@@ -348,10 +348,10 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex flex-col gap-3 md:flex-row md:items-center"
+                  className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center"
                 >
                   {/* 第一行：主下载 + 展示全部 */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-shrink-0 items-center gap-3">
                     {/* 主下载按钮 - 自动检测系统 */}
                     <div className="relative flex-1 border-2 border-dashed border-[#d4a017]/50 p-[2px] md:flex-none dark:border-[#FFD000]/50">
                       <Button
@@ -444,7 +444,7 @@ export default function Hero() {
                   </div>
 
                   {/* 第二行：Mirror酱 */}
-                  <div className="relative w-full border-2 border-dashed border-[#008fa6]/40 p-[2px] md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
+                  <div className="relative w-full flex-shrink-0 border-2 border-dashed border-[#008fa6]/40 p-[2px] md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
                     <Button
                       variant="outline"
                       className="group relative h-16 w-full overflow-hidden border-none bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:bg-[#008fa6]/10 dark:text-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
