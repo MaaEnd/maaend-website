@@ -1,29 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Activity, GitBranch, Layers } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function About() {
   const { t } = useTranslation();
-
-  const stats = [
-    {
-      label: t("about.stats.githubStars"),
-      value: "30k+",
-      icon: <GitBranch className="h-5 w-5" />,
-    },
-    {
-      label: t("about.stats.dailyUsers"),
-      value: "100k+",
-      icon: <Activity className="h-5 w-5" />,
-    },
-    {
-      label: t("about.stats.modules"),
-      value: "50+",
-      icon: <Layers className="h-5 w-5" />,
-    },
-  ];
 
   return (
     <section className="relative z-10 overflow-hidden px-6 py-32">
@@ -48,22 +29,6 @@ export default function About() {
             <div className="space-y-8 text-lg font-light text-black/80 dark:text-white/70">
               <p>{t("about.paragraph1")}</p>
               <p>{t("about.paragraph2")}</p>
-            </div>
-
-            <div className="mt-12 grid grid-cols-3 gap-6 border-t border-black/10 pt-8 dark:border-white/10">
-              {stats.map((stat, i) => (
-                <div key={i}>
-                  <div className="mb-2 flex items-center gap-2 text-[#c49102] dark:text-[#FFE600]">
-                    {stat.icon}
-                    <span className="font-mono text-xs font-bold">
-                      {stat.label}
-                    </span>
-                  </div>
-                  <div className="font-syne text-3xl font-bold text-black dark:text-white">
-                    {stat.value}
-                  </div>
-                </div>
-              ))}
             </div>
           </motion.div>
 
