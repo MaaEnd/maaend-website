@@ -21,7 +21,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
-import InteractiveModelOptimized from "./hero/InteractiveModelOptimized";
 import BackgroundLayer from "./hero/BackgroundLayer";
 import { GITHUB_URLS } from "../constants";
 
@@ -259,27 +258,27 @@ export default function Hero() {
       {/* Industrial Background Layer */}
       <BackgroundLayer />
 
-      <div className="relative z-10 mx-auto grid h-full w-full max-w-[1600px] grid-cols-1 items-center gap-8 lg:grid-cols-12">
-        {/* Left: Industrial Typography */}
-        <div className="col-span-1 flex flex-col items-center pl-0 text-left md:items-start lg:col-span-7 lg:pl-12">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl items-center justify-center px-4 lg:px-12">
+        {/* Main Content */}
+        <div className="flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-4 inline-flex w-fit items-center gap-3 self-start border border-[#008fa6]/30 bg-[#008fa6]/5 px-3 py-1 dark:border-[#00F0FF]/30 dark:bg-[#00F0FF]/5"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="mb-6 inline-flex w-fit items-center gap-3 rounded-full border border-black/10 bg-black/5 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/5"
           >
-            <TerminalIcon
-              size={12}
-              className="text-[#008fa6] dark:text-[#00F0FF]"
-            />
-            <span className="font-mono text-xs font-bold tracking-widest text-[#008fa6] select-none dark:text-[#00F0FF]">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-2 w-2 animate-ping rounded-full bg-[#008fa6] dark:bg-[#00F0FF]" />
+              <div className="relative h-2 w-2 rounded-full bg-[#008fa6] dark:bg-[#00F0FF]" />
+            </div>
+            <span className="font-mono text-xs font-medium tracking-[0.2em] text-[#008fa6] uppercase select-none dark:text-[#00F0FF]">
               {t("hero.neuralOnline")}
             </span>
           </motion.div>
 
           <motion.h1
             style={{ y: textY }}
-            className="font-syne relative mb-6 font-bold text-black dark:text-white"
+            className="font-syne relative mb-8 font-bold text-black drop-shadow-sm dark:text-white dark:drop-shadow-[0_4px_30px_rgba(255,255,255,0.1)]"
           >
             <div className="flex flex-row items-center gap-3 sm:gap-4 md:gap-8 lg:gap-10">
               {/* Logo Icon */}
@@ -299,33 +298,32 @@ export default function Hero() {
                 />
               </motion.div>
 
-              <div className="text-left text-[2.5rem] leading-[0.9] tracking-tighter select-none sm:text-[3rem] md:text-[3rem] lg:text-[5rem]">
-                <span className="block bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-transparent dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
+              <div className="text-left leading-[0.95] tracking-tight select-none">
+                <span className="block bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-[2.5rem] font-black text-transparent md:text-[3.5rem] lg:text-[5rem] xl:text-[5.5rem] dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                   {t("hero.title")}
                 </span>
-                <span className="hidden text-black md:block dark:text-white">
+                <span className="mt-1 hidden text-xl font-medium tracking-[0.1em] text-zinc-500 uppercase md:block dark:text-zinc-400">
                   {t("hero.subtitle")}
                 </span>
-                <span className="mt-2 block font-mono text-[2.2rem] tracking-normal text-[#008fa6] sm:text-[2.6rem] md:text-[2.8rem] lg:text-[4.5rem] dark:text-[#00F0FF]">
+                <span className="mt-4 block font-mono text-[2rem] tracking-wider text-[#008fa6] sm:text-[2.6rem] md:text-[3rem] lg:text-[4.5rem] dark:text-[#00F0FF] dark:drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">
                   {t("hero.description")}
                 </span>
               </div>
             </div>
 
-            {/* Decorative lines attached to text */}
-            <div className="absolute top-4 bottom-4 -left-8 w-1 bg-[#d4a017] dark:bg-[#FFD000]" />
-            <div className="absolute top-0 -left-8 h-1 w-4 bg-[#d4a017] dark:bg-[#FFD000]" />
-            <div className="absolute bottom-0 -left-8 h-1 w-4 bg-[#d4a017] dark:bg-[#FFD000]" />
+            {/* Elevated Decorative lines attached to text */}
+            <div className="absolute top-8 bottom-8 -left-8 w-[2px] bg-gradient-to-b from-transparent via-[#008fa6]/60 to-transparent dark:via-[#00F0FF]/60" />
+            <div className="absolute top-1/2 -left-[35px] h-[2px] w-4 -translate-y-1/2 bg-[#008fa6]/80 shadow-[0_0_8px_#008fa6] dark:bg-[#00F0FF]/80 dark:shadow-[0_0_8px_#00F0FF]" />
           </motion.h1>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-12 flex max-w-xl items-start justify-center gap-4 md:justify-start"
+            className="mb-12 flex max-w-xl items-start justify-center gap-4"
           >
-            <div className="mt-1.5 text-[#d4a017] dark:text-[#FFD000]">
-              <Shield size={20} />
+            <div className="mt-1 rounded-full border border-black/5 bg-black/5 p-2 text-[#008fa6] dark:border-white/5 dark:bg-white/5 dark:text-[#00F0FF]">
+              <Shield size={18} />
             </div>
             <p className="text-lg leading-relaxed font-light text-black/80 dark:text-white/70">
               {t("hero.tagline")}
@@ -345,10 +343,10 @@ export default function Hero() {
               {!showDownloadOptions ? (
                 <motion.div
                   key="primary-actions"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center"
                 >
                   {/* 第一行：主下载 + 展示全部 */}
                   <div className="flex flex-shrink-0 items-center gap-3">
@@ -534,11 +532,6 @@ export default function Hero() {
               )}
             </AnimatePresence>
           </motion.div>
-        </div>
-
-        {/* Right: Interactive Particle Model */}
-        <div className="pointer-events-auto relative col-span-1 hidden h-[500px] lg:col-span-5 lg:block lg:h-[700px]">
-          <InteractiveModelOptimized />
         </div>
       </div>
     </section>
