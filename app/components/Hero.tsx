@@ -14,7 +14,6 @@ import {
   Loader2,
   Monitor,
   Shield,
-  Terminal as TerminalIcon,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -253,34 +252,19 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="bg-background relative flex min-h-screen flex-col justify-start overflow-hidden px-4 pt-32 transition-colors duration-300 md:px-16 md:pt-28"
+      className="bg-background relative flex min-h-screen flex-col justify-center overflow-hidden px-4 transition-colors duration-300 md:px-16"
     >
       {/* Industrial Background Layer */}
       <BackgroundLayer />
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl items-center justify-center px-4 lg:px-12">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl items-center justify-center px-4 py-20 lg:px-12">
         {/* Main Content */}
         <div className="flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-6 inline-flex w-fit items-center gap-3 rounded-full border border-black/10 bg-black/5 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/5"
-          >
-            <div className="relative flex items-center justify-center">
-              <div className="absolute h-2 w-2 animate-ping rounded-full bg-[#008fa6] dark:bg-[#00F0FF]" />
-              <div className="relative h-2 w-2 rounded-full bg-[#008fa6] dark:bg-[#00F0FF]" />
-            </div>
-            <span className="font-mono text-xs font-medium tracking-[0.2em] text-[#008fa6] uppercase select-none dark:text-[#00F0FF]">
-              {t("hero.neuralOnline")}
-            </span>
-          </motion.div>
-
           <motion.h1
             style={{ y: textY }}
-            className="font-syne relative mb-8 font-bold text-black drop-shadow-sm dark:text-white dark:drop-shadow-[0_4px_30px_rgba(255,255,255,0.1)]"
+            className="font-syne relative mb-12 font-bold text-black drop-shadow-sm dark:text-white dark:drop-shadow-[0_4px_30px_rgba(255,255,255,0.1)]"
           >
-            <div className="flex flex-row items-center gap-3 sm:gap-4 md:gap-8 lg:gap-10">
+            <div className="flex flex-col items-center gap-6 sm:gap-8 md:flex-row md:gap-12 lg:gap-16">
               {/* Logo Icon */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -298,11 +282,11 @@ export default function Hero() {
                 />
               </motion.div>
 
-              <div className="text-left leading-[0.95] tracking-tight select-none">
+              <div className="flex flex-col items-center text-center leading-[0.95] tracking-tight select-none md:items-start md:text-left">
                 <span className="block bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-[2.5rem] font-black text-transparent md:text-[3.5rem] lg:text-[5rem] xl:text-[5.5rem] dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                   {t("hero.title")}
                 </span>
-                <span className="mt-1 hidden text-xl font-medium tracking-[0.1em] text-zinc-500 uppercase md:block dark:text-zinc-400">
+                <span className="mt-1 hidden text-xl font-medium tracking-widest text-zinc-500 uppercase md:block dark:text-zinc-400">
                   {t("hero.subtitle")}
                 </span>
                 <span className="mt-4 block font-mono text-[2rem] tracking-wider text-[#008fa6] sm:text-[2.6rem] md:text-[3rem] lg:text-[4.5rem] dark:text-[#00F0FF] dark:drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">
@@ -312,15 +296,15 @@ export default function Hero() {
             </div>
 
             {/* Elevated Decorative lines attached to text */}
-            <div className="absolute top-8 bottom-8 -left-8 w-[2px] bg-gradient-to-b from-transparent via-[#008fa6]/60 to-transparent dark:via-[#00F0FF]/60" />
-            <div className="absolute top-1/2 -left-[35px] h-[2px] w-4 -translate-y-1/2 bg-[#008fa6]/80 shadow-[0_0_8px_#008fa6] dark:bg-[#00F0FF]/80 dark:shadow-[0_0_8px_#00F0FF]" />
+            <div className="absolute top-8 bottom-8 -left-8 hidden w-0.5 bg-linear-to-b from-transparent via-[#008fa6]/60 to-transparent md:block dark:via-[#00F0FF]/60" />
+            <div className="absolute top-1/2 -left-[35px] hidden h-0.5 w-4 -translate-y-1/2 bg-[#008fa6]/80 shadow-[0_0_8px_#008fa6] md:block dark:bg-[#00F0FF]/80 dark:shadow-[0_0_8px_#00F0FF]" />
           </motion.h1>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-12 flex max-w-xl items-start justify-center gap-4"
+            className="mb-16 flex max-w-xl items-start justify-center gap-4"
           >
             <div className="mt-1 rounded-full border border-black/5 bg-black/5 p-2 text-[#008fa6] dark:border-white/5 dark:bg-white/5 dark:text-[#00F0FF]">
               <Shield size={18} />
@@ -349,9 +333,9 @@ export default function Hero() {
                   className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center"
                 >
                   {/* 第一行：主下载 + 展示全部 */}
-                  <div className="flex flex-shrink-0 items-center gap-3">
+                  <div className="flex shrink-0 items-center gap-3">
                     {/* 主下载按钮 - 自动检测系统 */}
-                    <div className="relative flex-1 border-2 border-dashed border-[#d4a017]/50 p-[2px] md:flex-none dark:border-[#FFD000]/50">
+                    <div className="relative flex-1 border-2 border-dashed border-[#d4a017]/50 p-0.5 md:flex-none dark:border-[#FFD000]/50">
                       <Button
                         variant="primary"
                         className="group relative h-16 w-full overflow-hidden border-none bg-[#fef901] pr-10 pl-8 text-xl font-bold tracking-wide text-black hover:bg-[#fef901] dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
@@ -421,7 +405,7 @@ export default function Hero() {
 
                     {/* 更多下载选项按钮 - 仅当有下载选项时显示 */}
                     {downloadOptions.length > 0 && (
-                      <div className="relative shrink-0 border-2 border-dashed border-[#d4a017]/50 p-[2px] dark:border-[#FFD000]/50">
+                      <div className="relative shrink-0 border-2 border-dashed border-[#d4a017]/50 p-0.5 dark:border-[#FFD000]/50">
                         <Button
                           variant="outline"
                           className="group relative h-16 w-16 overflow-hidden border-none bg-transparent p-0 hover:bg-[#d4a017]/10 dark:hover:bg-[#FFD000]/10"
@@ -442,7 +426,7 @@ export default function Hero() {
                   </div>
 
                   {/* 第二行：Mirror酱 */}
-                  <div className="relative w-full flex-shrink-0 border-2 border-dashed border-[#008fa6]/40 p-[2px] md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
+                  <div className="relative w-full shrink-0 border-2 border-dashed border-[#008fa6]/40 p-0.5 md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
                     <Button
                       variant="outline"
                       className="group relative h-16 w-full overflow-hidden border-none bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:bg-[#008fa6]/10 dark:text-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
