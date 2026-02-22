@@ -338,7 +338,7 @@ export default function Hero() {
                     <div className="relative flex-1 border-2 border-dashed border-[#d4a017]/50 p-0.5 md:flex-none dark:border-[#FFD000]/50">
                       <Button
                         variant="primary"
-                        className="group relative h-16 w-full overflow-hidden border-none bg-[#fef901] pr-10 pl-8 text-xl font-bold tracking-wide text-black hover:bg-[#fef901] dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
+                        className="group relative h-16 w-full overflow-hidden border-none bg-[#fef901] px-4 text-lg font-bold tracking-wide text-black hover:bg-[#fef901] sm:pr-10 sm:pl-8 sm:text-xl dark:bg-[#FFD000] dark:hover:bg-[#E6CF00]"
                         style={{
                           clipPath:
                             "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
@@ -360,7 +360,7 @@ export default function Hero() {
                           (downloadOptions.length > 0 && !currentDownload)
                         }
                       >
-                        <span className="relative z-10 flex items-center gap-3">
+                        <span className="relative z-10 flex items-center gap-2 sm:gap-3">
                           {loading ? (
                             <>
                               <Loader2 size={20} className="animate-spin" />
@@ -368,10 +368,17 @@ export default function Hero() {
                             </>
                           ) : currentPlatform === "mobile" ? (
                             <>
-                              <Monitor size={20} className="shrink-0" />
-                              <span className="flex flex-col items-start gap-0.5 text-left text-base leading-tight">
-                                <span>{t("hero.desktopOnlyLine1")}</span>
-                                <span>{t("hero.desktopOnlyLine2")}</span>
+                              <Monitor
+                                size={20}
+                                className="hidden shrink-0 sm:block"
+                              />
+                              <span className="flex flex-col items-start gap-0.5 text-left text-[13px] leading-tight tracking-normal sm:text-base">
+                                <span className="whitespace-nowrap">
+                                  {t("hero.desktopOnlyLine1")}
+                                </span>
+                                <span className="whitespace-nowrap">
+                                  {t("hero.desktopOnlyLine2")}
+                                </span>
                               </span>
                             </>
                           ) : downloadOptions.length === 0 ? (
