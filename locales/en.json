@@ -71,8 +71,8 @@
     "architectureLabel": "Architecture",
     "title1": "AI-FIRST",
     "title2": "AUTOMATION SYSTEM",
-    "paragraph1": "MaaEnd is not just a script—it's an intelligent automation platform built on next-generation image recognition technology. Through deep learning models and real-time decision algorithms, it thinks like a human player but with machine-like precision and stability.",
-    "paragraph2": "Open source, secure, and transparent. MaaEnd is community-driven, providing reliable logistical support for administrators worldwide. Whether on high-performance Win32 native environments or ADB-driven mobile platforms, MaaEnd delivers a consistently excellent experience.",
+    "paragraph1": "MaaEnd is more than a simple script. Built on MaaFramework’s “black-box automation” capabilities, it forms a closed loop of screenshot capture → visual recognition → branching decisions → action execution. Without reading any in-game/internal data, it hands repetitive tasks over to the program.",
+    "paragraph2": "Whether you’re on PC or Android/emulators, MaaEnd runs tasks with the same logic to minimize platform-specific hassle. With auto-updates and continuous iteration, you can spend your time in the game—not in configuration.",
     "stats": {
       "githubStars": "GitHub Stars",
       "dailyUsers": "Daily Users",
