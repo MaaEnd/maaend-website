@@ -38,7 +38,7 @@
       "realTimeTask": {
         "title": "Real-time Assist",
         "desc": "Helper while you play!",
-        "detail": "Auto story, interaction handling, combat assist, auto pickup, teleport confirmations, auto zipline — plus quick puzzle solving and pat support, powered by real-time screen recognition~ 🎮"
+        "detail": "Early-game copilot upgraded! Focus fire, attacks/dodges/chains, and smart story branch/skip; auto handles guidance, manual pages, and voice cleanup. Plus loot, teleports, ziplines, puzzles, and mounts for a buttery smooth run~ 🎮"
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
@@ -51,14 +51,14 @@
         "detail": "Intelligently recognizes essence attributes, auto-filters and keeps the best stats — trash cleared in one click, no more manual checking! 💎"
       },
       "blueprints": {
-        "title": "Blueprint Importer",
-        "desc": "Builder's Dream!",
-        "detail": "Batch import blueprints with smart parsing (share codes or messy text) — build your industrial empire with max efficiency! 📐"
+        "title": "Auto Trading",
+        "desc": "Maximize every run!",
+        "detail": "Merchant mode enabled! Automatically finds the highest-profit goods, buys them, then hops to friends' ships for one-stop selling. Prefer manual control? It can also provide purchase-only recommendations~ 💸"
       },
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Never forget to claim!",
-        "detail": "Base collection/restock/clues, daily rewards (missions/pass/mail), simulation rewards, delivery jobs/commission grabbing, friend visits, wiki/manual cleanup, Baker chats — plus product exchanges, credit shopping, item transfers, batch crafting... all done in one click! ✅"
+        "detail": "Daily bundle expanded! Auto base restock, clues, and rewards (missions/pass/mail/storage); covers simulation, wiki dots, handbook, Baker chats, friend visits, and delivery snipes. Plus exchanges, shopping, transfers, and batch crafting—all in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",

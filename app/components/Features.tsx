@@ -12,7 +12,6 @@ import {
   Crosshair,
   Puzzle,
   ShoppingCart,
-  FileJson,
   Calendar,
   MonitorSmartphone,
   Sparkles,
@@ -33,11 +32,11 @@ export default function Features() {
       col: "md:col-span-2",
     },
     {
-      title: t("features.items.blueprints.title"),
-      desc: t("features.items.blueprints.desc"),
-      detail: t("features.items.blueprints.detail"),
+      title: t("features.items.essenceFilter.title"),
+      desc: t("features.items.essenceFilter.desc"),
+      detail: t("features.items.essenceFilter.detail"),
       icon: (
-        <FileJson className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+        <Sparkles className="text-[#c49102] dark:text-[#FFE600]" size={32} />
       ),
       col: "md:col-span-1",
     },
@@ -49,11 +48,14 @@ export default function Features() {
       col: "md:col-span-1",
     },
     {
-      title: t("features.items.essenceFilter.title"),
-      desc: t("features.items.essenceFilter.desc"),
-      detail: t("features.items.essenceFilter.detail"),
+      title: t("features.items.blueprints.title"),
+      desc: t("features.items.blueprints.desc"),
+      detail: t("features.items.blueprints.detail"),
       icon: (
-        <Sparkles className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+        <ShoppingCart
+          className="text-[#c49102] dark:text-[#FFE600]"
+          size={32}
+        />
       ),
       col: "md:col-span-2",
     },
