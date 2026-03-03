@@ -283,7 +283,7 @@ export default function Hero() {
               </motion.div>
 
               <div className="flex flex-col items-center text-center tracking-tight select-none md:items-start md:text-left">
-                <span className="inline-block origin-center scale-y-125 bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text text-[2.9rem] leading-none font-black text-transparent md:text-[4rem] lg:text-[5.6rem] xl:text-[6.2rem] dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
+                <span className="inline-block bg-linear-to-r from-[#d4a017] via-[#c49102] to-black bg-clip-text [font-family:var(--font-orbitron)] text-[3.2rem] leading-none font-black tracking-[0.02em] text-transparent md:text-[4.5rem] lg:text-[6.2rem] xl:text-[6.8rem] dark:from-[#FFD000] dark:via-[#FFD000] dark:to-white">
                   {t("hero.title")}
                 </span>
                 <span className="mt-4 block font-mono text-[2rem] tracking-wider text-[#008fa6] sm:text-[2.6rem] md:text-[3rem] lg:text-[4.5rem] dark:text-[#00F0FF] dark:drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">

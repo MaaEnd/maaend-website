@@ -1,6 +1,12 @@
 "use client";
 
-import { DM_Sans, JetBrains_Mono, Space_Grotesk, Syne } from "next/font/google";
+import {
+  DM_Sans,
+  JetBrains_Mono,
+  Orbitron,
+  Space_Grotesk,
+  Syne,
+} from "next/font/google";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "./globals.css";
@@ -25,6 +31,12 @@ const jetbrainsMono = JetBrains_Mono({
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
+});
+
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
 });
 
 export default function RootLayout({
@@ -57,7 +69,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${dmSans.variable} bg-background text-foreground overflow-x-hidden antialiased`}
+        className={`${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${orbitron.variable} bg-background text-foreground overflow-x-hidden antialiased`}
       >
         <ThemeProvider
           attribute="class"
