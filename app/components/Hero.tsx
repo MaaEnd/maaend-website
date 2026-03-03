@@ -301,16 +301,13 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mb-16 flex max-w-xl items-start justify-center gap-4"
+            className="mb-16 flex max-w-xl items-center justify-center gap-4"
           >
-            <div className="mt-1 rounded-full border border-black/5 bg-black/5 p-2 text-[#008fa6] dark:border-white/5 dark:bg-white/5 dark:text-[#00F0FF]">
+            <div className="rounded-full border border-black/5 bg-black/5 p-2 text-[#008fa6] dark:border-white/5 dark:bg-white/5 dark:text-[#00F0FF]">
               <Sparkles size={18} className="stroke-[2.2]" />
             </div>
             <p className="text-lg leading-relaxed font-light text-black/80 dark:text-white/70">
               {t("hero.tagline")}
-              <span className="mt-2 block font-mono text-xs text-[#008fa6] dark:text-[#00F0FF]/60">
-                {t("hero.status")}
-              </span>
             </p>
           </motion.div>
 
