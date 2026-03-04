@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Book, Languages } from "lucide-react";
+import { Book, Languages, Users } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
-import { GITHUB_URLS } from "../constants";
+import { GITHUB_URLS, QQ_GROUPS } from "../constants";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -50,6 +50,14 @@ export default function Header() {
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
           >
             <Book size={16} /> {t("header.docs")}
+          </Link>
+          <Link
+            href={QQ_GROUPS.USER_GROUP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"
+          >
+            <Users size={16} /> {t("header.qqGroup")}
           </Link>
         </nav>
 

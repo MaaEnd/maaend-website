@@ -5,7 +5,8 @@
   },
   "header": {
     "github": "GitHub",
-    "docs": "文档"
+    "docs": "文档",
+    "qqGroup": "用户群"
   },
   "hero": {
     "neuralOnline": "神经网络在线",
