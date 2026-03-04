@@ -2,13 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { GITHUB_URLS } from "../constants";
-
-// QQ 群号和链接常量
-const USER_QQ_GROUP = "755643532";
-const DEV_QQ_GROUP = "1072587329";
-const USER_QQ_GROUP_LINK = "https://qm.qq.com/q/o4HDYMHUGc";
-const DEV_QQ_GROUP_LINK = "https://qm.qq.com/q/EyirQpBiW4";
+import { GITHUB_URLS, QQ_GROUPS } from "../constants";
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -56,22 +50,22 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href={USER_QQ_GROUP_LINK}
+                href={QQ_GROUPS.USER_GROUP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.userGroup")}: {USER_QQ_GROUP}
+                {t("footer.userGroup")}: {QQ_GROUPS.USER_GROUP}
               </a>
             </li>
             <li>
               <a
-                href={DEV_QQ_GROUP_LINK}
+                href={QQ_GROUPS.DEV_GROUP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.devGroup")}: {DEV_QQ_GROUP}
+                {t("footer.devGroup")}: {QQ_GROUPS.DEV_GROUP}
               </a>
             </li>
           </ul>
