@@ -17,3 +17,43 @@ export const QQ_GROUPS = {
   DEV_GROUP: "1072587329",
   DEV_GROUP_LINK: "https://qm.qq.com/q/EyirQpBiW4",
 } as const;
+
+export interface FriendLink {
+  id: string;
+  name: string;
+  href: string;
+  iconSrc: string;
+  iconAlt: string;
+}
+
+// 友情链接：图标来自 public/friend
+export const FRIEND_LINKS: FriendLink[] = [
+  {
+    id: "MAA",
+    name: "MAA",
+    href: "https://maa.plus/",
+    iconSrc: "/friend/maa.png",
+    iconAlt: "MAA",
+  },
+  {
+    id: "MaaFramework",
+    name: "MaaFramework",
+    href: "https://maafw.com/",
+    iconSrc: "/friend/maa.png",
+    iconAlt: "MAA",
+  },
+  {
+    id: "ef-yituliu",
+    name: "终末地一图流",
+    href: "https://www.yituliu.cn/",
+    iconSrc: "/friend/ef-yituliu.png",
+    iconAlt: "终末地一图流",
+  },
+  {
+    id: "mirrorchyan",
+    name: "Mirror酱",
+    href: "https://mirrorchyan.com/zh/projects?rid=MaaEnd&os=windows&arch=x64&channel=stable",
+    iconSrc: "/friend/mirrorchyan.png",
+    iconAlt: "Mirror酱",
+  },
+];
