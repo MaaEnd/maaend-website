@@ -11,8 +11,6 @@ import {
   ArrowRight,
   ChevronDown,
   Download,
-  ExternalLink,
-  Link2,
   Loader2,
   Monitor,
   Sparkles,
@@ -23,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
 import BackgroundLayer from "./hero/BackgroundLayer";
-import { FRIEND_LINKS, GITHUB_URLS } from "../constants";
+import { GITHUB_URLS } from "../constants";
 
 // 定义平台和架构类型
 type Platform = "win" | "macos" | "linux" | "mobile" | "unknown";
@@ -168,7 +166,6 @@ export default function Hero() {
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   const [loading, setLoading] = useState(true);
-  const [showFriendLinks, setShowFriendLinks] = useState(false);
 
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
@@ -429,104 +426,25 @@ export default function Hero() {
                     )}
                   </div>
 
-                  {/* 第二行：Mirror酱 + 友链悬浮入口 */}
-                  <div className="relative flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-start">
-                    <div className="relative w-full shrink-0 border-2 border-dashed border-[#008fa6]/40 p-0.5 md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
-                      <Button
-                        variant="outline"
-                        className="group relative h-16 w-full overflow-hidden border-none bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:bg-[#008fa6]/10 dark:text-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
-                        style={{
-                          clipPath:
-                            "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-                        }}
-                        onClick={() => window.open(mirrorDownloadUrl, "_blank")}
-                      >
-                        <span className="flex w-full flex-col items-start gap-1">
-                          <span>{t("hero.mirrorDownloadLine1")}</span>
-                          <span className="flex items-center gap-2">
-                            {t("hero.mirrorDownloadLine2")}
-                            <ArrowRight size={16} strokeWidth={2.5} />
-                          </span>
-                        </span>
-                      </Button>
-                    </div>
-
-                    <div
-                      className="group/friend relative w-full md:w-auto"
-                      onMouseEnter={() => setShowFriendLinks(true)}
-                      onMouseLeave={() => setShowFriendLinks(false)}
+                  {/* 第二行：Mirror酱 */}
+                  <div className="relative w-full shrink-0 border-2 border-dashed border-[#008fa6]/40 p-0.5 md:w-auto md:max-w-[320px] dark:border-[#00F0FF]/40">
+                    <Button
+                      variant="outline"
+                      className="group relative h-16 w-full overflow-hidden border-none bg-transparent px-5 text-left text-sm leading-tight font-semibold tracking-normal text-[#008fa6] normal-case hover:bg-[#008fa6]/10 dark:text-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
+                      style={{
+                        clipPath:
+                          "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                      }}
+                      onClick={() => window.open(mirrorDownloadUrl, "_blank")}
                     >
-                      <div className="relative w-full shrink-0 border-2 border-dashed border-[#008fa6]/40 p-0.5 md:w-auto dark:border-[#00F0FF]/40">
-                        <Button
-                          variant="outline"
-                          className="group relative h-16 w-full overflow-hidden border-none bg-transparent px-4 text-[#008fa6] hover:bg-[#008fa6]/10 md:w-16 md:px-0 dark:text-[#00F0FF] dark:hover:bg-[#00F0FF]/10"
-                          style={{
-                            clipPath:
-                              "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-                          }}
-                          onClick={() => setShowFriendLinks((value) => !value)}
-                          aria-expanded={showFriendLinks}
-                          aria-label={t("hero.friendLinksTitle")}
-                        >
-                          <span className="flex w-full items-center justify-center gap-2 md:flex-col md:gap-1">
-                            <Link2 size={17} />
-                            <span className="font-mono text-[10px] tracking-[0.18em] uppercase md:tracking-[0.12em]">
-                              {t("hero.friendLinks")}
-                            </span>
-                          </span>
-                        </Button>
-                      </div>
-
-                      <AnimatePresence>
-                        {showFriendLinks && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            transition={{ duration: 0.18, ease: "easeOut" }}
-                            className="absolute bottom-[calc(100%+0.6rem)] left-0 z-30 w-full origin-bottom border border-[#008fa6]/30 bg-[#F4F4F4]/95 p-1 shadow-[0_10px_30px_rgba(0,143,166,0.18)] backdrop-blur md:bottom-0 md:left-[calc(100%+0.6rem)] md:w-72 md:origin-bottom-left dark:border-[#00F0FF]/30 dark:bg-[#09090B]/95 dark:shadow-[0_10px_30px_rgba(0,240,255,0.18)]"
-                          >
-                            <div className="border border-black/10 bg-black/[0.02] p-3 dark:border-white/10 dark:bg-white/[0.02]">
-                              <div className="mb-2 border-b border-[#008fa6]/15 pb-2 dark:border-[#00F0FF]/15">
-                                <span className="font-mono text-xs tracking-[0.2em] text-[#008fa6] uppercase dark:text-[#00F0FF]">
-                                  {t("hero.friendLinksTitle")}
-                                </span>
-                              </div>
-                              <ul className="space-y-2">
-                                {FRIEND_LINKS.map((friend) => (
-                                  <li key={friend.id}>
-                                    <a
-                                      href={friend.href}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={() => setShowFriendLinks(false)}
-                                      className="group/link flex items-center justify-between border border-black/10 bg-white/70 px-3 py-2 text-sm text-black/80 transition-all duration-200 hover:border-[#008fa6]/45 hover:bg-[#008fa6]/10 hover:text-[#008fa6] dark:border-white/10 dark:bg-white/[0.03] dark:text-white/80 dark:hover:border-[#00F0FF]/45 dark:hover:bg-[#00F0FF]/10 dark:hover:text-[#00F0FF]"
-                                    >
-                                      <span className="flex items-center gap-3">
-                                        <span className="rounded-sm border border-[#008fa6]/25 bg-white/85 p-1.5 dark:border-[#00F0FF]/25 dark:bg-white/10">
-                                          <Image
-                                            src={friend.iconSrc}
-                                            alt={friend.iconAlt}
-                                            width={20}
-                                            height={20}
-                                            className="h-5 w-5 object-contain"
-                                          />
-                                        </span>
-                                        <span>{friend.name}</span>
-                                      </span>
-                                      <ExternalLink
-                                        size={14}
-                                        className="opacity-45 transition-opacity group-hover/link:opacity-100"
-                                      />
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                      <span className="flex w-full flex-col items-start gap-1">
+                        <span>{t("hero.mirrorDownloadLine1")}</span>
+                        <span className="flex items-center gap-2">
+                          {t("hero.mirrorDownloadLine2")}
+                          <ArrowRight size={16} strokeWidth={2.5} />
+                        </span>
+                      </span>
+                    </Button>
                   </div>
                 </motion.div>
               ) : (

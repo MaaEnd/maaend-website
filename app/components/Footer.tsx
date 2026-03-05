@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { GITHUB_URLS, QQ_GROUPS } from "../constants";
+import Image from "next/image";
+import { FRIEND_LINKS, GITHUB_URLS, QQ_GROUPS } from "../constants";
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -34,8 +35,8 @@ export default function Footer() {
         </motion.div>
       </div>
 
-      <div className="container mx-auto grid grid-cols-1 gap-12 px-6 md:grid-cols-4">
-        <div className="col-span-2">
+      <div className="container mx-auto grid grid-cols-1 gap-12 px-6 md:grid-cols-6">
+        <div className="col-span-1 md:col-span-2">
           <h3 className="font-heading mb-4 text-2xl text-black dark:text-white">
             MaaEnd
           </h3>
@@ -99,6 +100,34 @@ export default function Footer() {
                 {t("footer.issues")}
               </a>
             </li>
+          </ul>
+        </div>
+        <div className="col-span-1 md:col-span-2">
+          <h4 className="mb-4 font-mono text-black dark:text-white">
+            {t("footer.friendLinks")}
+          </h4>
+          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-black/80 dark:text-white/70">
+            {FRIEND_LINKS.map((friend) => (
+              <li key={friend.id} className="w-40">
+                <a
+                  href={friend.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2 transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
+                >
+                  <span className="rounded-sm border border-black/10 bg-white/90 p-1.5 dark:border-white/15 dark:bg-white/10">
+                    <Image
+                      src={friend.iconSrc}
+                      alt={friend.iconAlt}
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 object-contain"
+                    />
+                  </span>
+                  <span className="min-w-0 truncate">{friend.name}</span>
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

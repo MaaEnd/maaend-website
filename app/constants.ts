@@ -56,4 +56,18 @@ export const FRIEND_LINKS: FriendLink[] = [
     iconSrc: "/friend/mirrorchyan.png",
     iconAlt: "Mirror酱",
   },
+  {
+    id: "endfield-terminal",
+    name: "终末地-协议终端",
+    href: "https://end.shallow.ink",
+    iconSrc: "https://end.shallow.ink/icon.svg",
+    iconAlt: "终末地-协议终端",
+  },
+  {
+    id: "zmd-map",
+    name: "终末地地图站",
+    href: "https://www.zmdmap.com/",
+    iconSrc: "https://assets.zmdmap.com/logo.png",
+    iconAlt: "终末地地图站",
+  },
 ];
