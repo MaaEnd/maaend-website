@@ -6,15 +6,13 @@
   "header": {
     "github": "GitHub",
     "docs": "文档",
-    "qqGroup": "用户群"
+    "qqGroup": "QQ 群"
   },
   "hero": {
     "neuralOnline": "神经网络在线",
     "title": "MaaEnd",
-    "subtitle": "MAA - 终",
     "description": "终末地小助手",
-    "tagline": "基于视觉识别的「明日方舟：终末地」自动化辅助工具",
-    "status": "[ 状态：已优化生产环境 ]",
+    "tagline": "基于视觉 AI 的「明日方舟：终末地」自动化助手",
     "systemReady": "系统就绪",
     "initCore": "下载",
     "downloadFor": "下载",

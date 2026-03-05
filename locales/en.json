@@ -11,10 +11,8 @@
   "hero": {
     "neuralOnline": "NEURAL_NETWORK_ONLINE",
     "title": "MaaEnd",
-    "subtitle": "MAA - End",
     "description": "Endfield Assistant",
-    "tagline": "\"Arknights: Endfield\" Automated Assistant Tool Powered by Visual Recognition",
-    "status": "[ STATUS: OPTIMIZED FOR PRODUCTION ]",
+    "tagline": "\"Arknights: Endfield\" Automated Assistant Powered by Visual AI",
     "systemReady": "SYSTEM_READY",
     "initCore": "DOWNLOAD",
     "downloadFor": "Download for",
