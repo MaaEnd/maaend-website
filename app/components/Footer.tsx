@@ -115,7 +115,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-2 transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
                 >
-                  <span className="rounded-sm border border-black/10 bg-white/90 p-1.5 dark:border-white/15 dark:bg-white/10">
+                  <span className="rounded-sm border border-black/10 bg-white/90 p-0.5 dark:border-white/15 dark:bg-white/10">
                     <Image
                       src={friend.iconSrc}
                       alt={friend.iconAlt}

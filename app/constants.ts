@@ -60,14 +60,14 @@ export const FRIEND_LINKS: FriendLink[] = [
     id: "endfield-terminal",
     name: "终末地-协议终端",
     href: "https://end.shallow.ink",
-    iconSrc: "https://end.shallow.ink/icon.svg",
+    iconSrc: "/friend/endfield-terminal.svg",
     iconAlt: "终末地-协议终端",
   },
   {
     id: "zmd-map",
     name: "终末地地图站",
     href: "https://www.zmdmap.com/",
-    iconSrc: "https://assets.zmdmap.com/logo.png",
+    iconSrc: "/friend/zmd-map.png",
     iconAlt: "终末地地图站",
   },
 ];
