@@ -1,8 +1,8 @@
 name: Sync QQ Groups
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"
+  repository_dispatch:
+    types: [sync-qq-groups]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
+          token: ${{ secrets.PAT_TOKEN }}
           show-progress: false
 
       - name: Fetch index.json and update constants
