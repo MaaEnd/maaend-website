@@ -7,10 +7,12 @@ import { Book, Languages, Users } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
-import { GITHUB_URLS, QQ_GROUPS } from "../constants";
+import { GITHUB_URLS } from "../constants";
+import { useQQGroups } from "../hooks/useQQGroups";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
+  const qqGroups = useQQGroups();
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "zh" ? "en" : "zh";
@@ -52,7 +54,7 @@ export default function Header() {
             <Book size={16} /> {t("header.docs")}
           </Link>
           <Link
-            href={QQ_GROUPS.USER_GROUP_LINK}
+            href={qqGroups.user.link}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 font-mono text-sm text-black/80 transition-colors hover:text-[#c49102] dark:text-white/80 dark:hover:text-[#FFE600]"

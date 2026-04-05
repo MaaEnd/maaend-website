@@ -3,10 +3,12 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
-import { FRIEND_LINKS, GITHUB_URLS, QQ_GROUPS } from "../constants";
+import { FRIEND_LINKS, GITHUB_URLS } from "../constants";
+import { useQQGroups } from "../hooks/useQQGroups";
 
 export default function Footer() {
   const { t } = useTranslation();
+  const qqGroups = useQQGroups();
 
   // 性能优化：使用固定速度，移除滚动速度检测
   const marqueeDuration = 200;
@@ -51,22 +53,22 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-black/80 dark:text-white/70">
             <li>
               <a
-                href={QQ_GROUPS.USER_GROUP_LINK}
+                href={qqGroups.user.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.userGroup")}: {QQ_GROUPS.USER_GROUP}
+                {t("footer.userGroup")}: {qqGroups.user.number}
               </a>
             </li>
             <li>
               <a
-                href={QQ_GROUPS.DEV_GROUP_LINK}
+                href={qqGroups.dev.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-[#c49102] dark:hover:text-[#FFE600]"
               >
-                {t("footer.devGroup")}: {QQ_GROUPS.DEV_GROUP}
+                {t("footer.devGroup")}: {qqGroups.dev.number}
               </a>
             </li>
           </ul>
