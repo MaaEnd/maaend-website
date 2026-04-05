@@ -1,0 +1,59 @@
+name: Sync QQ Groups
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+
+      - name: Fetch index.json and update constants
+        run: |
+          # 拉取远程数据
+          DATA=$(curl -sf https://end.maafw.com/index.json) || exit 0
+
+          # 解析字段
+          USER_GROUP=$(echo "$DATA" | jq -r '.qq_groups.user.number // empty')
+          USER_LINK=$(echo "$DATA" | jq -r '.qq_groups.user.link // empty')
+          DEV_GROUP=$(echo "$DATA" | jq -r '.qq_groups.dev.number // empty')
+          DEV_LINK=$(echo "$DATA" | jq -r '.qq_groups.dev.link // empty')
+
+          # 任一字段为空则跳过
+          if [ -z "$USER_GROUP" ] || [ -z "$USER_LINK" ] || [ -z "$DEV_GROUP" ] || [ -z "$DEV_LINK" ]; then
+            echo "Missing fields in index.json, skipping"
+            exit 0
+          fi
+
+          # 替换 constants.ts 中的值
+          FILE="app/constants.ts"
+          sed -i "s|USER_GROUP: \".*\"|USER_GROUP: \"$USER_GROUP\"|" "$FILE"
+          sed -i "s|USER_GROUP_LINK: \".*\"|USER_GROUP_LINK: \"$USER_LINK\"|" "$FILE"
+          sed -i "s|DEV_GROUP: \".*\"|DEV_GROUP: \"$DEV_GROUP\"|" "$FILE"
+          sed -i "s|DEV_GROUP_LINK: \".*\"|DEV_GROUP_LINK: \"$DEV_LINK\"|" "$FILE"
+
+          # 同步 README.md
+          sed -i "s|\[用户 QQ 群\](https://qm.qq.com/q/[^)]*): [0-9]*|[用户 QQ 群]($USER_LINK): $USER_GROUP|" README.md
+          sed -i "s|\[开发 QQ 群\](https://qm.qq.com/q/[^)]*): [0-9]*|[开发 QQ 群]($DEV_LINK): $DEV_GROUP|" README.md
+
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add app/constants.ts README.md
+          git commit -m "chore: sync QQ group info from index.json"
+          git push
