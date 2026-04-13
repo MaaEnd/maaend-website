@@ -60,6 +60,15 @@ export default function Features() {
       col: "md:col-span-2",
     },
     {
+      title: t("features.items.dailyRewards.title"),
+      desc: t("features.items.dailyRewards.desc"),
+      detail: t("features.items.dailyRewards.detail"),
+      icon: (
+        <Calendar className="text-[#c49102] dark:text-[#FFE600]" size={32} />
+      ),
+      col: "md:col-span-2",
+    },
+    {
       title: t("features.items.crossPlatform.title"),
       desc: t("features.items.crossPlatform.desc"),
       detail: t("features.items.crossPlatform.detail"),
@@ -70,15 +79,6 @@ export default function Features() {
         />
       ),
       col: "md:col-span-1",
-    },
-    {
-      title: t("features.items.dailyRewards.title"),
-      desc: t("features.items.dailyRewards.desc"),
-      detail: t("features.items.dailyRewards.detail"),
-      icon: (
-        <Calendar className="text-[#c49102] dark:text-[#FFE600]" size={32} />
-      ),
-      col: "md:col-span-2",
     },
   ];
   return (
