@@ -162,6 +162,7 @@ async function fetchPrereleaseAndroidOptions(): Promise<DownloadOption[]> {
     if (!response.ok) return [];
     const releases: ReleaseInfo[] = await response.json();
     for (const release of releases) {
+      if (!release.prerelease) continue;
       const options = parseDownloadOptions(release).filter(
         (opt) => opt.platform === "android"
       );
@@ -171,6 +172,19 @@ async function fetchPrereleaseAndroidOptions(): Promise<DownloadOption[]> {
     console.error("Failed to fetch prerelease info:", error);
   }
   return [];
+}
+
+// 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
+// Android 以真机用的 arm64-v8a 优先
+function sortDownloadOptions(options: DownloadOption[]): DownloadOption[] {
+  const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
+  const archOrder: Arch[] = ["arm64-v8a", "x86_64", "aarch64", "universal"];
+  return [...options].sort((a, b) => {
+    const platformDiff =
+      platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
+    if (platformDiff !== 0) return platformDiff;
+    return archOrder.indexOf(a.arch) - archOrder.indexOf(b.arch);
+  });
 }
 
 // 测试版角标
@@ -264,24 +278,19 @@ export default function Hero() {
 
       // 解析 assets 为下载选项
       const options = parseDownloadOptions(data);
+      setDownloadOptions(sortDownloadOptions(options));
 
       // 桌面端只用稳定版；Android 优先用稳定版，稳定版没有 APK 时才回退到预发布版
       if (!options.some((opt) => opt.platform === "android")) {
-        options.push(...(await fetchPrereleaseAndroidOptions()));
+        // 回退请求不能挡住桌面端下载，只有 Android 设备需要等它的结果
+        if (detectPlatform() !== "android") setLoading(false);
+        const androidOptions = await fetchPrereleaseAndroidOptions();
+        if (androidOptions.length > 0) {
+          setDownloadOptions(
+            sortDownloadOptions([...options, ...androidOptions])
+          );
+        }
       }
-
-      // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
-      // Android 以真机用的 arm64-v8a 优先
-      const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
-      const archOrder: Arch[] = ["arm64-v8a", "x86_64", "aarch64", "universal"];
-      options.sort((a, b) => {
-        const platformDiff =
-          platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
-        if (platformDiff !== 0) return platformDiff;
-        return archOrder.indexOf(a.arch) - archOrder.indexOf(b.arch);
-      });
-
-      setDownloadOptions(options);
     } catch (error) {
       console.error("Failed to fetch release info:", error);
     } finally {
@@ -344,9 +353,6 @@ export default function Hero() {
   const desktopOptions = downloadOptions.filter(
     (opt) => opt.platform !== "android"
   );
-  const allAndroidOptions = downloadOptions.filter(
-    (opt) => opt.platform === "android"
-  );
   // 只展示当前设备对应架构的 APK 和通用包：
   // 手机和 ARM 电脑对应 arm64-v8a，x64 电脑（模拟器）对应 x86_64
   const androidArch: Arch =
@@ -355,13 +361,11 @@ export default function Hero() {
     currentArch === "arm64-v8a"
       ? "arm64-v8a"
       : "x86_64";
-  const matchedAndroidOptions = allAndroidOptions.filter(
-    (opt) => opt.arch === androidArch || opt.arch === "universal"
+  const androidOptions = downloadOptions.filter(
+    (opt) =>
+      opt.platform === "android" &&
+      (opt.arch === androidArch || opt.arch === "universal")
   );
-  const androidOptions =
-    matchedAndroidOptions.length > 0
-      ? matchedAndroidOptions
-      : allAndroidOptions;
 
   // API 错误或无结果时跳转 GitHub releases；Android 设备上没找到 APK 时同理
   const fallbackToGitHub =
