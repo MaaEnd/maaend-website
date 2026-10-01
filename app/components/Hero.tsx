@@ -175,10 +175,10 @@ async function fetchPrereleaseAndroidOptions(): Promise<DownloadOption[]> {
 }
 
 // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
-// Android 以真机用的 arm64-v8a 优先
+// Android 以通用包优先
 function sortDownloadOptions(options: DownloadOption[]): DownloadOption[] {
   const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
-  const archOrder: Arch[] = ["arm64-v8a", "x86_64", "aarch64", "universal"];
+  const archOrder: Arch[] = ["universal", "arm64-v8a", "x86_64", "aarch64"];
   return [...options].sort((a, b) => {
     const platformDiff =
       platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
@@ -321,13 +321,13 @@ export default function Hero() {
       return null;
     }
     if (currentPlatform === "android") {
-      // 优先匹配设备架构，找不到再回退通用包
+      // 优先通用包，没有再回退到设备架构对应的包
       return (
         downloadOptions.find(
-          (opt) => opt.platform === "android" && opt.arch === currentArch
+          (opt) => opt.platform === "android" && opt.arch === "universal"
         ) ||
         downloadOptions.find(
-          (opt) => opt.platform === "android" && opt.arch === "universal"
+          (opt) => opt.platform === "android" && opt.arch === currentArch
         ) ||
         null
       );
@@ -381,28 +381,21 @@ export default function Hero() {
     <Button
       key={`${opt.platform}-${opt.arch}`}
       variant="outline"
-      className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
+      className={`group h-14 border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
         opt === currentDownload
           ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
           : ""
       }`}
       onClick={() => startDownload(opt)}
     >
-      <span className="flex items-center gap-2">
-        <PlatformIcon
-          platform={opt.platform}
-          className="h-4 w-4 group-hover:stroke-2"
-        />
-        <span className="font-medium">
-          {getPlatformDisplayName(opt.platform)}
-        </span>
-        <span className="text-xs opacity-60">
-          {getArchDisplayName(opt.arch)}
-        </span>
+      <PlatformIcon
+        platform={opt.platform}
+        className="h-4 w-4 group-hover:stroke-2"
+      />
+      <span className="font-medium">
+        {getPlatformDisplayName(opt.platform)}
       </span>
-      <span className="text-xs opacity-60 group-hover:opacity-80">
-        {formatSize(opt.size)}
-      </span>
+      <span className="text-xs opacity-60">{getArchDisplayName(opt.arch)}</span>
     </Button>
   );
 
