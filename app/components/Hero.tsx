@@ -25,8 +25,8 @@ import BackgroundLayer from "./hero/BackgroundLayer";
 import { GITHUB_URLS } from "../constants";
 
 // 定义平台和架构类型
-type Platform = "win" | "macos" | "linux" | "mobile" | "unknown";
-type Arch = "x86_64" | "aarch64" | "unknown";
+type Platform = "win" | "macos" | "linux" | "android" | "mobile" | "unknown";
+type Arch = "x86_64" | "aarch64" | "arm64-v8a" | "universal" | "unknown";
 
 interface ReleaseAsset {
   name: string;
@@ -95,6 +95,8 @@ function getPlatformDisplayName(platform: Platform): string {
       return "macOS";
     case "linux":
       return "Linux";
+    case "android":
+      return "Android";
     default:
       return "Unknown";
   }
@@ -106,7 +108,10 @@ function getArchDisplayName(arch: Arch): string {
     case "x86_64":
       return "x64";
     case "aarch64":
+    case "arm64-v8a":
       return "ARM64";
+    case "universal":
+      return "Universal";
     default:
       return "Unknown";
   }
@@ -151,6 +156,16 @@ function PlatformIcon({
           className={`dark:invert ${className}`}
         />
       );
+    case "android":
+      return (
+        <Image
+          src="/android.svg"
+          alt="Android"
+          width={size}
+          height={size}
+          className={`dark:invert ${className}`}
+        />
+      );
     default:
       return <Download className={className} />;
   }
@@ -186,8 +201,11 @@ export default function Hero() {
       const options: DownloadOption[] = data.assets
         .map((asset) => {
           // 解析文件名: MaaEnd-{os}-{arch}-{version}.{ext}
-          // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz）
-          const match = asset.name.match(/MaaEnd-(\w+)-(\w+)-v[\d.]+/);
+          // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz，Android 是 apk）
+          // arch 可能带连字符（如 arm64-v8a），所以用完整的版本号来定位结尾
+          const match = asset.name.match(
+            /^MaaEnd-(win|macos|linux|android)-(.+?)-v\d+\.\d+\.\d+/
+          );
           if (!match) return null;
           return {
             platform: match[1] as Platform,
@@ -199,9 +217,10 @@ export default function Hero() {
         })
         .filter((opt): opt is DownloadOption => opt !== null);
 
-      // 排序：Windows > macOS > Linux，每个平台内 x64 在左 ARM64 在右
-      const platformOrder: Platform[] = ["win", "macos", "linux"];
-      const archOrder: Arch[] = ["x86_64", "aarch64"];
+      // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
+      // Android 以真机用的 arm64-v8a 优先
+      const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
+      const archOrder: Arch[] = ["arm64-v8a", "x86_64", "aarch64", "universal"];
       options.sort((a, b) => {
         const platformDiff =
           platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform);
