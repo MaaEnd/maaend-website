@@ -25,8 +25,9 @@ import BackgroundLayer from "./hero/BackgroundLayer";
 import { GITHUB_URLS } from "../constants";
 
 // 定义平台和架构类型
-type Platform = "win" | "macos" | "linux" | "android" | "mobile" | "unknown";
+type Platform = "win" | "macos" | "linux" | "android" | "ios" | "unknown";
 type Arch = "x86_64" | "aarch64" | "arm64-v8a" | "universal" | "unknown";
+type Channel = "stable" | "beta";
 
 interface ReleaseAsset {
   name: string;
@@ -38,6 +39,7 @@ interface ReleaseInfo {
   tag_name: string;
   assets: ReleaseAsset[];
   html_url: string;
+  prerelease: boolean;
 }
 
 interface DownloadOption {
@@ -46,6 +48,8 @@ interface DownloadOption {
   url: string;
   filename: string;
   size: number;
+  version: string;
+  channel: Channel;
 }
 
 // 检测当前系统平台
@@ -53,13 +57,9 @@ function detectPlatform(): Platform {
   if (typeof window === "undefined") return "unknown";
   const ua = navigator.userAgent.toLowerCase();
   // 先检测移动设备，避免被桌面检测误判
-  if (
-    ua.includes("android") ||
-    ua.includes("iphone") ||
-    ua.includes("ipad") ||
-    ua.includes("ipod")
-  ) {
-    return "mobile";
+  if (ua.includes("android")) return "android";
+  if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("ipod")) {
+    return "ios";
   }
   if (ua.includes("win")) return "win";
   if (ua.includes("mac")) return "macos";
@@ -71,6 +71,13 @@ function detectPlatform(): Platform {
 function detectArch(): Arch {
   if (typeof window === "undefined") return "unknown";
   const ua = navigator.userAgent.toLowerCase();
+  // Android 的 UA 通常不带架构，要看 navigator.platform（如 "Linux armv8l" / "Linux x86_64"）
+  // 真机基本都是 ARM，只有明确是 x86 时才当作 x86_64
+  if (ua.includes("android")) {
+    return /x86|i686|amd64/.test(`${ua} ${navigator.platform.toLowerCase()}`)
+      ? "x86_64"
+      : "arm64-v8a";
+  }
   // Apple Silicon Mac 检测
   if (
     ua.includes("mac") &&
@@ -121,6 +128,61 @@ function getArchDisplayName(arch: Arch): string {
 function formatSize(bytes: number): string {
   const mb = bytes / (1024 * 1024);
   return `${mb.toFixed(1)} MB`;
+}
+
+// 解析 release 的 assets 为下载选项
+function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
+  return release.assets
+    .map((asset): DownloadOption | null => {
+      // 解析文件名: MaaEnd-{os}-{arch}-{version}.{ext}
+      // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz，Android 是 apk）
+      // arch 可能带连字符（如 arm64-v8a），所以用完整的版本号来定位结尾
+      const match = asset.name.match(
+        /^MaaEnd-(win|macos|linux|android)-(.+?)-v\d+\.\d+\.\d+/
+      );
+      if (!match) return null;
+      return {
+        platform: match[1] as Platform,
+        arch: match[2] as Arch,
+        url: asset.browser_download_url,
+        filename: asset.name,
+        size: asset.size,
+        version: release.tag_name,
+        channel: release.prerelease ? "beta" : "stable",
+      };
+    })
+    .filter((opt): opt is DownloadOption => opt !== null);
+}
+
+// 稳定版还没有 APK 时，从最近的 release 里找最新一个带 APK 的预发布版
+// 失败时返回空数组，不影响桌面端下载
+async function fetchPrereleaseAndroidOptions(): Promise<DownloadOption[]> {
+  try {
+    const response = await fetch(GITHUB_URLS.API_RECENT_RELEASES);
+    if (!response.ok) return [];
+    const releases: ReleaseInfo[] = await response.json();
+    for (const release of releases) {
+      const options = parseDownloadOptions(release).filter(
+        (opt) => opt.platform === "android"
+      );
+      if (options.length > 0) return options;
+    }
+  } catch (error) {
+    console.error("Failed to fetch prerelease info:", error);
+  }
+  return [];
+}
+
+// 测试版角标
+function BetaBadge({ className = "" }: { className?: string }) {
+  const { t } = useTranslation();
+  return (
+    <span
+      className={`shrink-0 border border-current px-1 font-mono text-[10px] leading-4 font-bold tracking-wider uppercase ${className}`}
+    >
+      {t("hero.beta")}
+    </span>
+  );
 }
 
 // 获取平台图标
@@ -182,7 +244,10 @@ export default function Hero() {
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   const [loading, setLoading] = useState(true);
-  const [showDownloadTip, setShowDownloadTip] = useState(false);
+  // 下载说明浮层：记录触发它的下载渠道，测试版会多显示一条提示
+  const [downloadTipChannel, setDownloadTipChannel] = useState<Channel | null>(
+    null
+  );
   const downloadAreaRef = useRef<HTMLDivElement>(null);
   const [downloadAreaWidth, setDownloadAreaWidth] = useState(0);
 
@@ -198,24 +263,12 @@ export default function Hero() {
       setReleaseInfo(data);
 
       // 解析 assets 为下载选项
-      const options: DownloadOption[] = data.assets
-        .map((asset) => {
-          // 解析文件名: MaaEnd-{os}-{arch}-{version}.{ext}
-          // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz，Android 是 apk）
-          // arch 可能带连字符（如 arm64-v8a），所以用完整的版本号来定位结尾
-          const match = asset.name.match(
-            /^MaaEnd-(win|macos|linux|android)-(.+?)-v\d+\.\d+\.\d+/
-          );
-          if (!match) return null;
-          return {
-            platform: match[1] as Platform,
-            arch: match[2] as Arch,
-            url: asset.browser_download_url,
-            filename: asset.name,
-            size: asset.size,
-          };
-        })
-        .filter((opt): opt is DownloadOption => opt !== null);
+      const options = parseDownloadOptions(data);
+
+      // 桌面端只用稳定版；Android 优先用稳定版，稳定版没有 APK 时才回退到预发布版
+      if (!options.some((opt) => opt.platform === "android")) {
+        options.push(...(await fetchPrereleaseAndroidOptions()));
+      }
 
       // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
       // Android 以真机用的 arm64-v8a 优先
@@ -254,9 +307,21 @@ export default function Hero() {
 
   // 使用 useMemo 优化 currentDownload 计算
   const currentDownload = useMemo(() => {
-    // 移动设备不提供匹配的下载选项
-    if (currentPlatform === "mobile") {
+    // iOS 不提供匹配的下载选项
+    if (currentPlatform === "ios") {
       return null;
+    }
+    if (currentPlatform === "android") {
+      // 优先匹配设备架构，找不到再回退通用包
+      return (
+        downloadOptions.find(
+          (opt) => opt.platform === "android" && opt.arch === currentArch
+        ) ||
+        downloadOptions.find(
+          (opt) => opt.platform === "android" && opt.arch === "universal"
+        ) ||
+        null
+      );
     }
     return (
       downloadOptions.find(
@@ -274,6 +339,68 @@ export default function Hero() {
   // const otherDownloads = downloadOptions.filter(
   //   (opt) => opt !== currentDownload
   // );
+
+  // Android 可能来自预发布版，版本号与桌面端不同，面板里单独分组展示
+  const desktopOptions = downloadOptions.filter(
+    (opt) => opt.platform !== "android"
+  );
+  const allAndroidOptions = downloadOptions.filter(
+    (opt) => opt.platform === "android"
+  );
+  // 只展示当前设备对应架构的 APK 和通用包：
+  // 手机和 ARM 电脑对应 arm64-v8a，x64 电脑（模拟器）对应 x86_64
+  const androidArch: Arch =
+    currentPlatform === "ios" ||
+    currentArch === "aarch64" ||
+    currentArch === "arm64-v8a"
+      ? "arm64-v8a"
+      : "x86_64";
+  const matchedAndroidOptions = allAndroidOptions.filter(
+    (opt) => opt.arch === androidArch || opt.arch === "universal"
+  );
+  const androidOptions =
+    matchedAndroidOptions.length > 0
+      ? matchedAndroidOptions
+      : allAndroidOptions;
+
+  // API 错误或无结果时跳转 GitHub releases；Android 设备上没找到 APK 时同理
+  const fallbackToGitHub =
+    downloadOptions.length === 0 ||
+    (currentPlatform === "android" && !currentDownload);
+
+  const startDownload = (opt: DownloadOption) => {
+    window.open(opt.url, "_blank");
+    setDownloadTipChannel(opt.channel);
+  };
+
+  const renderDownloadOption = (opt: DownloadOption) => (
+    <Button
+      key={`${opt.platform}-${opt.arch}`}
+      variant="outline"
+      className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
+        opt === currentDownload
+          ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
+          : ""
+      }`}
+      onClick={() => startDownload(opt)}
+    >
+      <span className="flex items-center gap-2">
+        <PlatformIcon
+          platform={opt.platform}
+          className="h-4 w-4 group-hover:stroke-2"
+        />
+        <span className="font-medium">
+          {getPlatformDisplayName(opt.platform)}
+        </span>
+        <span className="text-xs opacity-60">
+          {getArchDisplayName(opt.arch)}
+        </span>
+      </span>
+      <span className="text-xs opacity-60 group-hover:opacity-80">
+        {formatSize(opt.size)}
+      </span>
+    </Button>
+  );
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -372,22 +499,19 @@ export default function Hero() {
                               "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
                           }}
                           onClick={() => {
-                            // 移动设备不支持下载，点击无效
-                            if (currentPlatform === "mobile") return;
-                            // API 错误或无结果时，跳转 GitHub releases
-                            if (downloadOptions.length === 0) {
+                            // iOS 不支持下载，点击无效
+                            if (currentPlatform === "ios") return;
+                            if (fallbackToGitHub) {
                               window.open(GITHUB_URLS.RELEASES, "_blank");
-                              setShowDownloadTip(true);
+                              setDownloadTipChannel("stable");
                               return;
                             }
                             if (currentDownload) {
-                              window.open(currentDownload.url, "_blank");
-                              setShowDownloadTip(true);
+                              startDownload(currentDownload);
                             }
                           }}
                           disabled={
-                            loading ||
-                            (downloadOptions.length > 0 && !currentDownload)
+                            loading || (!fallbackToGitHub && !currentDownload)
                           }
                         >
                           <span className="relative z-10 flex items-center gap-2 sm:gap-3">
@@ -396,7 +520,7 @@ export default function Hero() {
                                 <Loader2 size={20} className="animate-spin" />
                                 {t("hero.loading")}
                               </>
-                            ) : currentPlatform === "mobile" ? (
+                            ) : currentPlatform === "ios" ? (
                               <>
                                 <Monitor
                                   size={20}
@@ -411,11 +535,40 @@ export default function Hero() {
                                   </span>
                                 </span>
                               </>
-                            ) : downloadOptions.length === 0 ? (
+                            ) : fallbackToGitHub ? (
                               <>
                                 <Download size={20} />
                                 {t("hero.goToGitHub")}
                                 <ArrowRight size={20} strokeWidth={3} />
+                              </>
+                            ) : currentDownload?.platform === "android" ? (
+                              <>
+                                <Image
+                                  src="/android.svg"
+                                  alt="Android"
+                                  width={20}
+                                  height={20}
+                                  className="hidden shrink-0 sm:block"
+                                />
+                                <span className="flex flex-col items-start gap-1 text-left leading-tight tracking-normal">
+                                  <span className="text-[13px] whitespace-nowrap sm:text-base">
+                                    {t("hero.downloadFor")}{" "}
+                                    {getPlatformDisplayName("android")}
+                                  </span>
+                                  <span className="flex items-center gap-1.5 font-mono text-[11px] font-medium whitespace-nowrap normal-case">
+                                    {currentDownload.channel === "beta" && (
+                                      <BetaBadge />
+                                    )}
+                                    {getArchDisplayName(currentDownload.arch)}
+                                    {" · "}
+                                    {formatSize(currentDownload.size)}
+                                  </span>
+                                </span>
+                                <ArrowRight
+                                  size={20}
+                                  strokeWidth={3}
+                                  className="hidden shrink-0 sm:block"
+                                />
                               </>
                             ) : currentDownload ? (
                               <>
@@ -509,38 +662,25 @@ export default function Hero() {
                         </button>
                       </div>
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {downloadOptions.map((opt) => (
-                          <Button
-                            key={`${opt.platform}-${opt.arch}`}
-                            variant="outline"
-                            className={`group h-14 justify-between border-black/10 px-4 hover:bg-[#d4a017] hover:text-black dark:hover:bg-[#FFD000] dark:hover:text-black ${
-                              opt === currentDownload
-                                ? "border-[#d4a017] bg-[#d4a017]/10 dark:border-[#FFD000] dark:bg-[#FFD000]/10"
-                                : ""
-                            }`}
-                            onClick={() => {
-                              window.open(opt.url, "_blank");
-                              setShowDownloadTip(true);
-                            }}
-                          >
-                            <span className="flex items-center gap-2">
-                              <PlatformIcon
-                                platform={opt.platform}
-                                className="h-4 w-4 group-hover:stroke-2"
-                              />
-                              <span className="font-medium">
-                                {getPlatformDisplayName(opt.platform)}
-                              </span>
-                              <span className="text-xs opacity-60">
-                                {getArchDisplayName(opt.arch)}
-                              </span>
-                            </span>
-                            <span className="text-xs opacity-60 group-hover:opacity-80">
-                              {formatSize(opt.size)}
-                            </span>
-                          </Button>
-                        ))}
+                        {desktopOptions.map(renderDownloadOption)}
                       </div>
+                      {/* Android 分组：单独标注版本号，来自预发布版时加测试版角标 */}
+                      {androidOptions.length > 0 && (
+                        <>
+                          <div className="mt-4 mb-2 flex items-center gap-2 text-[#d4a017] dark:text-[#FFD000]">
+                            <div className="h-2 w-2 bg-current" />
+                            <span className="font-mono text-xs">
+                              {t("hero.android")} - {androidOptions[0].version}
+                            </span>
+                            {androidOptions[0].channel === "beta" && (
+                              <BetaBadge />
+                            )}
+                          </div>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {androidOptions.map(renderDownloadOption)}
+                          </div>
+                        </>
+                      )}
                       {/* 查看所有 releases 链接 */}
                       <div className="mt-3 border-t border-black/10 pt-3 dark:border-white/10">
                         <a
@@ -561,7 +701,7 @@ export default function Hero() {
 
             {/* 下载说明浮出提示 */}
             <AnimatePresence>
-              {showDownloadTip && (
+              {downloadTipChannel && (
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -587,13 +727,18 @@ export default function Hero() {
                           </span>
                         </div>
                         <button
-                          onClick={() => setShowDownloadTip(false)}
+                          onClick={() => setDownloadTipChannel(null)}
                           className="text-black/40 transition-colors hover:text-black dark:text-white/40 dark:hover:text-white"
                         >
                           <X size={14} />
                         </button>
                       </div>
                       <div className="space-y-2 text-left text-xs leading-relaxed text-black/60 dark:text-white/55">
+                        {downloadTipChannel === "beta" && (
+                          <p className="font-medium text-[#c49102] dark:text-[#FFD000]">
+                            {t("hero.androidBetaTip")}
+                          </p>
+                        )}
                         <p>{t("hero.downloadTipGitHub")}</p>
                         <p>{t("hero.downloadTipMirror")}</p>
                       </div>
