@@ -32,7 +32,9 @@
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
-    "android": "Android"
+    "android": "Android",
+    "beta": "测试版",
+    "androidBetaTip": "Android 端目前仅提供测试版，功能尚不稳定，可能存在问题，欢迎反馈。"
   },
   "features": {
     "title": "核心模块",

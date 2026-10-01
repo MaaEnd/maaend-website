@@ -32,7 +32,9 @@
     "windows": "Windows",
     "linux": "Linux",
     "macos": "macOS",
-    "android": "Android"
+    "android": "Android",
+    "beta": "Beta",
+    "androidBetaTip": "The Android build is currently available as a beta only. It may be unstable — feedback is welcome."
   },
   "features": {
     "title": "CORE MODULES",
