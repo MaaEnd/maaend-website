@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -12,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          token: ${{ secrets.PAT_TOKEN }}
           show-progress: false
 
       - name: Fetch index.json and update README
@@ -37,11 +37,22 @@ jobs:
         run: |
           git diff --quiet && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push
+      # main 要求经 PR 合并，GITHUB_TOKEN 不能直推；改为开 PR 并立即合并，不再依赖个人 PAT
+      # 网站运行时直接读取 index.json，这里只同步 README，合并后不需要触发部署
+      - name: Open and merge PR
         if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: chore/sync-qq-groups-${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
           git add README.md
           git commit -m "chore: sync QQ group info in README"
-          git push
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "chore: sync QQ group info in README" \
+            --body "由 [Sync QQ Groups]($RUN_URL) 根据 https://end.maafw.com/index.json 自动生成。"
+          gh pr merge "$BRANCH" --squash --delete-branch
