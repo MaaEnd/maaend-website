@@ -77,7 +77,7 @@ pnpm start
 
 - [MaaEnd 核心项目](https://github.com/MaaEnd/MaaEnd)
 - [官方网站](https://maaend.com)
-- [用户 QQ 群](https://qm.qq.com/q/rAj53B5V4s): 1097256935
+- [用户 QQ 群](https://qm.qq.com/q/F4FjKxkCRy): 1082597011
 - [开发 QQ 群](https://qm.qq.com/q/EyirQpBiW4): 1072587329
 
 ## 💖 致谢
