@@ -33,6 +33,7 @@ interface ReleaseAsset {
   name: string;
   browser_download_url: string;
   size: number;
+  state: string;
 }
 
 interface ReleaseInfo {
@@ -134,6 +135,8 @@ function formatSize(bytes: number): string {
 function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
   return release.assets
     .map((asset): DownloadOption | null => {
+      // 还在上传中的产物下载不了
+      if (asset.state !== "uploaded") return null;
       // 解析文件名: MaaEnd-{os}-{arch}-{version}.{ext}
       // 不限制文件格式（win 是 zip，macOS 是 dmg，Linux 是 tar.gz，Android 是 apk）
       // arch 可能带连字符（如 arm64-v8a），所以用完整的版本号来定位结尾
@@ -154,24 +157,38 @@ function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
     .filter((opt): opt is DownloadOption => opt !== null);
 }
 
-// 稳定版还没有 APK 时，从最近的 release 里找最新一个带 APK 的预发布版
-// 失败时返回空数组，不影响桌面端下载
-async function fetchPrereleaseAndroidOptions(): Promise<DownloadOption[]> {
+// 获取最近的 release 列表（含预发布版），失败时返回空数组，不影响已有的下载选项
+async function fetchRecentReleases(): Promise<ReleaseInfo[]> {
   try {
     const response = await fetch(GITHUB_URLS.API_RECENT_RELEASES);
     if (!response.ok) return [];
-    const releases: ReleaseInfo[] = await response.json();
-    for (const release of releases) {
-      if (!release.prerelease) continue;
-      const options = parseDownloadOptions(release).filter(
-        (opt) => opt.platform === "android"
-      );
-      if (options.length > 0) return options;
-    }
+    return await response.json();
   } catch (error) {
-    console.error("Failed to fetch prerelease info:", error);
+    console.error("Failed to fetch recent releases:", error);
+    return [];
   }
-  return [];
+}
+
+// 从 release 列表（由新到旧）里挑出下载选项：
+// 桌面端只用稳定版，取最新一个已有桌面端产物的稳定版。发版时 latest 会先发布、
+// 产物要几十分钟后才传完，这期间回退到上一个稳定版
+// Android 优先跟桌面端同一个版本，没有 APK 时取最新一个带 APK 的 release（通常是预发布版）
+function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
+  const optionsList = releases.map(parseDownloadOptions);
+  const stableOptions =
+    optionsList.find(
+      (options, i) =>
+        !releases[i].prerelease &&
+        options.some((opt) => opt.platform !== "android")
+    ) ?? [];
+  const androidOptions =
+    [stableOptions, ...optionsList]
+      .map((options) => options.filter((opt) => opt.platform === "android"))
+      .find((options) => options.length > 0) ?? [];
+  return sortDownloadOptions([
+    ...stableOptions.filter((opt) => opt.platform !== "android"),
+    ...androidOptions,
+  ]);
 }
 
 // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
@@ -253,7 +270,6 @@ export default function Hero() {
   const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
-  const [releaseInfo, setReleaseInfo] = useState<ReleaseInfo | null>(null);
   const [downloadOptions, setDownloadOptions] = useState<DownloadOption[]>([]);
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
@@ -273,22 +289,20 @@ export default function Hero() {
         console.error("Failed to fetch release info");
         return;
       }
-      const data: ReleaseInfo = await response.json();
-      setReleaseInfo(data);
+      const latest: ReleaseInfo = await response.json();
+      const options = pickDownloadOptions([latest]);
+      setDownloadOptions(options);
 
-      // 解析 assets 为下载选项
-      const options = parseDownloadOptions(data);
-      setDownloadOptions(sortDownloadOptions(options));
-
-      // 桌面端只用稳定版；Android 优先用稳定版，稳定版没有 APK 时才回退到预发布版
-      if (!options.some((opt) => opt.platform === "android")) {
-        // 回退请求不能挡住桌面端下载，只有 Android 设备需要等它的结果
-        if (detectPlatform() !== "android") setLoading(false);
-        const androidOptions = await fetchPrereleaseAndroidOptions();
-        if (androidOptions.length > 0) {
-          setDownloadOptions(
-            sortDownloadOptions([...options, ...androidOptions])
-          );
+      // latest 缺桌面端产物（发版中）或缺 APK 时，再从最近的 release 里回退
+      const hasDesktop = options.some((opt) => opt.platform !== "android");
+      const hasAndroid = options.some((opt) => opt.platform === "android");
+      if (!hasDesktop || !hasAndroid) {
+        // 回退请求不能挡住已经能下载的一端，只有缺产物的一端需要等它的结果
+        const isAndroid = detectPlatform() === "android";
+        if (isAndroid ? hasAndroid : hasDesktop) setLoading(false);
+        const recent = await fetchRecentReleases();
+        if (recent.length > 0) {
+          setDownloadOptions(pickDownloadOptions([latest, ...recent]));
         }
       }
     } catch (error) {
@@ -340,7 +354,9 @@ export default function Hero() {
         // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
         (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
       ) ||
-      downloadOptions[0]
+      // 再兜底到第一个桌面端产物，不能落到 Android 包上
+      downloadOptions.find((opt) => opt.platform !== "android") ||
+      null
     );
   }, [downloadOptions, currentPlatform, currentArch]);
 
@@ -349,7 +365,6 @@ export default function Hero() {
   //   (opt) => opt !== currentDownload
   // );
 
-  // Android 可能来自预发布版，版本号与桌面端不同，面板里单独分组展示
   const desktopOptions = downloadOptions.filter(
     (opt) => opt.platform !== "android"
   );
@@ -366,11 +381,16 @@ export default function Hero() {
       opt.platform === "android" &&
       (opt.arch === androidArch || opt.arch === "universal")
   );
+  // 面板标题的版本号以桌面端为准；Android 版本相同时并进同一个网格，
+  // 来自预发布版（版本不同）时单独分组，标出自己的版本号
+  const panelVersion = desktopOptions[0]?.version;
+  const showAndroidGroup =
+    androidOptions.length > 0 && androidOptions[0].version !== panelVersion;
 
-  // API 错误或无结果时跳转 GitHub releases；Android 设备上没找到 APK 时同理
+  // API 错误或无结果时跳转 GitHub releases；当前设备找不到对应产物时同理
   const fallbackToGitHub =
     downloadOptions.length === 0 ||
-    (currentPlatform === "android" && !currentDownload);
+    (currentPlatform !== "ios" && !currentDownload);
 
   const startDownload = (opt: DownloadOption) => {
     window.open(opt.url, "_blank");
@@ -648,7 +668,8 @@ export default function Hero() {
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 bg-[#d4a017] dark:bg-[#FFD000]" />
                           <span className="font-mono text-xs text-[#d4a017] dark:text-[#FFD000]">
-                            {t("hero.selectPlatform")} - {releaseInfo?.tag_name}
+                            {t("hero.selectPlatform")}
+                            {panelVersion && ` - ${panelVersion}`}
                           </span>
                         </div>
                         <button
@@ -660,9 +681,11 @@ export default function Hero() {
                       </div>
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         {desktopOptions.map(renderDownloadOption)}
+                        {!showAndroidGroup &&
+                          androidOptions.map(renderDownloadOption)}
                       </div>
-                      {/* Android 分组：单独标注版本号，来自预发布版时加测试版角标 */}
-                      {androidOptions.length > 0 && (
+                      {/* Android 分组：版本与桌面端不同时单独标注版本号，来自预发布版时加测试版角标 */}
+                      {showAndroidGroup && (
                         <>
                           <div className="mt-4 mb-2 flex items-center gap-2 text-[#d4a017] dark:text-[#FFD000]">
                             <div className="h-2 w-2 bg-current" />

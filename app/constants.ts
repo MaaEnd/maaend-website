@@ -8,9 +8,10 @@ export const GITHUB_URLS = {
   DOCS: `${GITHUB_REPO_BASE}/blob/v2/README.md`,
   API_LATEST_RELEASE:
     "https://api.github.com/repos/MaaEnd/MaaEnd/releases/latest",
-  // 含预发布版的最近几个 release，用于稳定版缺少某平台产物时回退
+  // 含预发布版的最近几个 release，用于 latest 缺产物（发版中）或缺 APK 时回退
+  // 两个稳定版之间通常隔着若干预发布版，数量要够覆盖到上一个稳定版
   API_RECENT_RELEASES:
-    "https://api.github.com/repos/MaaEnd/MaaEnd/releases?per_page=5",
+    "https://api.github.com/repos/MaaEnd/MaaEnd/releases?per_page=20",
 } as const;
 
 // QQ 群号和链接
