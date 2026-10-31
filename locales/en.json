@@ -42,32 +42,47 @@
       "realTimeTask": {
         "title": "Real-time Assist",
         "desc": "Helper while you play!",
-        "detail": "Early-game copilot upgraded! Focus fire, attacks/dodges/chains, and smart story branch/skip; auto handles guidance, manual pages, and voice cleanup. Plus loot, teleports, ziplines, puzzles, and mounts for a buttery smooth run~ 🎮"
+        "detail": "Early-game copilot upgraded! Focus fire, attacks/dodges/chains, and smart story branch/skip; auto handles guidance, manual pages, and voice cleanup. Plus loot, teleports, ziplines, puzzles, Aerial Salvage, and mounts for a buttery smooth run~ 🎮"
+      },
+      "combat": {
+        "title": "Combat Challenges",
+        "desc": "Hands-free sanity spending!",
+        "detail": "Protocol Space and essence farming spend sanity automatically, and can use limited-time potions when it runs out; Umbral Monument and War Echo clear uncleared stages with configurable retries; Trial of Swordmancy, Environment Monitoring, and Arena of Games are covered too! ⚔️"
       },
       "puzzleSolver": {
         "title": "Puzzle Solver",
         "desc": "Brain? Not needed!",
         "detail": "AI solves puzzles instantly — no more scratching your head! Supports single/loop/demo modes 😎"
       },
-      "essenceFilter": {
-        "title": "Essence Filter",
-        "desc": "AI Appraiser!",
-        "detail": "Intelligently recognizes essence attributes, auto-filters and keeps the best stats — trash cleared in one click, no more manual checking! 💎"
+      "openWorld": {
+        "title": "Open World",
+        "desc": "Explore and idle at once!",
+        "detail": "Auto-gathers along field resource routes, harvests/plants/waters the Eco Farm, and collects from owl recycle stations; Aerial Salvage and tracked missions can run on their own. Plus zipline import and cleanup, team switching, and blueprint import for smoother building! 🧺"
       },
       "blueprints": {
-        "title": "Auto Trading",
+        "title": "Trading & Delivery",
         "desc": "Maximize every run!",
-        "detail": "Merchant mode enabled! Automatically finds the highest-profit goods, buys them, then hops to friends' ships for one-stop selling. Prefer manual control? It can also provide purchase-only recommendations~ 💸"
+        "detail": "Stockpiling, staple-goods buying, and flexible-demand selling work together so you can watch margins and manage vouchers; outpost products are exchanged automatically, commissions get snatched, and accept-and-forward or full auto delivery are all on the table! 💸"
+      },
+      "essenceFilter": {
+        "title": "Essence & Growth",
+        "desc": "AI Appraiser!",
+        "detail": "Recognizes essence attributes and locks/discards them by weapon rarity, essence type, and extra rules; also handles sanity extraction, weapon upgrades, gear crafting, and operator level-ups! 💎"
+      },
+      "dijiang": {
+        "title": "Dijiang Ship",
+        "desc": "Ship chores, all handled!",
+        "detail": "Collects base outputs and restocks, runs clue collection/placement/gifting and exchanges; visits friends for production assistance and intel, gives operators gifts and collects returns, and sends or cleans up friend lists in bulk! 🚀"
       },
       "dailyRewards": {
         "title": "Daily Automation",
         "desc": "Never forget to claim!",
-        "detail": "Daily bundle expanded! Auto base restock, clues, and rewards (missions/pass/mail/storage); covers simulation, wiki dots, handbook, Baker chats, friend visits, and delivery snipes. Plus exchanges, shopping, transfers, and batch crafting—all in one click! ✅"
+        "detail": "Claims mission/pass/mail/storage/event rewards, simulation rewards, wiki dots, and handbook rewards; plus Yuanyuan Manor innkeeping, credit shopping, Baker chats, Intel Archive, pull counting, and account switching — all in one click! ✅"
       },
       "crossPlatform": {
         "title": "Cross Platform",
         "desc": "Chill with us~",
-        "detail": "PC + Android fully supported — enjoy the game on any platform! 🐟"
+        "detail": "Windows, Android, and Linux are fully supported, and Mac users can run it via PlayCover — enjoy the game on any platform! 🐟"
       }
     }
   },
