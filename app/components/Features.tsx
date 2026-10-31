@@ -3,84 +3,41 @@
 import { Card } from "./ui/Card";
 import { motion } from "framer-motion";
 import {
-  Cpu,
-  Globe,
-  Layout,
-  Scan,
-  Terminal,
-  Zap,
-  Crosshair,
-  Puzzle,
-  ShoppingCart,
   Calendar,
+  Crosshair,
+  Map as MapIcon,
   MonitorSmartphone,
+  Puzzle,
+  Ship,
+  ShoppingCart,
   Sparkles,
+  Swords,
+  type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
+const FEATURE_ITEMS: { key: string; Icon: LucideIcon; col: string }[] = [
+  { key: "realTimeTask", Icon: Crosshair, col: "md:col-span-2" },
+  { key: "combat", Icon: Swords, col: "md:col-span-1" },
+  { key: "puzzleSolver", Icon: Puzzle, col: "md:col-span-1" },
+  { key: "openWorld", Icon: MapIcon, col: "md:col-span-2" },
+  { key: "blueprints", Icon: ShoppingCart, col: "md:col-span-2" },
+  { key: "essenceFilter", Icon: Sparkles, col: "md:col-span-1" },
+  { key: "dijiang", Icon: Ship, col: "md:col-span-1" },
+  { key: "dailyRewards", Icon: Calendar, col: "md:col-span-2" },
+  { key: "crossPlatform", Icon: MonitorSmartphone, col: "md:col-span-3" },
+];
 
 export default function Features() {
   const { t } = useTranslation();
 
-  const features = [
-    {
-      title: t("features.items.realTimeTask.title"),
-      desc: t("features.items.realTimeTask.desc"),
-      detail: t("features.items.realTimeTask.detail"),
-      icon: (
-        <Crosshair className="text-[#c49102] dark:text-[#FFE600]" size={32} />
-      ),
-      col: "md:col-span-2",
-    },
-    {
-      title: t("features.items.essenceFilter.title"),
-      desc: t("features.items.essenceFilter.desc"),
-      detail: t("features.items.essenceFilter.detail"),
-      icon: (
-        <Sparkles className="text-[#c49102] dark:text-[#FFE600]" size={32} />
-      ),
-      col: "md:col-span-1",
-    },
-    {
-      title: t("features.items.puzzleSolver.title"),
-      desc: t("features.items.puzzleSolver.desc"),
-      detail: t("features.items.puzzleSolver.detail"),
-      icon: <Puzzle className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
-      col: "md:col-span-1",
-    },
-    {
-      title: t("features.items.blueprints.title"),
-      desc: t("features.items.blueprints.desc"),
-      detail: t("features.items.blueprints.detail"),
-      icon: (
-        <ShoppingCart
-          className="text-[#c49102] dark:text-[#FFE600]"
-          size={32}
-        />
-      ),
-      col: "md:col-span-2",
-    },
-    {
-      title: t("features.items.dailyRewards.title"),
-      desc: t("features.items.dailyRewards.desc"),
-      detail: t("features.items.dailyRewards.detail"),
-      icon: (
-        <Calendar className="text-[#c49102] dark:text-[#FFE600]" size={32} />
-      ),
-      col: "md:col-span-2",
-    },
-    {
-      title: t("features.items.crossPlatform.title"),
-      desc: t("features.items.crossPlatform.desc"),
-      detail: t("features.items.crossPlatform.detail"),
-      icon: (
-        <MonitorSmartphone
-          className="text-[#c49102] dark:text-[#FFE600]"
-          size={32}
-        />
-      ),
-      col: "md:col-span-1",
-    },
-  ];
+  const features = FEATURE_ITEMS.map(({ key, Icon, col }) => ({
+    title: t(`features.items.${key}.title`),
+    desc: t(`features.items.${key}.desc`),
+    detail: t(`features.items.${key}.detail`),
+    icon: <Icon className="text-[#c49102] dark:text-[#FFE600]" size={32} />,
+    col,
+  }));
   return (
     <section className="relative z-10 px-6 py-20">
       <div className="container mx-auto max-w-6xl">
