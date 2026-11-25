@@ -6,7 +6,8 @@ const TAG_API = "https://api.github.com/repos/MaaEnd/MaaEnd/releases";
 async function fetchRelease() {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const RELEASE_TAG = process.env.RELEASE_TAG ?? "latest";
-  const FETCH_API = RELEASE_TAG === "latest" ? LATEST_API : `${TAG_API}/${RELEASE_TAG}`;
+  const FETCH_API =
+    RELEASE_TAG === "latest" ? LATEST_API : `${TAG_API}/${RELEASE_TAG}`;
 
   const res = await fetch(FETCH_API, {
     headers: { Authorization: `Bearer ${GITHUB_TOKEN}` },
@@ -14,14 +15,21 @@ async function fetchRelease() {
 
   console.log(`Getting data from ${FETCH_API}`);
   if (!res.ok) {
-    throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+    throw new Error(
+      `Failed to fetch ${API} ${res.status}: ${await res.text()}`
+    );
   }
 
-  return res.json();
+  const data = res.json();
+  return data;
 }
 
 async function writeEnvFine(data) {
-  await fs.writeFile(".release_info.json", JSON.stringify(data, null, 4), "utf8");
+  await fs.writeFile(
+    ".release_info.json",
+    JSON.stringify(data, null, 4),
+    "utf8"
+  );
 }
 
 async function main() {

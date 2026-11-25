@@ -284,12 +284,9 @@ export default function Hero() {
   // 获取最新 release 信息
   const fetchReleaseInfo = useCallback(async () => {
     try {
-      const response = await fetch(GITHUB_URLS.API_LATEST_RELEASE);
-      if (!response.ok) {
-        console.error("Failed to fetch release info");
-        return;
-      }
-      const latest: ReleaseInfo = await response.json();
+      const latest: ReleaseInfo = JSON.parse(
+        process.env.NEXT_PUBLIC_RELEASE_INFO ?? "{}"
+      );
       const options = pickDownloadOptions([latest]);
       setDownloadOptions(options);
 
