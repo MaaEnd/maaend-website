@@ -12,36 +12,22 @@ import {
   ChevronDown,
   Download,
   Info,
-  Loader2,
   Monitor,
   Sparkles,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
 import BackgroundLayer from "./hero/BackgroundLayer";
+import { type ReleaseInfo, RELEASE } from "../utils/release";
 import { GITHUB_URLS } from "../constants";
 
 // 定义平台和架构类型
 type Platform = "win" | "macos" | "linux" | "android" | "ios" | "unknown";
 type Arch = "x86_64" | "aarch64" | "arm64-v8a" | "universal" | "unknown";
 type Channel = "stable" | "beta";
-
-interface ReleaseAsset {
-  name: string;
-  browser_download_url: string;
-  size: number;
-  state: string;
-}
-
-interface ReleaseInfo {
-  tag_name: string;
-  assets: ReleaseAsset[];
-  html_url: string;
-  prerelease: boolean;
-}
 
 interface DownloadOption {
   platform: Platform;
@@ -132,7 +118,7 @@ function formatSize(bytes: number): string {
 }
 
 // 解析 release 的 assets 为下载选项
-function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
+function parseoptions(release: ReleaseInfo): DownloadOption[] {
   return release.assets
     .map((asset): DownloadOption | null => {
       // 还在上传中的产物下载不了
@@ -157,24 +143,12 @@ function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
     .filter((opt): opt is DownloadOption => opt !== null);
 }
 
-// 获取最近的 release 列表（含预发布版），失败时返回空数组，不影响已有的下载选项
-async function fetchRecentReleases(): Promise<ReleaseInfo[]> {
-  try {
-    const response = await fetch(GITHUB_URLS.API_RECENT_RELEASES);
-    if (!response.ok) return [];
-    return await response.json();
-  } catch (error) {
-    console.error("Failed to fetch recent releases:", error);
-    return [];
-  }
-}
-
 // 从 release 列表（由新到旧）里挑出下载选项：
 // 桌面端只用稳定版，取最新一个已有桌面端产物的稳定版。发版时 latest 会先发布、
 // 产物要几十分钟后才传完，这期间回退到上一个稳定版
 // Android 优先跟桌面端同一个版本，没有 APK 时取最新一个带 APK 的 release（通常是预发布版）
 function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
-  const optionsList = releases.map(parseDownloadOptions);
+  const optionsList = releases.map(parseoptions);
   const stableOptions =
     optionsList.find(
       (options, i) =>
@@ -185,7 +159,7 @@ function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
     [stableOptions, ...optionsList]
       .map((options) => options.filter((opt) => opt.platform === "android"))
       .find((options) => options.length > 0) ?? [];
-  return sortDownloadOptions([
+  return sortoptions([
     ...stableOptions.filter((opt) => opt.platform !== "android"),
     ...androidOptions,
   ]);
@@ -193,7 +167,7 @@ function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
 
 // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
 // Android 以通用包优先
-function sortDownloadOptions(options: DownloadOption[]): DownloadOption[] {
+function sortoptions(options: DownloadOption[]): DownloadOption[] {
   const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
   const archOrder: Arch[] = ["universal", "arm64-v8a", "x86_64", "aarch64"];
   return [...options].sort((a, b) => {
@@ -269,11 +243,9 @@ export default function Hero() {
   const mirrorLocale = i18n.language?.startsWith("zh") ? "zh" : "en";
   const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
-  const [downloadOptions, setDownloadOptions] = useState<DownloadOption[]>([]);
+  const [showoptions, setShowoptions] = useState(false);
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
-  const [loading, setLoading] = useState(true);
   // 下载说明浮层：记录触发它的下载渠道，测试版会多显示一条提示
   const [downloadTipChannel, setDownloadTipChannel] = useState<Channel | null>(
     null
@@ -281,39 +253,14 @@ export default function Hero() {
   const downloadAreaRef = useRef<HTMLDivElement>(null);
   const [downloadAreaWidth, setDownloadAreaWidth] = useState(0);
 
-  // 获取最新 release 信息
-  const fetchReleaseInfo = useCallback(async () => {
-    try {
-      const latest: ReleaseInfo = JSON.parse(
-        process.env.NEXT_PUBLIC_RELEASE_INFO ?? "{}"
-      );
-      const options = pickDownloadOptions([latest]);
-      setDownloadOptions(options);
-
-      // latest 缺桌面端产物（发版中）或缺 APK 时，再从最近的 release 里回退
-      const hasDesktop = options.some((opt) => opt.platform !== "android");
-      const hasAndroid = options.some((opt) => opt.platform === "android");
-      if (!hasDesktop || !hasAndroid) {
-        // 回退请求不能挡住已经能下载的一端，只有缺产物的一端需要等它的结果
-        const isAndroid = detectPlatform() === "android";
-        if (isAndroid ? hasAndroid : hasDesktop) setLoading(false);
-        const recent = await fetchRecentReleases();
-        if (recent.length > 0) {
-          setDownloadOptions(pickDownloadOptions([latest, ...recent]));
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch release info:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const options = useMemo(() => pickDownloadOptions([RELEASE]), []);
 
   useEffect(() => {
+    // TODO: 处理 pnpm lint
+    // eslint-disable-next-line
     setCurrentPlatform(detectPlatform());
     setCurrentArch(detectArch());
-    fetchReleaseInfo();
-  }, [fetchReleaseInfo]);
+  }, []);
 
   useEffect(() => {
     const el = downloadAreaRef.current;
@@ -334,37 +281,35 @@ export default function Hero() {
     if (currentPlatform === "android") {
       // 优先通用包，没有再回退到设备架构对应的包
       return (
-        downloadOptions.find(
+        options.find(
           (opt) => opt.platform === "android" && opt.arch === "universal"
         ) ||
-        downloadOptions.find(
+        options.find(
           (opt) => opt.platform === "android" && opt.arch === currentArch
         ) ||
         null
       );
     }
     return (
-      downloadOptions.find(
+      options.find(
         (opt) => opt.platform === currentPlatform && opt.arch === currentArch
       ) ||
-      downloadOptions.find(
+      options.find(
         // 如果找不到完全匹配，尝试只匹配平台，默认 x86_64
         (opt) => opt.platform === currentPlatform && opt.arch === "x86_64"
       ) ||
       // 再兜底到第一个桌面端产物，不能落到 Android 包上
-      downloadOptions.find((opt) => opt.platform !== "android") ||
+      options.find((opt) => opt.platform !== "android") ||
       null
     );
-  }, [downloadOptions, currentPlatform, currentArch]);
+  }, [options, currentPlatform, currentArch]);
 
   // 其他下载选项(不包括当前系统) - 暂未使用
-  // const otherDownloads = downloadOptions.filter(
+  // const otherDownloads = options.filter(
   //   (opt) => opt !== currentDownload
   // );
 
-  const desktopOptions = downloadOptions.filter(
-    (opt) => opt.platform !== "android"
-  );
+  const desktopOptions = options.filter((opt) => opt.platform !== "android");
   // 只展示当前设备对应架构的 APK 和通用包：
   // 手机和 ARM 电脑对应 arm64-v8a，x64 电脑（模拟器）对应 x86_64
   const androidArch: Arch =
@@ -373,7 +318,7 @@ export default function Hero() {
     currentArch === "arm64-v8a"
       ? "arm64-v8a"
       : "x86_64";
-  const androidOptions = downloadOptions.filter(
+  const androidOptions = options.filter(
     (opt) =>
       opt.platform === "android" &&
       (opt.arch === androidArch || opt.arch === "universal")
@@ -386,8 +331,7 @@ export default function Hero() {
 
   // API 错误或无结果时跳转 GitHub releases；当前设备找不到对应产物时同理
   const fallbackToGitHub =
-    downloadOptions.length === 0 ||
-    (currentPlatform !== "ios" && !currentDownload);
+    options.length === 0 || (currentPlatform !== "ios" && !currentDownload);
 
   const startDownload = (opt: DownloadOption) => {
     window.open(opt.url, "_blank");
@@ -493,7 +437,7 @@ export default function Hero() {
           >
             <div ref={downloadAreaRef}>
               <AnimatePresence mode="popLayout">
-                {!showDownloadOptions ? (
+                {!showoptions ? (
                   <motion.div
                     key="primary-actions"
                     initial={{ opacity: 0, y: 20 }}
@@ -524,17 +468,10 @@ export default function Hero() {
                               startDownload(currentDownload);
                             }
                           }}
-                          disabled={
-                            loading || (!fallbackToGitHub && !currentDownload)
-                          }
+                          disabled={!fallbackToGitHub && !currentDownload}
                         >
                           <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-                            {loading ? (
-                              <>
-                                <Loader2 size={20} className="animate-spin" />
-                                {t("hero.loading")}
-                              </>
-                            ) : currentPlatform === "ios" ? (
+                            {currentPlatform === "ios" ? (
                               <>
                                 <Monitor
                                   size={20}
@@ -610,7 +547,7 @@ export default function Hero() {
                       </div>
 
                       {/* 更多下载选项按钮 - 仅当有下载选项时显示 */}
-                      {downloadOptions.length > 0 && (
+                      {options.length > 0 && (
                         <div className="relative shrink-0 border-2 border-dashed border-[#d4a017]/50 p-0.5 dark:border-[#FFD000]/50">
                           <Button
                             variant="outline"
@@ -619,8 +556,7 @@ export default function Hero() {
                               clipPath:
                                 "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
                             }}
-                            onClick={() => setShowDownloadOptions(true)}
-                            disabled={loading}
+                            onClick={() => setShowoptions(true)}
                           >
                             <ChevronDown
                               size={24}
@@ -670,7 +606,7 @@ export default function Hero() {
                           </span>
                         </div>
                         <button
-                          onClick={() => setShowDownloadOptions(false)}
+                          onClick={() => setShowoptions(false)}
                           className="text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white"
                         >
                           <X size={16} />

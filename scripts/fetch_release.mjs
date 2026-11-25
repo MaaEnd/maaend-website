@@ -13,7 +13,6 @@ async function fetchRelease() {
     headers: { Authorization: `Bearer ${GITHUB_TOKEN}` },
   });
 
-  console.log(`Getting data from ${FETCH_API}`);
   if (!res.ok) {
     throw new Error(
       `Failed to fetch ${API} ${res.status}: ${await res.text()}`
