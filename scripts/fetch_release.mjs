@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import fs from "node:fs";
 
 const LATEST_API = "https://api.github.com/repos/MaaEnd/MaaEnd/releases/latest";
 const TAG_API = "https://api.github.com/repos/MaaEnd/MaaEnd/releases";
@@ -23,17 +23,13 @@ async function fetchRelease() {
   return data;
 }
 
-async function writeEnvFine(data) {
-  await fs.writeFile(
-    ".release_info.json",
-    JSON.stringify(data, null, 4),
-    "utf8"
-  );
+function writeEnvFine(data) {
+  fs.writeFileSync(".release_info.json", JSON.stringify(data, null, 4), "utf8");
 }
 
 async function main() {
   const data = await fetchRelease();
-  await writeEnvFine(data);
+  writeEnvFine(data);
 }
 
 await main();
