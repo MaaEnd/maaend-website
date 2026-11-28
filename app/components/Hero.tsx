@@ -118,7 +118,7 @@ function formatSize(bytes: number): string {
 }
 
 // 解析 release 的 assets 为下载选项
-function parseoptions(release: ReleaseInfo): DownloadOption[] {
+function parseDownloadOptions(release: ReleaseInfo): DownloadOption[] {
   return release.assets
     .map((asset): DownloadOption | null => {
       // 还在上传中的产物下载不了
@@ -148,7 +148,7 @@ function parseoptions(release: ReleaseInfo): DownloadOption[] {
 // 产物要几十分钟后才传完，这期间回退到上一个稳定版
 // Android 优先跟桌面端同一个版本，没有 APK 时取最新一个带 APK 的 release（通常是预发布版）
 function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
-  const optionsList = releases.map(parseoptions);
+  const optionsList = releases.map(parseDownloadOptions);
   const stableOptions =
     optionsList.find(
       (options, i) =>
@@ -159,7 +159,7 @@ function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
     [stableOptions, ...optionsList]
       .map((options) => options.filter((opt) => opt.platform === "android"))
       .find((options) => options.length > 0) ?? [];
-  return sortoptions([
+  return sortDownloadOptions([
     ...stableOptions.filter((opt) => opt.platform !== "android"),
     ...androidOptions,
   ]);
@@ -167,7 +167,7 @@ function pickDownloadOptions(releases: ReleaseInfo[]): DownloadOption[] {
 
 // 排序：Windows > macOS > Linux > Android，桌面平台内 x64 在左 ARM64 在右，
 // Android 以通用包优先
-function sortoptions(options: DownloadOption[]): DownloadOption[] {
+function sortDownloadOptions(options: DownloadOption[]): DownloadOption[] {
   const platformOrder: Platform[] = ["win", "macos", "linux", "android"];
   const archOrder: Arch[] = ["universal", "arm64-v8a", "x86_64", "aarch64"];
   return [...options].sort((a, b) => {
@@ -243,7 +243,7 @@ export default function Hero() {
   const mirrorLocale = i18n.language?.startsWith("zh") ? "zh" : "en";
   const mirrorDownloadUrl = `https://mirrorchyan.com/${mirrorLocale}/projects?rid=MaaEnd&source=maaend.com`;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showoptions, setShowoptions] = useState(false);
+  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [currentPlatform, setCurrentPlatform] = useState<Platform>("unknown");
   const [currentArch, setCurrentArch] = useState<Arch>("unknown");
   // 下载说明浮层：记录触发它的下载渠道，测试版会多显示一条提示
@@ -437,7 +437,7 @@ export default function Hero() {
           >
             <div ref={downloadAreaRef}>
               <AnimatePresence mode="popLayout">
-                {!showoptions ? (
+                {!showDownloadOptions ? (
                   <motion.div
                     key="primary-actions"
                     initial={{ opacity: 0, y: 20 }}
@@ -556,7 +556,7 @@ export default function Hero() {
                               clipPath:
                                 "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
                             }}
-                            onClick={() => setShowoptions(true)}
+                            onClick={() => setShowDownloadOptions(true)}
                           >
                             <ChevronDown
                               size={24}
@@ -606,7 +606,7 @@ export default function Hero() {
                           </span>
                         </div>
                         <button
-                          onClick={() => setShowoptions(false)}
+                          onClick={() => setShowDownloadOptions(false)}
                           className="text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white"
                         >
                           <X size={16} />
